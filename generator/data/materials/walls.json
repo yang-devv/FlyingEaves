@@ -1,0 +1,521 @@
+{
+ "_说明": "说明：每一项是候选方块列表，从前往后挑第一个游戏里有的；可以写别的模组的方块，后面留一个原版的兜底。",
+ "walls": {
+  "palace": {
+   "cn": "红柱白墙（殿）",
+   "post": [
+    "minecraft:stripped_mangrove_log[axis=y]"
+   ],
+   "fill": [
+    "minecraft:calcite"
+   ],
+   "base": [
+    "minecraft:smooth_quartz"
+   ],
+   "beam": [
+    "minecraft:mangrove_planks"
+   ],
+   "floor": [
+    "minecraft:polished_andesite"
+   ],
+   "shutter": [
+    "minecraft:spruce_trapdoor"
+   ],
+   "door": [
+    "minecraft:spruce_door"
+   ],
+   "pane": [
+    "minecraft:white_stained_glass_pane"
+   ],
+   "swatch": "#B8402F",
+   "dado": [
+    "minecraft:mangrove_planks"
+   ],
+   "trim_stairs": [
+    "minecraft:mangrove_stairs"
+   ],
+   "trim_slab": [
+    "minecraft:mangrove_slab"
+   ],
+   "trim_trapdoor": [
+    "minecraft:mangrove_trapdoor"
+   ],
+   "base_stairs": [
+    "minecraft:smooth_quartz_stairs"
+   ]
+  },
+  "darkwood": {
+   "cn": "深色木",
+   "post": [
+    "minecraft:stripped_dark_oak_log[axis=y]"
+   ],
+   "fill": [
+    "minecraft:smooth_sandstone"
+   ],
+   "base": [
+    "minecraft:polished_blackstone_bricks"
+   ],
+   "beam": [
+    "minecraft:dark_oak_planks"
+   ],
+   "floor": [
+    "minecraft:dark_oak_planks"
+   ],
+   "shutter": [
+    "minecraft:dark_oak_trapdoor"
+   ],
+   "door": [
+    "minecraft:dark_oak_door"
+   ],
+   "pane": [
+    "minecraft:light_gray_stained_glass_pane"
+   ],
+   "swatch": "#4E3828",
+   "dado": [
+    "minecraft:polished_blackstone_bricks"
+   ],
+   "trim_stairs": [
+    "minecraft:dark_oak_stairs"
+   ],
+   "trim_slab": [
+    "minecraft:dark_oak_slab"
+   ],
+   "trim_trapdoor": [
+    "minecraft:dark_oak_trapdoor"
+   ],
+   "base_stairs": [
+    "minecraft:polished_blackstone_brick_stairs"
+   ]
+  },
+  "whitewall": {
+   "cn": "白墙黛瓦",
+   "post": [
+    "minecraft:stripped_dark_oak_log[axis=y]"
+   ],
+   "fill": [
+    "minecraft:white_concrete"
+   ],
+   "base": [
+    "minecraft:stone_bricks"
+   ],
+   "beam": [
+    "minecraft:dark_oak_planks"
+   ],
+   "floor": [
+    "minecraft:spruce_planks"
+   ],
+   "shutter": [
+    "minecraft:spruce_trapdoor"
+   ],
+   "door": [
+    "minecraft:spruce_door"
+   ],
+   "pane": [
+    "minecraft:white_stained_glass_pane"
+   ],
+   "swatch": "#E8E4DA",
+   "dado": [
+    "minecraft:polished_andesite"
+   ],
+   "trim_stairs": [
+    "minecraft:dark_oak_stairs"
+   ],
+   "trim_slab": [
+    "minecraft:dark_oak_slab"
+   ],
+   "trim_trapdoor": [
+    "minecraft:dark_oak_trapdoor"
+   ],
+   "base_stairs": [
+    "minecraft:stone_brick_stairs"
+   ]
+  },
+  "greybrick": {
+   "cn": "青砖",
+   "post": [
+    "minecraft:stripped_dark_oak_log[axis=y]"
+   ],
+   "fill": [
+    "minecraft:light_gray_terracotta"
+   ],
+   "base": [
+    "minecraft:stone_bricks"
+   ],
+   "beam": [
+    "minecraft:dark_oak_planks"
+   ],
+   "floor": [
+    "minecraft:polished_andesite"
+   ],
+   "shutter": [
+    "minecraft:dark_oak_trapdoor"
+   ],
+   "door": [
+    "minecraft:dark_oak_door"
+   ],
+   "pane": [
+    "minecraft:light_gray_stained_glass_pane"
+   ],
+   "swatch": "#7C828A",
+   "dado": [
+    "minecraft:stone_bricks"
+   ],
+   "trim_stairs": [
+    "minecraft:dark_oak_stairs"
+   ],
+   "trim_slab": [
+    "minecraft:dark_oak_slab"
+   ],
+   "trim_trapdoor": [
+    "minecraft:dark_oak_trapdoor"
+   ],
+   "base_stairs": [
+    "minecraft:stone_brick_stairs"
+   ]
+  },
+  "redbrick": {
+   "cn": "红砖",
+   "post": [
+    "minecraft:stripped_dark_oak_log[axis=y]"
+   ],
+   "fill": [
+    "minecraft:bricks"
+   ],
+   "base": [
+    "minecraft:stone_bricks"
+   ],
+   "beam": [
+    "minecraft:dark_oak_planks"
+   ],
+   "floor": [
+    "minecraft:spruce_planks"
+   ],
+   "shutter": [
+    "minecraft:dark_oak_trapdoor"
+   ],
+   "door": [
+    "minecraft:dark_oak_door"
+   ],
+   "pane": [
+    "minecraft:light_gray_stained_glass_pane"
+   ],
+   "swatch": "#9E4C3C",
+   "dado": [
+    "minecraft:stone_bricks"
+   ],
+   "trim_stairs": [
+    "minecraft:dark_oak_stairs"
+   ],
+   "trim_slab": [
+    "minecraft:dark_oak_slab"
+   ],
+   "trim_trapdoor": [
+    "minecraft:dark_oak_trapdoor"
+   ],
+   "base_stairs": [
+    "minecraft:stone_brick_stairs"
+   ]
+  },
+  "wattle": {
+   "cn": "木骨白墙",
+   "post": [
+    "minecraft:stripped_spruce_log[axis=y]"
+   ],
+   "fill": [
+    "minecraft:white_terracotta"
+   ],
+   "base": [
+    "minecraft:cobblestone"
+   ],
+   "beam": [
+    "minecraft:spruce_planks"
+   ],
+   "floor": [
+    "minecraft:spruce_planks"
+   ],
+   "shutter": [
+    "minecraft:spruce_trapdoor"
+   ],
+   "door": [
+    "minecraft:spruce_door"
+   ],
+   "pane": [
+    "minecraft:white_stained_glass_pane"
+   ],
+   "swatch": "#DAD1BE",
+   "dado": [
+    "minecraft:spruce_planks"
+   ],
+   "trim_stairs": [
+    "minecraft:spruce_stairs"
+   ],
+   "trim_slab": [
+    "minecraft:spruce_slab"
+   ],
+   "trim_trapdoor": [
+    "minecraft:spruce_trapdoor"
+   ],
+   "base_stairs": [
+    "minecraft:cobblestone_stairs"
+   ]
+  },
+  "log": {
+   "cn": "原木",
+   "post": [
+    "minecraft:spruce_log[axis=y]"
+   ],
+   "fill": [
+    "minecraft:spruce_planks"
+   ],
+   "base": [
+    "minecraft:cobblestone"
+   ],
+   "beam": [
+    "minecraft:spruce_log[axis=x]"
+   ],
+   "floor": [
+    "minecraft:spruce_planks"
+   ],
+   "shutter": [
+    "minecraft:spruce_trapdoor"
+   ],
+   "door": [
+    "minecraft:spruce_door"
+   ],
+   "pane": [
+    "minecraft:white_stained_glass_pane"
+   ],
+   "swatch": "#7C5C3C",
+   "dado": [
+    "minecraft:cobblestone"
+   ],
+   "trim_stairs": [
+    "minecraft:spruce_stairs"
+   ],
+   "trim_slab": [
+    "minecraft:spruce_slab"
+   ],
+   "trim_trapdoor": [
+    "minecraft:spruce_trapdoor"
+   ],
+   "base_stairs": [
+    "minecraft:cobblestone_stairs"
+   ]
+  },
+  "stone": {
+   "cn": "石砌",
+   "post": [
+    "minecraft:stone_bricks"
+   ],
+   "fill": [
+    "minecraft:cobblestone"
+   ],
+   "base": [
+    "minecraft:mossy_cobblestone"
+   ],
+   "beam": [
+    "minecraft:spruce_planks"
+   ],
+   "floor": [
+    "minecraft:stone_bricks"
+   ],
+   "shutter": [
+    "minecraft:iron_bars"
+   ],
+   "door": [
+    "minecraft:spruce_door"
+   ],
+   "pane": [
+    "minecraft:iron_bars"
+   ],
+   "swatch": "#8C8C8C",
+   "dado": [
+    "minecraft:mossy_cobblestone"
+   ],
+   "trim_stairs": [
+    "minecraft:spruce_stairs"
+   ],
+   "trim_slab": [
+    "minecraft:spruce_slab"
+   ],
+   "trim_trapdoor": [
+    "minecraft:spruce_trapdoor"
+   ],
+   "base_stairs": [
+    "minecraft:mossy_cobblestone_stairs"
+   ]
+  },
+  "mud": {
+   "cn": "土坯",
+   "post": [
+    "minecraft:stripped_oak_log[axis=y]"
+   ],
+   "fill": [
+    "minecraft:packed_mud"
+   ],
+   "base": [
+    "minecraft:cobblestone"
+   ],
+   "beam": [
+    "minecraft:oak_planks"
+   ],
+   "floor": [
+    "minecraft:packed_mud"
+   ],
+   "shutter": [
+    "minecraft:oak_trapdoor"
+   ],
+   "door": [
+    "minecraft:oak_door"
+   ],
+   "pane": [
+    "minecraft:white_stained_glass_pane"
+   ],
+   "swatch": "#9C7C5A",
+   "dado": [
+    "minecraft:mud_bricks"
+   ],
+   "trim_stairs": [
+    "minecraft:oak_stairs"
+   ],
+   "trim_slab": [
+    "minecraft:oak_slab"
+   ],
+   "trim_trapdoor": [
+    "minecraft:oak_trapdoor"
+   ],
+   "base_stairs": [
+    "minecraft:cobblestone_stairs"
+   ]
+  },
+  "yellow": {
+   "cn": "黄土",
+   "post": [
+    "minecraft:stripped_oak_log[axis=y]"
+   ],
+   "fill": [
+    "minecraft:smooth_sandstone"
+   ],
+   "base": [
+    "minecraft:sandstone"
+   ],
+   "beam": [
+    "minecraft:oak_planks"
+   ],
+   "floor": [
+    "minecraft:packed_mud"
+   ],
+   "shutter": [
+    "minecraft:oak_trapdoor"
+   ],
+   "door": [
+    "minecraft:oak_door"
+   ],
+   "pane": [
+    "minecraft:white_stained_glass_pane"
+   ],
+   "swatch": "#CBA96C",
+   "dado": [
+    "minecraft:sandstone"
+   ],
+   "trim_stairs": [
+    "minecraft:oak_stairs"
+   ],
+   "trim_slab": [
+    "minecraft:oak_slab"
+   ],
+   "trim_trapdoor": [
+    "minecraft:oak_trapdoor"
+   ],
+   "base_stairs": [
+    "minecraft:sandstone_stairs"
+   ]
+  },
+  "jade": {
+   "cn": "白玉",
+   "post": [
+    "minecraft:quartz_pillar[axis=y]"
+   ],
+   "fill": [
+    "minecraft:smooth_quartz"
+   ],
+   "base": [
+    "minecraft:quartz_bricks"
+   ],
+   "beam": [
+    "minecraft:gold_block"
+   ],
+   "floor": [
+    "minecraft:polished_diorite"
+   ],
+   "shutter": [
+    "minecraft:birch_trapdoor"
+   ],
+   "door": [
+    "minecraft:birch_door"
+   ],
+   "pane": [
+    "minecraft:glass_pane"
+   ],
+   "swatch": "#DDEEE7",
+   "dado": [
+    "minecraft:quartz_bricks"
+   ],
+   "trim_stairs": [
+    "minecraft:birch_stairs"
+   ],
+   "trim_slab": [
+    "minecraft:birch_slab"
+   ],
+   "trim_trapdoor": [
+    "minecraft:birch_trapdoor"
+   ],
+   "base_stairs": [
+    "minecraft:quartz_stairs"
+   ]
+  },
+  "cave": {
+   "cn": "岩石",
+   "post": [
+    "minecraft:stone_bricks"
+   ],
+   "fill": [
+    "minecraft:stone"
+   ],
+   "base": [
+    "minecraft:stone_bricks"
+   ],
+   "beam": [
+    "minecraft:spruce_planks"
+   ],
+   "floor": [
+    "minecraft:polished_andesite"
+   ],
+   "shutter": [
+    "minecraft:iron_bars"
+   ],
+   "door": [
+    "minecraft:spruce_door"
+   ],
+   "pane": [
+    "minecraft:iron_bars"
+   ],
+   "swatch": "#706C68",
+   "dado": [
+    "minecraft:stone_bricks"
+   ],
+   "trim_stairs": [
+    "minecraft:spruce_stairs"
+   ],
+   "trim_slab": [
+    "minecraft:spruce_slab"
+   ],
+   "trim_trapdoor": [
+    "minecraft:spruce_trapdoor"
+   ],
+   "base_stairs": [
+    "minecraft:stone_brick_stairs"
+   ]
+  }
+ }
+}

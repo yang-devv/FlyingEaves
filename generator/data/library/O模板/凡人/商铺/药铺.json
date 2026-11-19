@@ -1,0 +1,44 @@
+{
+ "name": "药铺",
+ "note": "2层硬山，建造菜单 pharmacy",
+ "tier": "mortal",
+ "look": 0,
+ "seed": 1,
+ "time": "",
+ "rooms": [
+  {
+   "x0": 0,
+   "z0": 0,
+   "x1": 10,
+   "z1": 8,
+   "y": 0,
+   "storeys": 2,
+   "roof": "yingshan",
+   "walls": "greybrick",
+   "theme": "grey",
+   "bay_style": "auto",
+   "base": "auto",
+   "front": "south",
+   "sh": 0,
+   "podium": 0,
+   "podium_style": "plain",
+   "open": "closed",
+   "uses": [
+    "pharmacy",
+    "herb_store",
+    "herb_store",
+    "herb_store",
+    "herb_store",
+    "herb_store",
+    "herb_store",
+    "herb_store"
+   ],
+   "special": "",
+   "round": false,
+   "seed": 782861511,
+   "variant": 0,
+   "roof_variant": 0,
+   "stack": false
+  }
+ ]
+}

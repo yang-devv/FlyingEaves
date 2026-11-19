@@ -1,0 +1,46 @@
+{
+ "name": "塔",
+ "note": "层层收分的攒尖塔，层数看框的大小",
+ "order": 10,
+ "recipe": true,
+ "set": {
+  "walls": "palace",
+  "theme": "grey",
+  "roof": "pyramid",
+  "taper": 1,
+  "podium_style": "xumizuo",
+  "podium": 2,
+  "base": "white",
+  "uses": [
+   "temple_hall",
+   "scripture_store",
+   "meditation_room",
+   "scripture_store",
+   "lookout",
+   "lookout",
+   "lookout",
+   "lookout"
+  ]
+ },
+ "by_size": {
+  "storeys": [
+   [
+    17,
+    7
+   ],
+   [
+    13,
+    5
+   ],
+   [
+    0,
+    3
+   ]
+  ],
+  "sh": [
+   2.4,
+   5,
+   7
+  ]
+ }
+}

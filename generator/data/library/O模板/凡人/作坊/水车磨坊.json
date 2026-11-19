@@ -1,0 +1,44 @@
+{
+ "name": "水车磨坊",
+ "note": "1层悬山，水车省掉了，建造菜单 watermill",
+ "tier": "mortal",
+ "look": 0,
+ "seed": 1,
+ "time": "",
+ "rooms": [
+  {
+   "x0": 0,
+   "z0": 0,
+   "x1": 10,
+   "z1": 8,
+   "y": 0,
+   "storeys": 1,
+   "roof": "xuanshan",
+   "walls": "log",
+   "theme": "wood",
+   "bay_style": "auto",
+   "base": "auto",
+   "front": "south",
+   "sh": 0,
+   "podium": 0,
+   "podium_style": "plain",
+   "open": "closed",
+   "uses": [
+    "mill_room",
+    "mill_room",
+    "mill_room",
+    "mill_room",
+    "mill_room",
+    "mill_room",
+    "mill_room",
+    "mill_room"
+   ],
+   "special": "",
+   "round": false,
+   "seed": 615888144,
+   "variant": 0,
+   "roof_variant": 0,
+   "stack": false
+  }
+ ]
+}

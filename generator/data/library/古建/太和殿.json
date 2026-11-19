@@ -1,0 +1,52 @@
+{
+ "name": "太和殿",
+ "note": "1:1 面阔11间64m×进深37m；重檐庑殿，黄琉璃，三层汉白玉台基(8m)，边距16：三台约117×91，比殿大得多",
+ "tier": "mortal",
+ "look": 0,
+ "seed": 1,
+ "time": "",
+ "rooms": [
+  {
+   "y": 0,
+   "bay_style": "auto",
+   "base": "white",
+   "front": "south",
+   "podium_style": "tiers",
+   "open": "closed",
+   "special": "",
+   "round": false,
+   "variant": 0,
+   "roof_variant": 0,
+   "stack": false,
+   "taper": 0,
+   "beasts": 5,
+   "brackets": 4,
+   "caihua": "hexi",
+   "storeys": 1,
+   "roof": "wudian",
+   "walls": "palace",
+   "theme": "gold",
+   "x0": 0,
+   "z0": 0,
+   "x1": 62,
+   "z1": 36,
+   "sh": 12,
+   "double_eave": true,
+   "podium": 8,
+   "podium_margin": "16",
+   "pitch": 1,
+   "overhang": 2,
+   "uses": [
+    "throne_hall",
+    "throne_hall",
+    "throne_hall",
+    "throne_hall",
+    "throne_hall",
+    "throne_hall",
+    "throne_hall",
+    "throne_hall"
+   ],
+   "seed": 2939530
+  }
+ ]
+}

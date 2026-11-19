@@ -1,0 +1,51 @@
+{
+ "name": "大殿",
+ "note": "太和殿、保和殿、乾清宫那样：重檐、四面回廊、汉白玉台基；框大的用三层台",
+ "order": 0,
+ "recipe": true,
+ "set": {
+  "walls": "palace",
+  "theme": "gold",
+  "base": "white",
+  "double_eave": true,
+  "colonnade": true,
+  "uses": [
+   "throne_hall"
+  ],
+  "pitch": 3
+ },
+ "pick": {
+  "roof": [
+   "wudian",
+   "wudian",
+   "xieshan"
+  ]
+ },
+ "by_size": {
+  "podium_style": [
+   [
+    19,
+    "tiers"
+   ],
+   [
+    0,
+    "xumizuo"
+   ]
+  ],
+  "podium": [
+   [
+    19,
+    9
+   ],
+   [
+    0,
+    4
+   ]
+  ],
+  "sh": [
+   2.4,
+   6,
+   10
+  ]
+ }
+}

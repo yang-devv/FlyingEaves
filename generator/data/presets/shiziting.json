@@ -1,0 +1,45 @@
+{
+ "name": "十字亭",
+ "note": "千秋亭、万春亭那样：敞开的重檐攒尖亭，四面敞开的抱厦（框是中间的亭）",
+ "order": 9,
+ "recipe": true,
+ "set": {
+  "walls": "palace",
+  "theme": "teal",
+  "roof": "pyramid",
+  "double_eave": true,
+  "open": "open",
+  "podium": 1,
+  "base": "white"
+ },
+ "by_size": {
+  "sh": [
+   1.6,
+   5,
+   7
+  ]
+ },
+ "wings": [
+  {
+   "sides": "nsew",
+   "w": 0.6,
+   "d": 0.45,
+   "min_d": 5,
+   "set": {
+    "walls": "palace",
+    "theme": "teal",
+    "roof": "xieshan",
+    "open": "open",
+    "podium": 1,
+    "base": "white"
+   },
+   "by_size": {
+    "sh": [
+     1.6,
+     4,
+     6
+    ]
+   }
+  }
+ ]
+}

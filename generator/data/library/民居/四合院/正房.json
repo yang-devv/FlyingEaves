@@ -1,0 +1,44 @@
+{
+ "name": "正房",
+ "note": "硬山，台基一格",
+ "tier": "mortal",
+ "look": 0,
+ "seed": 1,
+ "time": "",
+ "rooms": [
+  {
+   "x0": 0,
+   "z0": 0,
+   "x1": 14,
+   "z1": 8,
+   "y": 0,
+   "storeys": 1,
+   "roof": "yingshan",
+   "walls": "greybrick",
+   "theme": "grey",
+   "bay_style": "auto",
+   "base": "auto",
+   "front": "south",
+   "sh": 0,
+   "podium": 1,
+   "podium_style": "plain",
+   "open": "closed",
+   "uses": [
+    "main_room",
+    "main_room",
+    "main_room",
+    "main_room",
+    "main_room",
+    "main_room",
+    "main_room",
+    "main_room"
+   ],
+   "special": "",
+   "round": false,
+   "seed": 205077725,
+   "variant": 0,
+   "roof_variant": 0,
+   "stack": false
+  }
+ ]
+}

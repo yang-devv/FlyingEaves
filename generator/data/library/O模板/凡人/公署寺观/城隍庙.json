@@ -1,0 +1,44 @@
+{
+ "name": "城隍庙",
+ "note": "1层歇山，建造菜单 city_god_temple",
+ "tier": "mortal",
+ "look": 0,
+ "seed": 1,
+ "time": "",
+ "rooms": [
+  {
+   "x0": 0,
+   "z0": 0,
+   "x1": 16,
+   "z1": 14,
+   "y": 0,
+   "storeys": 1,
+   "roof": "xieshan",
+   "walls": "palace",
+   "theme": "grey",
+   "bay_style": "auto",
+   "base": "auto",
+   "front": "south",
+   "sh": 0,
+   "podium": 2,
+   "podium_style": "plain",
+   "open": "closed",
+   "uses": [
+    "temple_hall",
+    "temple_hall",
+    "temple_hall",
+    "temple_hall",
+    "temple_hall",
+    "temple_hall",
+    "temple_hall",
+    "temple_hall"
+   ],
+   "special": "",
+   "round": false,
+   "seed": 1019320262,
+   "variant": 0,
+   "roof_variant": 0,
+   "stack": false
+  }
+ ]
+}

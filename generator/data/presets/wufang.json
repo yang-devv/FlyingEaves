@@ -1,0 +1,22 @@
+{
+ "name": "庑房",
+ "note": "围着院子的一排房：硬山、矮",
+ "order": 7,
+ "recipe": true,
+ "set": {
+  "walls": "palace",
+  "theme": "gold",
+  "roof": "yingshan",
+  "podium": 1,
+  "uses": [
+   "storeroom"
+  ]
+ },
+ "by_size": {
+  "sh": [
+   1.6,
+   5,
+   6
+  ]
+ }
+}

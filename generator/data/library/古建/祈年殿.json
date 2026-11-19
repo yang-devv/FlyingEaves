@@ -1,0 +1,51 @@
+{
+ "name": "祈年殿",
+ "note": "1:1 圆殿直径约33m；三重檐圆攒尖逐层收进(收分2，蓝瓦以青绿代)，三层汉白玉圆坛(祈谷坛)，直径约67/77/87m",
+ "tier": "mortal",
+ "look": 0,
+ "seed": 1,
+ "time": "",
+ "rooms": [
+  {
+   "y": 0,
+   "bay_style": "auto",
+   "base": "white",
+   "front": "south",
+   "podium_style": "tiers",
+   "open": "closed",
+   "special": "",
+   "round": true,
+   "variant": 0,
+   "roof_variant": 0,
+   "stack": false,
+   "taper": 2,
+   "beasts": 0,
+   "brackets": 0,
+   "caihua": "hexi",
+   "storeys": 3,
+   "roof": "xieshan",
+   "walls": "palace",
+   "theme": "teal",
+   "shape": "round",
+   "round_roof": "cone",
+   "x0": 0,
+   "z0": 0,
+   "x1": 32,
+   "z1": 32,
+   "sh": 7,
+   "podium": 6,
+   "uses": [
+    "temple_hall",
+    "temple_hall",
+    "temple_hall",
+    "temple_hall",
+    "temple_hall",
+    "temple_hall",
+    "temple_hall",
+    "temple_hall"
+   ],
+   "seed": 7919930,
+   "podium_margin": "16"
+  }
+ ]
+}

@@ -1,0 +1,45 @@
+{
+ "name": "密檐塔",
+ "note": "七层，层矮",
+ "tier": "mortal",
+ "look": 0,
+ "seed": 1,
+ "time": "",
+ "rooms": [
+  {
+   "x0": 0,
+   "z0": 0,
+   "x1": 10,
+   "z1": 10,
+   "y": 0,
+   "storeys": 7,
+   "roof": "pyramid",
+   "walls": "greybrick",
+   "theme": "grey",
+   "bay_style": "auto",
+   "base": "auto",
+   "front": "south",
+   "sh": 5,
+   "podium": 0,
+   "podium_style": "plain",
+   "open": "closed",
+   "uses": [
+    "lookout",
+    "lookout",
+    "lookout",
+    "lookout",
+    "lookout",
+    "lookout",
+    "lookout",
+    "lookout"
+   ],
+   "special": "",
+   "round": false,
+   "seed": 574830699,
+   "variant": 0,
+   "roof_variant": 0,
+   "stack": false,
+   "taper": 0
+  }
+ ]
+}

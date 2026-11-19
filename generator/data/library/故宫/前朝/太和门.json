@@ -1,0 +1,49 @@
+{
+ "name": "太和门",
+ "note": "重檐歇山门殿，前后穿堂",
+ "tier": "mortal",
+ "look": 0,
+ "seed": 1,
+ "time": "",
+ "rooms": [
+  {
+   "x0": 0,
+   "z0": 0,
+   "x1": 40,
+   "z1": 20,
+   "y": 0,
+   "storeys": 1,
+   "roof": "xieshan",
+   "walls": "palace",
+   "theme": "gold",
+   "bay_style": "auto",
+   "base": "white",
+   "front": "south",
+   "sh": 9,
+   "podium": 3,
+   "podium_style": "xumizuo",
+   "open": "through",
+   "uses": [
+    "lookout",
+    "lookout",
+    "lookout",
+    "lookout",
+    "lookout",
+    "lookout",
+    "lookout",
+    "lookout"
+   ],
+   "special": "",
+   "round": false,
+   "seed": 496663457,
+   "variant": 0,
+   "roof_variant": 0,
+   "stack": false,
+   "caihua": "hexi",
+   "beasts": 3,
+   "pitch": 1,
+   "double_eave": true,
+   "overhang": 2
+  }
+ ]
+}

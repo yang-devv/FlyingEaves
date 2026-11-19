@@ -1,0 +1,51 @@
+{
+ "name": "应县木塔",
+ "note": "1:1 底径约30m(八角以圆代)，外观五层逐层收进(收分1)，上四层各一圈平座，4m石台基，木构",
+ "tier": "mortal",
+ "look": 0,
+ "seed": 1,
+ "time": "",
+ "rooms": [
+  {
+   "y": 0,
+   "bay_style": "auto",
+   "base": "greybrick",
+   "front": "south",
+   "podium_style": "plain",
+   "open": "closed",
+   "special": "",
+   "round": true,
+   "variant": 0,
+   "roof_variant": 0,
+   "stack": false,
+   "taper": 1,
+   "beasts": 0,
+   "brackets": 3,
+   "caihua": "",
+   "storeys": 5,
+   "roof": "xieshan",
+   "walls": "darkwood",
+   "theme": "grey",
+   "shape": "round",
+   "round_roof": "cone",
+   "x0": 0,
+   "z0": 0,
+   "x1": 30,
+   "z1": 30,
+   "sh": 9,
+   "podium": 4,
+   "uses": [
+    "temple_hall",
+    "scripture_store",
+    "scripture_store",
+    "scripture_store",
+    "scripture_store",
+    "scripture_store",
+    "scripture_store",
+    "scripture_store"
+   ],
+   "seed": 8903360,
+   "pingzuo": true
+  }
+ ]
+}

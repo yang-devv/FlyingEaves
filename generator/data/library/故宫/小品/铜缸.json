@@ -1,0 +1,45 @@
+{
+ "name": "铜缸",
+ "note": "",
+ "tier": "mortal",
+ "look": 0,
+ "seed": 1,
+ "time": "",
+ "rooms": [
+  {
+   "x0": 0,
+   "z0": 0,
+   "x1": 2,
+   "z1": 2,
+   "y": 0,
+   "storeys": 1,
+   "roof": "yingshan",
+   "walls": "palace",
+   "theme": "gold",
+   "bay_style": "auto",
+   "base": "auto",
+   "front": "south",
+   "sh": 0,
+   "podium": 0,
+   "podium_style": "plain",
+   "open": "closed",
+   "uses": [
+    "main_room",
+    "main_room",
+    "main_room",
+    "main_room",
+    "main_room",
+    "main_room",
+    "main_room",
+    "main_room"
+   ],
+   "special": "ornament",
+   "round": false,
+   "seed": 366975885,
+   "variant": 3,
+   "roof_variant": 0,
+   "stack": false,
+   "shape": "ornament"
+  }
+ ]
+}

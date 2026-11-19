@@ -1,0 +1,63 @@
+{
+ "_说明": "基座材料：台基、房子底下的石台、坡上往下垫的地基用什么方块（单体建造每间房能选）。auto 是默认的石砖（夹着青苔石砖、裂石砖、安山岩）；wall 是和这间的墙脚一样；其他的写 blocks（候选方块，挑第一个游戏里有的），swatch 是房间表里的示意色。自己的放 run/bgen/materials/bases*.json，同名替换、新名字是新的一种。",
+ "bases": {
+  "auto": {
+   "cn": "石砖（默认）",
+   "swatch": "#8a8a8a"
+  },
+  "wall": {
+   "cn": "和墙脚一样",
+   "swatch": "#b04030"
+  },
+  "greybrick": {
+   "cn": "青砖",
+   "blocks": [
+    "minecraft:deepslate_bricks"
+   ],
+   "swatch": "#4a4a50"
+  },
+  "white": {
+   "cn": "白石",
+   "blocks": [
+    "minecraft:smooth_quartz",
+    "minecraft:calcite"
+   ],
+   "swatch": "#ebe6dc"
+  },
+  "rammed": {
+   "cn": "夯土",
+   "blocks": [
+    "minecraft:packed_mud"
+   ],
+   "swatch": "#8c6a4a"
+  },
+  "mudbrick": {
+   "cn": "土砖",
+   "blocks": [
+    "minecraft:mud_bricks"
+   ],
+   "swatch": "#a07a5a"
+  },
+  "rubble": {
+   "cn": "毛石",
+   "blocks": [
+    "minecraft:cobblestone"
+   ],
+   "swatch": "#777777"
+  },
+  "sandstone": {
+   "cn": "砂岩",
+   "blocks": [
+    "minecraft:smooth_sandstone"
+   ],
+   "swatch": "#d8cc96"
+  },
+  "blackstone": {
+   "cn": "黑石",
+   "blocks": [
+    "minecraft:polished_blackstone_bricks"
+   ],
+   "swatch": "#2e2a30"
+  }
+ }
+}

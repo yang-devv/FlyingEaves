@@ -1,0 +1,52 @@
+{
+ "name": "西安钟楼",
+ "note": "1:1 方形砖台35m高9m，四面券洞十字相交，台上二层楼，重檐三滴水攒尖，绿琉璃",
+ "tier": "mortal",
+ "look": 0,
+ "seed": 1,
+ "time": "",
+ "rooms": [
+  {
+   "y": 0,
+   "bay_style": "auto",
+   "base": "greybrick",
+   "front": "south",
+   "podium_style": "chengtai",
+   "open": "closed",
+   "special": "",
+   "round": false,
+   "variant": 0,
+   "roof_variant": 0,
+   "stack": false,
+   "taper": 0,
+   "beasts": 3,
+   "brackets": 2,
+   "caihua": "xuanzi",
+   "storeys": 2,
+   "roof": "pyramid",
+   "walls": "palace",
+   "theme": "teal",
+   "x0": 0,
+   "z0": 0,
+   "x1": 26,
+   "z1": 26,
+   "sh": 7,
+   "double_eave": true,
+   "podium": 9,
+   "podium_margin": 4,
+   "tunnels": 2,
+   "uses": [
+    "lookout",
+    "lookout",
+    "lookout",
+    "lookout",
+    "lookout",
+    "lookout",
+    "lookout",
+    "lookout"
+   ],
+   "seed": 9153660,
+   "doors": "four"
+  }
+ ]
+}

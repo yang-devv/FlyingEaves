@@ -1,0 +1,149 @@
+plugins {
+    id 'eclipse'
+    id 'idea'
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+    id 'org.parchmentmc.librarian.forgegradle' version '1.+'
+}
+
+version = mod_version
+group = mod_group_id
+
+base {
+    archivesName = mod_id
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+// A release build (the default) is pure Java: the jar has the generator's data (materials, parts, presets, library) and
+// no Python; the mod never starts or looks for Python. -PwithPython=true (development only) also packs the Python
+// generator (generator/*.py) and turns on the in-game fallback to it (config backend / pythonPath / autoStart) - the
+// oracle tooling (tools/oracle) runs generator/ from the repo and needs neither.
+def withPython = project.findProperty('withPython') == 'true'
+
+minecraft {
+    mappings channel: mapping_channel, version: mapping_version
+    copyIdeResources = true
+
+    runs {
+        configureEach {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+            mods {
+                "${mod_id}" {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        client {
+            // the dev client reads the generator's data straight from <project>/generator/data; -PjarGenerator=true reads
+            // it from the mod's resources instead, as a release does (with -PwithPython=true: the Python one unpacked too)
+            if (project.findProperty('jarGenerator') != 'true') property 'flyingeaves.generatorDir', project.file('generator').absolutePath
+            // -Pdev=true: the dev command pipe (run/flyingeaves-commands.txt), see dev/DevPipe
+            if (project.findProperty('dev') == 'true') property 'flyingeaves.dev', 'true'
+            // keep the dev client off some cores (the generator and chunk work can load every core)
+            // -PclientXmx=6G: more heap (the 1:1 紫禁城)
+            jvmArgs '-XX:ActiveProcessorCount=8', "-Xmx${project.findProperty('clientXmx') ?: '2G'}"
+            def quick = project.findProperty('quickPlay')
+            if (quick) args '--quickPlaySingleplayer', quick
+        }
+
+        server {
+            args '--nogui'
+        }
+    }
+}
+
+dependencies {
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.10.2'
+}
+
+// the Java generator against the frozen Python one (checked-in answers: tools/oracle/capture.py); no Minecraft, no Python.
+// The generator's state is static and a set's requests run in the order Python ran them: a fresh JVM per test class.
+tasks.withType(Test).configureEach {
+    systemProperty 'flyingeaves.genData', file('generator/data').absolutePath
+    forkEvery = 1
+    jvmArgs '-Xss16m'
+    testLogging {
+        events 'failed'
+        exceptionFormat 'full'
+    }
+}
+
+tasks.named('test', Test).configure {
+    useJUnitPlatform { excludeTags 'slow' }
+    maxHeapSize = '1g'
+}
+
+// the 1:1 紫禁城 (about 30 s, 1.5 GB of heap): gradlew slowTest
+tasks.register('slowTest', Test) {
+    description = 'Runs the slow oracle cases (the 1:1 Forbidden City).'
+    group = 'verification'
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+    useJUnitPlatform { includeTags 'slow' }
+    maxHeapSize = '2g'
+}
+
+// the generator's data ship inside the jar (flyingeaves/generator/data, read in place by the Java generator); the
+// Python generator only with -PwithPython=true (the mod then unpacks it into <game dir>/flyingeaves/generator)
+def generatorFiles = fileTree('generator') {
+    include 'data/**'
+    if (withPython) include '*.py'
+    else exclude 'data/targets/**'                  // (pipeline.py's targets: a Python dev tool)
+    exclude 'test_*.py', 'towncheck.py', 'reach.py', 'run/**', '**/__pycache__/**'
+}
+
+// com/flyingeaves/build.properties: python=true|false (com.flyingeaves.Build)
+def buildInfoDir = layout.buildDirectory.dir('generated/buildinfo')
+tasks.register('writeBuildInfo') {
+    inputs.property 'withPython', withPython
+    outputs.dir buildInfoDir
+    doLast {
+        def f = buildInfoDir.get().file('com/flyingeaves/build.properties').asFile
+        f.parentFile.mkdirs()
+        f.text = "python=${withPython}\n"
+    }
+}
+
+tasks.named('processResources', ProcessResources).configure {
+    from(generatorFiles) { into 'flyingeaves/generator' }
+    from(tasks.named('writeBuildInfo'))
+    inputs.property 'withPython', withPython
+    var replaceProperties = [
+            minecraft_version: minecraft_version, minecraft_version_range: minecraft_version_range,
+            forge_version: forge_version, forge_version_range: forge_version_range,
+            loader_version_range: loader_version_range,
+            mod_id: mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
+            mod_authors: mod_authors, mod_description: mod_description,
+    ]
+    inputs.properties replaceProperties
+    filteringCharset = 'UTF-8'
+
+    filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
+        expand replaceProperties + [project: project]
+    }
+}
+
+tasks.named('jar', Jar).configure {
+    if (!withPython) exclude '**/*.py'
+    manifest {
+        attributes([
+                'Specification-Title'     : mod_id,
+                'Specification-Vendor'    : mod_authors,
+                'Specification-Version'   : '1',
+                'Implementation-Title'    : project.name,
+                'Implementation-Version'  : project.jar.archiveVersion,
+                'Implementation-Vendor'   : mod_authors,
+                'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+    finalizedBy 'reobfJar'
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}

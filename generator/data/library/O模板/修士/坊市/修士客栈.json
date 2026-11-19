@@ -1,0 +1,44 @@
+{
+ "name": "修士客栈",
+ "note": "4层歇山，建造菜单 cultivator_inn",
+ "tier": "lianqi",
+ "look": 0,
+ "seed": 1,
+ "time": "",
+ "rooms": [
+  {
+   "x0": 0,
+   "z0": 0,
+   "x1": 16,
+   "z1": 14,
+   "y": 0,
+   "storeys": 4,
+   "roof": "xieshan",
+   "walls": "palace",
+   "theme": "grey",
+   "bay_style": "auto",
+   "base": "auto",
+   "front": "south",
+   "sh": 0,
+   "podium": 0,
+   "podium_style": "plain",
+   "open": "closed",
+   "uses": [
+    "inn_hall",
+    "cultivator_inn_room",
+    "cultivator_inn_room",
+    "cultivator_inn_room",
+    "cultivator_inn_room",
+    "cultivator_inn_room",
+    "cultivator_inn_room",
+    "cultivator_inn_room"
+   ],
+   "special": "",
+   "round": false,
+   "seed": 1026046016,
+   "variant": 0,
+   "roof_variant": 0,
+   "stack": false
+  }
+ ]
+}

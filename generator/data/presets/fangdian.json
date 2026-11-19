@@ -1,0 +1,26 @@
+{
+ "name": "方殿",
+ "note": "中和殿、交泰殿那样：攒尖、四面回廊、须弥座（框画成方的最好）",
+ "order": 1,
+ "recipe": true,
+ "set": {
+  "walls": "palace",
+  "theme": "gold",
+  "base": "white",
+  "roof": "pyramid",
+  "colonnade": true,
+  "podium_style": "xumizuo",
+  "podium": 4,
+  "uses": [
+   "council_hall"
+  ],
+  "pitch": 3
+ },
+ "by_size": {
+  "sh": [
+   2.0,
+   6,
+   9
+  ]
+ }
+}

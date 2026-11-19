@@ -1,0 +1,44 @@
+{
+ "name": "土地庙",
+ "note": "1层攒尖，四面敞开的小亭，里面供神像，建造菜单 earth_shrine",
+ "tier": "mortal",
+ "look": 0,
+ "seed": 1,
+ "time": "",
+ "rooms": [
+  {
+   "x0": 0,
+   "z0": 0,
+   "x1": 6,
+   "z1": 6,
+   "y": 0,
+   "storeys": 1,
+   "roof": "pyramid",
+   "walls": "greybrick",
+   "theme": "grey",
+   "bay_style": "auto",
+   "base": "white",
+   "front": "south",
+   "sh": 0,
+   "podium": 2,
+   "podium_style": "xumizuo",
+   "open": "open",
+   "uses": [
+    "temple_hall",
+    "temple_hall",
+    "temple_hall",
+    "temple_hall",
+    "temple_hall",
+    "temple_hall",
+    "temple_hall",
+    "temple_hall"
+   ],
+   "special": "",
+   "round": false,
+   "seed": 270701793,
+   "variant": 0,
+   "roof_variant": 0,
+   "stack": false
+  }
+ ]
+}

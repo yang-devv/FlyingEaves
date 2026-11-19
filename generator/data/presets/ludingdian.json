@@ -1,0 +1,26 @@
+{
+ "name": "盝顶殿",
+ "note": "钦安殿那样：重檐盝顶、须弥座",
+ "order": 2,
+ "recipe": true,
+ "set": {
+  "walls": "palace",
+  "theme": "gold",
+  "base": "white",
+  "roof": "luding",
+  "double_eave": true,
+  "podium_style": "xumizuo",
+  "podium": 3,
+  "uses": [
+   "temple_hall"
+  ],
+  "pitch": 3
+ },
+ "by_size": {
+  "sh": [
+   1.8,
+   6,
+   9
+  ]
+ }
+}

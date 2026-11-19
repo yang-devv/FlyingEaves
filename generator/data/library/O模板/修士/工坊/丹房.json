@@ -1,0 +1,44 @@
+{
+ "name": "丹房",
+ "note": "2层歇山，建造菜单 alchemy_house",
+ "tier": "lianqi",
+ "look": 0,
+ "seed": 1,
+ "time": "",
+ "rooms": [
+  {
+   "x0": 0,
+   "z0": 0,
+   "x1": 12,
+   "z1": 12,
+   "y": 0,
+   "storeys": 2,
+   "roof": "xieshan",
+   "walls": "darkwood",
+   "theme": "teal",
+   "bay_style": "auto",
+   "base": "auto",
+   "front": "south",
+   "sh": 0,
+   "podium": 0,
+   "podium_style": "plain",
+   "open": "closed",
+   "uses": [
+    "alchemy_room",
+    "meditation_room",
+    "meditation_room",
+    "meditation_room",
+    "meditation_room",
+    "meditation_room",
+    "meditation_room",
+    "meditation_room"
+   ],
+   "special": "",
+   "round": false,
+   "seed": 925590357,
+   "variant": 0,
+   "roof_variant": 0,
+   "stack": false
+  }
+ ]
+}

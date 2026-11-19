@@ -1,0 +1,44 @@
+{
+ "name": "灵田小屋",
+ "note": "1层悬山，建造菜单 spirit_field_hut",
+ "tier": "lianqi",
+ "look": 0,
+ "seed": 1,
+ "time": "",
+ "rooms": [
+  {
+   "x0": 0,
+   "z0": 0,
+   "x1": 8,
+   "z1": 6,
+   "y": 0,
+   "storeys": 1,
+   "roof": "xuanshan",
+   "walls": "wattle",
+   "theme": "thatch",
+   "bay_style": "auto",
+   "base": "auto",
+   "front": "south",
+   "sh": 0,
+   "podium": 0,
+   "podium_style": "plain",
+   "open": "closed",
+   "uses": [
+    "herb_store",
+    "herb_store",
+    "herb_store",
+    "herb_store",
+    "herb_store",
+    "herb_store",
+    "herb_store",
+    "herb_store"
+   ],
+   "special": "",
+   "round": false,
+   "seed": 435014623,
+   "variant": 0,
+   "roof_variant": 0,
+   "stack": false
+  }
+ ]
+}

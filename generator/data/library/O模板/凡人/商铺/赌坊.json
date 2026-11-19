@@ -1,0 +1,44 @@
+{
+ "name": "赌坊",
+ "note": "2层硬山，建造菜单 gambling_house",
+ "tier": "mortal",
+ "look": 0,
+ "seed": 1,
+ "time": "",
+ "rooms": [
+  {
+   "x0": 0,
+   "z0": 0,
+   "x1": 12,
+   "z1": 10,
+   "y": 0,
+   "storeys": 2,
+   "roof": "yingshan",
+   "walls": "redbrick",
+   "theme": "grey",
+   "bay_style": "auto",
+   "base": "auto",
+   "front": "south",
+   "sh": 0,
+   "podium": 0,
+   "podium_style": "plain",
+   "open": "closed",
+   "uses": [
+    "gambling_den",
+    "private_dining",
+    "private_dining",
+    "private_dining",
+    "private_dining",
+    "private_dining",
+    "private_dining",
+    "private_dining"
+   ],
+   "special": "",
+   "round": false,
+   "seed": 113892562,
+   "variant": 0,
+   "roof_variant": 0,
+   "stack": false
+  }
+ ]
+}

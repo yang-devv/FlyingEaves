@@ -1,0 +1,29 @@
+# gradle
+build
+.gradle
+out
+bin
+
+# ide
+.idea
+*.iml
+*.ipr
+*.iws
+.settings
+.classpath
+.project
+eclipse
+*.launch
+
+# game run dirs, logs
+run
+run2
+logs/
+
+# python
+__pycache__/
+*.pyc
+# a local Python runtime (not part of the repository)
+python/
+generator/out/
+generator/run/

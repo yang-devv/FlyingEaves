@@ -1,0 +1,32 @@
+{
+ "name": "城楼",
+ "note": "天安门、午门正楼那样：城台开门洞，上面重檐歇山、四面回廊",
+ "order": 4,
+ "recipe": true,
+ "set": {
+  "walls": "palace",
+  "theme": "gold",
+  "roof": "xieshan",
+  "double_eave": true,
+  "colonnade": true,
+  "podium_style": "chengtai",
+  "pitch": 3
+ },
+ "by_size": {
+  "podium": [
+   [
+    17,
+    12
+   ],
+   [
+    0,
+    9
+   ]
+  ],
+  "sh": [
+   2.4,
+   6,
+   9
+  ]
+ }
+}

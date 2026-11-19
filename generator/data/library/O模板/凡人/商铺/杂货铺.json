@@ -1,0 +1,44 @@
+{
+ "name": "杂货铺",
+ "note": "1层悬山，建造菜单 general_store",
+ "tier": "mortal",
+ "look": 0,
+ "seed": 1,
+ "time": "",
+ "rooms": [
+  {
+   "x0": 0,
+   "z0": 0,
+   "x1": 10,
+   "z1": 8,
+   "y": 0,
+   "storeys": 1,
+   "roof": "xuanshan",
+   "walls": "wattle",
+   "theme": "grey",
+   "bay_style": "auto",
+   "base": "auto",
+   "front": "south",
+   "sh": 0,
+   "podium": 0,
+   "podium_style": "plain",
+   "open": "closed",
+   "uses": [
+    "general_store",
+    "general_store",
+    "general_store",
+    "general_store",
+    "general_store",
+    "general_store",
+    "general_store",
+    "general_store"
+   ],
+   "special": "",
+   "round": false,
+   "seed": 676147953,
+   "variant": 0,
+   "roof_variant": 0,
+   "stack": false
+  }
+ ]
+}

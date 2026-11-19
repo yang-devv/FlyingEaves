@@ -1,0 +1,46 @@
+{
+ "name": "圆顶",
+ "note": "",
+ "tier": "mortal",
+ "look": 0,
+ "seed": 1,
+ "time": "",
+ "rooms": [
+  {
+   "x0": 0,
+   "z0": 0,
+   "x1": 12,
+   "z1": 12,
+   "y": 0,
+   "storeys": 2,
+   "roof": "yingshan",
+   "walls": "whitewall",
+   "theme": "teal",
+   "bay_style": "auto",
+   "base": "auto",
+   "front": "south",
+   "sh": 0,
+   "podium": 0,
+   "podium_style": "plain",
+   "open": "closed",
+   "uses": [
+    "lookout",
+    "lookout",
+    "lookout",
+    "lookout",
+    "lookout",
+    "lookout",
+    "lookout",
+    "lookout"
+   ],
+   "special": "",
+   "round": true,
+   "seed": 994698691,
+   "variant": 0,
+   "roof_variant": 0,
+   "stack": false,
+   "shape": "round",
+   "round_roof": "dome"
+  }
+ ]
+}

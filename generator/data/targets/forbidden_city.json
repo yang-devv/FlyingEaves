@@ -1,0 +1,76 @@
+{
+ "note": "公开资料里的大致尺寸（米，约等于格），不是地图量的：面阔 w、进深 d、台基顶 floor、檐（下檐）eave、正脊 ridge 都从地面算。只是流水线的例子，数字可以改。",
+ "targets": [
+  {
+   "name": "太和殿",
+   "w": 63,
+   "d": 37,
+   "roof": "wudian",
+   "double_eave": true,
+   "podium_style": "tiers",
+   "podium": 8,
+   "fixed": [
+    "podium"
+   ],
+   "floor": 8,
+   "eave": 19,
+   "ridge": 35,
+   "beasts": 5,
+   "brackets": 4,
+   "use": "throne_hall"
+  },
+  {
+   "name": "中和殿",
+   "w": 25,
+   "d": 25,
+   "roof": "pyramid",
+   "podium_style": "tiers",
+   "podium": 8,
+   "fixed": [
+    "podium"
+   ],
+   "floor": 8,
+   "eave": 16,
+   "ridge": 27
+  },
+  {
+   "name": "保和殿",
+   "w": 49,
+   "d": 25,
+   "roof": "xieshan",
+   "double_eave": true,
+   "podium_style": "tiers",
+   "podium": 8,
+   "fixed": [
+    "podium"
+   ],
+   "floor": 8,
+   "eave": 17,
+   "ridge": 29
+  },
+  {
+   "name": "乾清宫",
+   "w": 45,
+   "d": 25,
+   "roof": "wudian",
+   "double_eave": true,
+   "podium_style": "xumizuo",
+   "podium": 5,
+   "floor": 5,
+   "eave": 13,
+   "ridge": 24
+  },
+  {
+   "name": "太和门",
+   "w": 41,
+   "d": 21,
+   "roof": "xieshan",
+   "double_eave": true,
+   "podium_style": "xumizuo",
+   "podium": 3,
+   "floor": 3,
+   "eave": 11,
+   "ridge": 23
+  }
+ ]
+}

@@ -1,0 +1,253 @@
+{
+ "_说明": "说明：每一项是候选方块列表，从前往后挑第一个游戏里有的；可以写别的模组的方块，后面留一个原版的兜底。",
+ "roofs": {
+  "grey": {
+   "cn": "灰瓦",
+   "stairs": [
+    "minecraft:deepslate_tile_stairs"
+   ],
+   "slab": [
+    "minecraft:deepslate_tile_slab"
+   ],
+   "full": [
+    "minecraft:deepslate_tiles"
+   ],
+   "ridge": [
+    "minecraft:polished_deepslate"
+   ],
+   "cap": [
+    "minecraft:polished_deepslate"
+   ],
+   "corner_lift": true,
+   "swatch": "#6D7582",
+   "stripe_stairs": [
+    "minecraft:deepslate_brick_stairs"
+   ],
+   "stripe_slab": [
+    "minecraft:deepslate_brick_slab"
+   ]
+  },
+  "teal": {
+   "cn": "绿琉璃",
+   "stairs": [
+    "minecraft:oxidized_cut_copper_stairs"
+   ],
+   "slab": [
+    "minecraft:oxidized_cut_copper_slab"
+   ],
+   "full": [
+    "minecraft:oxidized_cut_copper"
+   ],
+   "ridge": [
+    "minecraft:dark_prismarine"
+   ],
+   "cap": [
+    "minecraft:dark_prismarine"
+   ],
+   "corner_lift": true,
+   "swatch": "#3CA78E",
+   "stripe_stairs": [
+    "minecraft:dark_prismarine_stairs"
+   ],
+   "stripe_slab": [
+    "minecraft:dark_prismarine_slab"
+   ]
+  },
+  "gold": {
+   "cn": "黄琉璃",
+   "stairs": [
+    "minecraft:bamboo_mosaic_stairs"
+   ],
+   "slab": [
+    "minecraft:bamboo_mosaic_slab"
+   ],
+   "full": [
+    "minecraft:bamboo_mosaic"
+   ],
+   "ridge": [
+    "minecraft:gold_block"
+   ],
+   "cap": [
+    "minecraft:bamboo_mosaic"
+   ],
+   "corner_lift": true,
+   "swatch": "#E2B24C",
+   "stripe_stairs": [
+    "minecraft:bamboo_stairs"
+   ],
+   "stripe_slab": [
+    "minecraft:bamboo_slab"
+   ]
+  },
+  "black": {
+   "cn": "黑瓦",
+   "stairs": [
+    "minecraft:blackstone_stairs"
+   ],
+   "slab": [
+    "minecraft:blackstone_slab"
+   ],
+   "full": [
+    "minecraft:blackstone"
+   ],
+   "ridge": [
+    "minecraft:polished_blackstone"
+   ],
+   "cap": [
+    "minecraft:polished_blackstone"
+   ],
+   "corner_lift": true,
+   "swatch": "#2C2F35",
+   "stripe_stairs": [
+    "minecraft:polished_blackstone_brick_stairs"
+   ],
+   "stripe_slab": [
+    "minecraft:polished_blackstone_brick_slab"
+   ]
+  },
+  "red": {
+   "cn": "红瓦",
+   "stairs": [
+    "minecraft:red_nether_brick_stairs"
+   ],
+   "slab": [
+    "minecraft:red_nether_brick_slab"
+   ],
+   "full": [
+    "minecraft:red_nether_bricks"
+   ],
+   "ridge": [
+    "minecraft:nether_bricks"
+   ],
+   "cap": [
+    "minecraft:red_nether_bricks"
+   ],
+   "corner_lift": true,
+   "swatch": "#B2463C",
+   "stripe_stairs": [
+    "minecraft:nether_brick_stairs"
+   ],
+   "stripe_slab": [
+    "minecraft:nether_brick_slab"
+   ]
+  },
+  "jade": {
+   "cn": "碧瓦",
+   "stairs": [
+    "minecraft:prismarine_brick_stairs"
+   ],
+   "slab": [
+    "minecraft:prismarine_brick_slab"
+   ],
+   "full": [
+    "minecraft:prismarine_bricks"
+   ],
+   "ridge": [
+    "minecraft:dark_prismarine"
+   ],
+   "cap": [
+    "minecraft:dark_prismarine"
+   ],
+   "corner_lift": true,
+   "swatch": "#6FCFA8",
+   "stripe_stairs": [
+    "minecraft:prismarine_brick_stairs"
+   ],
+   "stripe_slab": [
+    "minecraft:prismarine_brick_slab"
+   ]
+  },
+  "slate": {
+   "cn": "石板",
+   "stairs": [
+    "minecraft:cobbled_deepslate_stairs"
+   ],
+   "slab": [
+    "minecraft:cobbled_deepslate_slab"
+   ],
+   "full": [
+    "minecraft:cobbled_deepslate"
+   ],
+   "ridge": [
+    "minecraft:polished_deepslate"
+   ],
+   "cap": [
+    "minecraft:polished_deepslate"
+   ],
+   "corner_lift": true,
+   "swatch": "#5B6570",
+   "stripe_stairs": [
+    "minecraft:deepslate_tile_stairs"
+   ],
+   "stripe_slab": [
+    "minecraft:deepslate_tile_slab"
+   ]
+  },
+  "wood": {
+   "cn": "木板",
+   "stairs": [
+    "minecraft:spruce_stairs"
+   ],
+   "slab": [
+    "minecraft:spruce_slab"
+   ],
+   "full": [
+    "minecraft:spruce_planks"
+   ],
+   "ridge": [
+    "minecraft:stripped_spruce_wood"
+   ],
+   "cap": [
+    "minecraft:spruce_planks"
+   ],
+   "corner_lift": false,
+   "swatch": "#8C6C47",
+   "stripe_stairs": [
+    "minecraft:dark_oak_stairs"
+   ],
+   "stripe_slab": [
+    "minecraft:dark_oak_slab"
+   ]
+  },
+  "thatch": {
+   "cn": "茅草",
+   "stairs": [
+    "minecraft:oak_stairs"
+   ],
+   "slab": [
+    "minecraft:oak_slab"
+   ],
+   "full": [
+    "minecraft:oak_planks"
+   ],
+   "ridge": [
+    "minecraft:hay_block"
+   ],
+   "cap": [
+    "minecraft:hay_block"
+   ],
+   "corner_lift": false,
+   "swatch": "#CBB06C"
+  },
+  "mud": {
+   "cn": "泥瓦",
+   "stairs": [
+    "minecraft:mud_brick_stairs"
+   ],
+   "slab": [
+    "minecraft:mud_brick_slab"
+   ],
+   "full": [
+    "minecraft:mud_bricks"
+   ],
+   "ridge": [
+    "minecraft:mud_bricks"
+   ],
+   "cap": [
+    "minecraft:mud_bricks"
+   ],
+   "corner_lift": false,
+   "swatch": "#8E6E52"
+  }
+ }
+}

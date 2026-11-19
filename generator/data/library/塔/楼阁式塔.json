@@ -1,0 +1,46 @@
+{
+ "name": "楼阁式塔",
+ "note": "五层，每层收一格",
+ "tier": "mortal",
+ "look": 0,
+ "seed": 1,
+ "time": "",
+ "rooms": [
+  {
+   "x0": 0,
+   "z0": 0,
+   "x1": 14,
+   "z1": 14,
+   "y": 0,
+   "storeys": 5,
+   "roof": "pyramid",
+   "walls": "palace",
+   "theme": "gold",
+   "bay_style": "auto",
+   "base": "auto",
+   "front": "south",
+   "sh": 0,
+   "podium": 0,
+   "podium_style": "plain",
+   "open": "closed",
+   "uses": [
+    "lookout",
+    "lookout",
+    "lookout",
+    "lookout",
+    "lookout",
+    "lookout",
+    "lookout",
+    "lookout"
+   ],
+   "special": "",
+   "round": false,
+   "seed": 724879081,
+   "variant": 0,
+   "roof_variant": 0,
+   "stack": false,
+   "taper": 1,
+   "beasts": 2
+  }
+ ]
+}

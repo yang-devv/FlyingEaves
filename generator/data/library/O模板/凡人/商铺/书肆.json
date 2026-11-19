@@ -1,0 +1,44 @@
+{
+ "name": "书肆",
+ "note": "2层硬山，建造菜单 bookshop",
+ "tier": "mortal",
+ "look": 0,
+ "seed": 1,
+ "time": "",
+ "rooms": [
+  {
+   "x0": 0,
+   "z0": 0,
+   "x1": 8,
+   "z1": 8,
+   "y": 0,
+   "storeys": 2,
+   "roof": "yingshan",
+   "walls": "whitewall",
+   "theme": "grey",
+   "bay_style": "auto",
+   "base": "auto",
+   "front": "south",
+   "sh": 0,
+   "podium": 0,
+   "podium_style": "plain",
+   "open": "closed",
+   "uses": [
+    "bookshop",
+    "study",
+    "study",
+    "study",
+    "study",
+    "study",
+    "study",
+    "study"
+   ],
+   "special": "",
+   "round": false,
+   "seed": 129183272,
+   "variant": 0,
+   "roof_variant": 0,
+   "stack": false
+  }
+ ]
+}

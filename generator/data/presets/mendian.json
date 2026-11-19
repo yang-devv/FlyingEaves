@@ -1,0 +1,42 @@
+{
+ "name": "门殿",
+ "note": "太和门、乾清门那样：歇山门殿，正中穿堂，须弥座；大的重檐",
+ "order": 3,
+ "recipe": true,
+ "set": {
+  "walls": "palace",
+  "theme": "gold",
+  "base": "white",
+  "roof": "xieshan",
+  "open": "through",
+  "podium_style": "xumizuo",
+  "pitch": 3
+ },
+ "by_size": {
+  "double_eave": [
+   [
+    15,
+    true
+   ],
+   [
+    0,
+    false
+   ]
+  ],
+  "podium": [
+   [
+    15,
+    4
+   ],
+   [
+    0,
+    3
+   ]
+  ],
+  "sh": [
+   2.0,
+   6,
+   9
+  ]
+ }
+}

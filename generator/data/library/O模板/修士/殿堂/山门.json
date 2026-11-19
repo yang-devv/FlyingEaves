@@ -1,0 +1,49 @@
+{
+ "name": "山门",
+ "note": "1层重檐歇山，建造菜单 sect_gate",
+ "tier": "zhuji",
+ "look": 0,
+ "seed": 1,
+ "time": "",
+ "rooms": [
+  {
+   "x0": 0,
+   "z0": 0,
+   "x1": 34,
+   "z1": 12,
+   "y": 0,
+   "storeys": 1,
+   "roof": "xieshan",
+   "walls": "palace",
+   "theme": "teal",
+   "bay_style": "auto",
+   "base": "auto",
+   "front": "south",
+   "sh": 0,
+   "podium": 12,
+   "podium_style": "chengtai",
+   "open": "closed",
+   "uses": [
+    "guardroom",
+    "guardroom",
+    "guardroom",
+    "guardroom",
+    "guardroom",
+    "guardroom",
+    "guardroom",
+    "guardroom"
+   ],
+   "special": "",
+   "round": false,
+   "seed": 52544532,
+   "variant": 0,
+   "roof_variant": 0,
+   "stack": false,
+   "double_eave": true,
+   "tunnels": 3,
+   "beasts": 2,
+   "pitch": 3,
+   "caihua": "xuanzi"
+  }
+ ]
+}

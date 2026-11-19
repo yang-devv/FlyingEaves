@@ -1,0 +1,44 @@
+{
+ "name": "陶窑",
+ "note": "1层硬山，窑的烟囱省掉了，建造菜单 kiln_house",
+ "tier": "mortal",
+ "look": 0,
+ "seed": 1,
+ "time": "",
+ "rooms": [
+  {
+   "x0": 0,
+   "z0": 0,
+   "x1": 10,
+   "z1": 8,
+   "y": 0,
+   "storeys": 1,
+   "roof": "yingshan",
+   "walls": "redbrick",
+   "theme": "slate",
+   "bay_style": "auto",
+   "base": "auto",
+   "front": "south",
+   "sh": 0,
+   "podium": 0,
+   "podium_style": "plain",
+   "open": "closed",
+   "uses": [
+    "pottery",
+    "pottery",
+    "pottery",
+    "pottery",
+    "pottery",
+    "pottery",
+    "pottery",
+    "pottery"
+   ],
+   "special": "",
+   "round": false,
+   "seed": 764544130,
+   "variant": 0,
+   "roof_variant": 0,
+   "stack": false
+  }
+ ]
+}

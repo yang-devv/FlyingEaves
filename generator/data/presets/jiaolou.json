@@ -1,0 +1,43 @@
+{
+ "name": "角楼",
+ "note": "十字脊重檐的中楼，四面抱厦（框是中楼，抱厦自己加在四面）",
+ "order": 5,
+ "recipe": true,
+ "set": {
+  "walls": "palace",
+  "theme": "gold",
+  "base": "white",
+  "roof": "shizi",
+  "double_eave": true,
+  "podium": 1
+ },
+ "by_size": {
+  "sh": [
+   1.4,
+   6,
+   9
+  ]
+ },
+ "wings": [
+  {
+   "sides": "nsew",
+   "w": 0.6,
+   "d": 0.45,
+   "min_d": 5,
+   "set": {
+    "walls": "palace",
+    "theme": "gold",
+    "base": "white",
+    "roof": "xieshan",
+    "podium": 1
+   },
+   "by_size": {
+    "sh": [
+     1.6,
+     5,
+     7
+    ]
+   }
+  }
+ ]
+}

@@ -1,0 +1,44 @@
+{
+ "name": "酿酒坊",
+ "note": "1层硬山，建造菜单 brewery",
+ "tier": "mortal",
+ "look": 0,
+ "seed": 1,
+ "time": "",
+ "rooms": [
+  {
+   "x0": 0,
+   "z0": 0,
+   "x1": 10,
+   "z1": 10,
+   "y": 0,
+   "storeys": 1,
+   "roof": "yingshan",
+   "walls": "redbrick",
+   "theme": "grey",
+   "bay_style": "auto",
+   "base": "auto",
+   "front": "south",
+   "sh": 0,
+   "podium": 0,
+   "podium_style": "plain",
+   "open": "closed",
+   "uses": [
+    "brewery",
+    "brewery",
+    "brewery",
+    "brewery",
+    "brewery",
+    "brewery",
+    "brewery",
+    "brewery"
+   ],
+   "special": "",
+   "round": false,
+   "seed": 494819206,
+   "variant": 0,
+   "roof_variant": 0,
+   "stack": false
+  }
+ ]
+}

@@ -1,0 +1,213 @@
+{
+ "_说明": "屋顶和檐下的装饰做成部件。point 是放在哪：ridge_end 正脊两头（鸱吻，另一头自动镜像）、ridge_mid 正脊正中（脊刹，默认没有）、finial 攒尖顶尖（宝顶）、bracket 檐下每根柱子上（斗拱）。cells 是 [往外, 往上, 往旁边, 方块]：ridge_end 以正脊这一头的最后一格为原点，往外是顺着正脊往外（东）；finial、ridge_mid 以下面那一格为原点；bracket 以檐下那一格为原点，往外是离开墙的方向（南）。方块可以写 $ridge、$full、$cap（这栋的屋脊、整块瓦、脊顶）、$gold、$tile_stairs[facing=..,half=..]、$tile_slab[type=..]（这栋的瓦），或者任意方块（别的模组的也行）。size：ridge_end 是吻高、finial 是宝顶高、ridge_mid 是正脊半长，用 min_size、max_size 限定。tiers 限定境界，weight 是权重；代码自己的画法也算一个候选（权重 3）。一栋楼里同一处同一大小只挑一次。玩家自己的放 run/bgen/parts/ornaments*.json。",
+ "ornaments": {
+  "gourd_finial": {
+   "cn": "葫芦宝顶",
+   "point": "finial",
+   "tiers": [
+    "jindan",
+    "yuanying",
+    "huashen"
+   ],
+   "weight": 3,
+   "cells": [
+    [
+     0,
+     1,
+     0,
+     "$ridge"
+    ],
+    [
+     0,
+     2,
+     0,
+     "$gold"
+    ],
+    [
+     0,
+     3,
+     0,
+     "minecraft:polished_blackstone_wall"
+    ],
+    [
+     0,
+     4,
+     0,
+     "$gold"
+    ],
+    [
+     0,
+     5,
+     0,
+     "minecraft:lightning_rod[facing=up]"
+    ]
+   ]
+  },
+  "pearl_finial": {
+   "cn": "火焰宝珠",
+   "point": "finial",
+   "tiers": [
+    "yuanying",
+    "huashen"
+   ],
+   "weight": 3,
+   "cells": [
+    [
+     0,
+     1,
+     0,
+     "$ridge"
+    ],
+    [
+     0,
+     2,
+     0,
+     "minecraft:chain[axis=y]"
+    ],
+    [
+     0,
+     3,
+     0,
+     "minecraft:pearlescent_froglight[axis=y]"
+    ],
+    [
+     0,
+     4,
+     0,
+     "minecraft:end_rod[facing=up]"
+    ]
+   ]
+  },
+  "jisha_gold": {
+   "cn": "脊刹（金）",
+   "point": "ridge_mid",
+   "tiers": [
+    "jindan",
+    "yuanying",
+    "huashen"
+   ],
+   "min_size": 2,
+   "weight": 2,
+   "cells": [
+    [
+     0,
+     1,
+     0,
+     "$gold"
+    ],
+    [
+     0,
+     2,
+     0,
+     "minecraft:lightning_rod[facing=up]"
+    ]
+   ]
+  },
+  "chiwei_curl": {
+   "cn": "鸱吻（卷尾）",
+   "point": "ridge_end",
+   "min_size": 3,
+   "weight": 2,
+   "cells": [
+    [
+     0,
+     1,
+     0,
+     "$ridge"
+    ],
+    [
+     0,
+     2,
+     0,
+     "$ridge"
+    ],
+    [
+     0,
+     3,
+     0,
+     "$ridge"
+    ],
+    [
+     -1,
+     3,
+     0,
+     "$tile_stairs[facing=east,half=top]"
+    ],
+    [
+     0,
+     4,
+     0,
+     "$tile_stairs[facing=west,half=bottom]"
+    ],
+    [
+     1,
+     2,
+     0,
+     "$tile_stairs[facing=west,half=bottom]"
+    ],
+    [
+     -1,
+     4,
+     0,
+     "$tile_slab[type=bottom]"
+    ]
+   ]
+  },
+  "chiwei_beast": {
+   "cn": "吻兽（翘头）",
+   "point": "ridge_end",
+   "max_size": 3,
+   "weight": 2,
+   "cells": [
+    [
+     0,
+     1,
+     0,
+     "$ridge"
+    ],
+    [
+     0,
+     2,
+     0,
+     "$tile_stairs[facing=west,half=bottom]"
+    ],
+    [
+     1,
+     1,
+     0,
+     "$tile_stairs[facing=west,half=bottom]"
+    ],
+    [
+     0,
+     3,
+     0,
+     "minecraft:polished_blackstone_button[face=floor,facing=east]"
+    ]
+   ]
+  },
+  "dougong_double": {
+   "cn": "斗拱（两跳）",
+   "point": "bracket",
+   "tiers": [
+    "jindan",
+    "yuanying",
+    "huashen"
+   ],
+   "weight": 2,
+   "cells": [
+    [
+     0,
+     0,
+     0,
+     "$trim_stairs[facing=north,half=top]"
+    ],
+    [
+     0,
+     -1,
+     0,
+     "$trim_trapdoor[facing=south,half=top,open=false]"
+    ]
+   ]
+  }
+ }
+}

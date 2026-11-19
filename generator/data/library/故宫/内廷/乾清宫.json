@@ -1,0 +1,49 @@
+{
+ "name": "乾清宫",
+ "note": "重檐庑殿",
+ "tier": "mortal",
+ "look": 0,
+ "seed": 1,
+ "time": "",
+ "rooms": [
+  {
+   "x0": 0,
+   "z0": 0,
+   "x1": 44,
+   "z1": 24,
+   "y": 0,
+   "storeys": 1,
+   "roof": "wudian",
+   "walls": "palace",
+   "theme": "gold",
+   "bay_style": "auto",
+   "base": "white",
+   "front": "south",
+   "sh": 8,
+   "podium": 5,
+   "podium_style": "xumizuo",
+   "open": "closed",
+   "uses": [
+    "council_hall",
+    "council_hall",
+    "council_hall",
+    "council_hall",
+    "council_hall",
+    "council_hall",
+    "council_hall",
+    "council_hall"
+   ],
+   "special": "",
+   "round": false,
+   "seed": 608466974,
+   "variant": 0,
+   "roof_variant": 0,
+   "stack": false,
+   "caihua": "hexi",
+   "beasts": 3,
+   "pitch": 1,
+   "double_eave": true,
+   "overhang": 2
+  }
+ ]
+}

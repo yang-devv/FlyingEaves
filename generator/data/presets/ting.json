@@ -1,0 +1,36 @@
+{
+ "name": "亭",
+ "note": "敞开的亭：方的攒尖，长的歇山；大一点的重檐",
+ "order": 8,
+ "recipe": true,
+ "set": {
+  "walls": "palace",
+  "theme": "teal",
+  "open": "open",
+  "podium_style": "xumizuo",
+  "podium": 2,
+  "base": "white"
+ },
+ "pick": {
+  "roof": [
+   "pyramid"
+  ]
+ },
+ "by_size": {
+  "double_eave": [
+   [
+    11,
+    true
+   ],
+   [
+    0,
+    false
+   ]
+  ],
+  "sh": [
+   1.4,
+   5,
+   7
+  ]
+ }
+}

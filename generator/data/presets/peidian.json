@@ -1,0 +1,26 @@
+{
+ "name": "配殿",
+ "note": "东西六宫正殿、配殿那样：单檐歇山，前廊，矮台基",
+ "order": 6,
+ "recipe": true,
+ "set": {
+  "walls": "palace",
+  "theme": "gold",
+  "veranda": true,
+  "podium": 1
+ },
+ "pick": {
+  "roof": [
+   "xieshan",
+   "xieshan",
+   "yingshan"
+  ]
+ },
+ "by_size": {
+  "sh": [
+   2.0,
+   5,
+   8
+  ]
+ }
+}

@@ -1,0 +1,221 @@
+{
+ "_说明": "墙的开间（两根柱子之间的一段墙）做成部件。role：door 门、window 窗、plain 实墙、shop 店面。rows：从下往上一行一行（一楼地面上第一格起，到梁下一格），每行写成「墙这一层|墙外这一层」，后面可跟 * （这一行可以重复，用来填满层高）、@N（层高 - 1 至少 N 时才有这一行）。一行只写一个字母就是整段都用它；写满宽度的就只用在这个宽度上（widths 里按开间宽度分别写）。宽度的列从靠墙中间那头往外数，另一半墙自动镜像。墙这一层的字母：F 墙心、b 墙基、d 墙裙、B 梁、P 柱、W 窗（玻璃板）、D 门、S 店面板窗（开着的活板门）、A 空气、. 不放；key 里可以给别的字母指定任意方块（也可以是别的模组的）。墙外这一层：h 窗檐（活板门）、v 窗台（放在这一格下面一格的墙外，只在一楼）。tiers、walls、faces（front、back、west、east）可以限定用在哪些境界、哪种墙、哪面墙；weight 是挑中的权重；style 是单体建造里「墙样」工具能选的样式名（选了它，这间房的这种开间就只用这个样式的，不管境界和墙）。同一栋楼里同一种开间（同一种用途、宽度、层高）只挑一次。玩家自己的放 run/bgen/parts/bays*.json，同名替换。",
+ "bays": {
+  "plain": {
+   "cn": "实墙",
+   "role": "plain",
+   "rows": [
+    "b",
+    "d@5",
+    "F*"
+   ]
+  },
+  "door": {
+   "cn": "门",
+   "role": "door",
+   "rows": [
+    "D",
+    "D",
+    "B",
+    "F*"
+   ]
+  },
+  "shop": {
+   "cn": "店面板窗",
+   "role": "shop",
+   "rows": [
+    "S*",
+    "B"
+   ]
+  },
+  "window": {
+   "cn": "窗",
+   "role": "window",
+   "widths": {
+    "2": [
+     "bb",
+     "dd@5",
+     "WF|v.",
+     "WF@4",
+     "BF|h.",
+     "FF*"
+    ],
+    "3": [
+     "bbb",
+     "ddd@5",
+     "FWF|.v.",
+     "FWF@4",
+     "FBF|.h.",
+     "FFF*"
+    ],
+    "4": [
+     "bbbb",
+     "dddd@5",
+     "FWWF|.vv.",
+     "FWWF@4",
+     "FBBF|.hh.",
+     "FFFF*"
+    ]
+   },
+   "style": "小窗"
+  },
+  "kanchuang": {
+   "cn": "槛窗（矮墙上一整排窗）",
+   "role": "window",
+   "tiers": [
+    "zhuji",
+    "jindan",
+    "yuanying",
+    "huashen"
+   ],
+   "weight": 2,
+   "rows": [
+    "b",
+    "W|v",
+    "W*",
+    "B|h"
+   ],
+   "style": "槛窗"
+  },
+  "geshan": {
+   "cn": "隔扇（正面整开间的门扇）",
+   "role": "window",
+   "faces": [
+    "front"
+   ],
+   "tiers": [
+    "jindan",
+    "yuanying",
+    "huashen"
+   ],
+   "weight": 2,
+   "rows": [
+    "D",
+    "D",
+    "W*",
+    "B"
+   ],
+   "style": "隔扇"
+  },
+  "zhiling": {
+   "cn": "直棂窗（木栏杆竖条）",
+   "role": "window",
+   "tiers": [
+    "mortal",
+    "lianqi",
+    "zhuji"
+   ],
+   "weight": 2,
+   "walls": [
+    "wattle",
+    "log",
+    "stone",
+    "mud",
+    "greybrick",
+    "whitewall",
+    "darkwood"
+   ],
+   "key": {
+    "I": "minecraft:spruce_fence"
+   },
+   "widths": {
+    "2": [
+     "bb",
+     "dd@5",
+     "IF|v.",
+     "IF@4",
+     "BF|h.",
+     "FF*"
+    ],
+    "3": [
+     "bbb",
+     "ddd@5",
+     "FIF|.v.",
+     "FIF@4",
+     "FBF|.h.",
+     "FFF*"
+    ],
+    "4": [
+     "bbbb",
+     "dddd@5",
+     "FIIF|.vv.",
+     "FIIF@4",
+     "FBBF|.hh.",
+     "FFFF*"
+    ]
+   },
+   "style": "直棂窗"
+  },
+  "huachuang": {
+   "cn": "花窗（十字形）",
+   "role": "window",
+   "walls": [
+    "whitewall",
+    "greybrick",
+    "palace",
+    "jade",
+    "yellow"
+   ],
+   "weight": 1,
+   "widths": {
+    "3": [
+     "bbb",
+     "ddd@5",
+     "FWF|.v.",
+     "WWW",
+     "FWF",
+     "FFF*"
+    ],
+    "4": [
+     "bbbb",
+     "dddd@5",
+     "FWWF|.vv.",
+     "WWWW",
+     "FWWF",
+     "FFFF*"
+    ]
+   },
+   "style": "花窗"
+  },
+  "plain_band": {
+   "cn": "实墙带腰枋",
+   "role": "plain",
+   "weight": 1,
+   "rows": [
+    "b",
+    "d@5",
+    "F*",
+    "B@6",
+    "F"
+   ]
+  },
+  "door_transom": {
+   "cn": "门上带横窗",
+   "role": "door",
+   "tiers": [
+    "zhuji",
+    "jindan",
+    "yuanying",
+    "huashen"
+   ],
+   "weight": 1,
+   "rows": [
+    "D",
+    "D",
+    "W@4",
+    "B",
+    "F*"
+   ]
+  },
+  "shop_counter": {
+   "cn": "店面带柜台",
+   "role": "shop",
+   "weight": 1,
+   "rows": [
+    "b",
+    "S*",
+    "F"
+   ]
+  }
+ }
+}

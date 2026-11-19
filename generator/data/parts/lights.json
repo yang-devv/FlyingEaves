@@ -1,0 +1,310 @@
+{
+ "_说明": "灯具：屋里屋外用什么灯。mount 是装在哪儿——屋里（照亮房间，每间房挑一种，再按亮度补够数量）：ceiling 嵌在天花板里、floor 落地（占一格地面，只放在靠墙的格子）、inlay 嵌在地板里（走道上，和地面齐平）；屋外和家具上（只是装饰，亮度由看不见的灵光补）：door 门两边地上的灯、corner 店面前两角的高灯柱、post 台阶平台栈道广场边的灯柱、garden 门前路两边的石灯、rail 栏杆上隔一段的一盏、stand 直接立在地上或台面上的一盏、table 桌上案上的蜡烛。一栋楼里同一个 mount 只挑一种，所以门灯、路灯都配套。light：发多亮（0-15）。blocks：从安装点往上的方块 [[高度, 方块], ...]，高度 0 是安装点那一格（屋外的灯从地面上一格算 1）。方块里可以写 $rail（这栋的栏杆，没有就是云杉栅栏）、$jade（白玉，台基镶边那种）、$n（table：家具要几根蜡烛，1-4）。tiers：哪些境界能用（不写就都行）；rooms：哪些房间用（只对屋里的灯，不写就都行）；weight：被挑中的权重。自己的灯放 run/bgen/parts/lights*.json，同名替换、新名字是新的一种；以后换模组的灯，把方块 id 填进来就行。",
+ "lights": {
+  "pearl": {
+   "cn": "夜明珠",
+   "mount": "ceiling",
+   "light": 15,
+   "blocks": [
+    [
+     0,
+     "minecraft:pearlescent_froglight[axis=y]"
+    ]
+   ],
+   "tiers": [
+    "jindan",
+    "yuanying",
+    "huashen"
+   ],
+   "weight": 6
+  },
+  "warm_ceiling": {
+   "cn": "暖灯（菌光体）",
+   "mount": "ceiling",
+   "light": 15,
+   "blocks": [
+    [
+     0,
+     "minecraft:shroomlight"
+    ]
+   ],
+   "tiers": [
+    "zhuji",
+    "jindan",
+    "yuanying",
+    "huashen"
+   ],
+   "rooms": [
+    "main_room",
+    "refectory",
+    "inn_hall",
+    "teahouse",
+    "private_dining",
+    "kitchen",
+    "lecture_hall",
+    "council_hall"
+   ],
+   "weight": 3
+  },
+  "spirit_ceiling": {
+   "cn": "灵石灯（海晶灯）",
+   "mount": "ceiling",
+   "light": 15,
+   "blocks": [
+    [
+     0,
+     "minecraft:sea_lantern"
+    ]
+   ],
+   "tiers": [
+    "yuanying",
+    "huashen"
+   ],
+   "weight": 4
+  },
+  "candle_stand": {
+   "cn": "烛台",
+   "mount": "floor",
+   "light": 12,
+   "blocks": [
+    [
+     0,
+     "minecraft:dark_oak_fence"
+    ],
+    [
+     1,
+     "minecraft:candle[candles=4,lit=true]"
+    ]
+   ],
+   "rooms": [
+    "bedroom",
+    "study",
+    "ancestral_hall",
+    "temple_hall",
+    "elder_quarters",
+    "guest_room",
+    "maiden_room",
+    "ancestor_tablets"
+   ],
+   "weight": 3
+  },
+  "floor_lantern": {
+   "cn": "落地灯",
+   "mount": "floor",
+   "light": 15,
+   "blocks": [
+    [
+     0,
+     "minecraft:spruce_fence"
+    ],
+    [
+     1,
+     "minecraft:lantern[hanging=false]"
+    ]
+   ],
+   "weight": 2
+  },
+  "brazier": {
+   "cn": "火盆",
+   "mount": "floor",
+   "light": 15,
+   "blocks": [
+    [
+     0,
+     "minecraft:campfire[lit=true,facing=north,signal_fire=false,waterlogged=false]"
+    ]
+   ],
+   "rooms": [
+    "training_room",
+    "smithy",
+    "forging_room",
+    "outer_dorm",
+    "beast_stable",
+    "throne_hall"
+   ],
+   "weight": 3
+  },
+  "floor_glow": {
+   "cn": "地灯（菌光体嵌地）",
+   "mount": "inlay",
+   "light": 15,
+   "blocks": [
+    [
+     0,
+     "minecraft:shroomlight"
+    ]
+   ],
+   "tiers": [
+    "zhuji",
+    "jindan",
+    "yuanying",
+    "huashen"
+   ],
+   "rooms": [
+    "ancestral_hall",
+    "temple_hall",
+    "ancestor_tablets",
+    "lecture_hall",
+    "council_hall",
+    "throne_hall",
+    "task_hall",
+    "auction_hall",
+    "refectory",
+    "inn_hall",
+    "teahouse",
+    "main_room"
+   ],
+   "weight": 4
+  },
+  "floor_pearl": {
+   "cn": "地嵌夜明珠",
+   "mount": "inlay",
+   "light": 15,
+   "blocks": [
+    [
+     0,
+     "minecraft:pearlescent_froglight[axis=y]"
+    ]
+   ],
+   "tiers": [
+    "jindan",
+    "yuanying",
+    "huashen"
+   ],
+   "weight": 5
+  },
+  "floor_spirit": {
+   "cn": "地嵌灵石灯",
+   "mount": "inlay",
+   "light": 15,
+   "blocks": [
+    [
+     0,
+     "minecraft:sea_lantern"
+    ]
+   ],
+   "tiers": [
+    "yuanying",
+    "huashen"
+   ],
+   "weight": 4
+  },
+  "door_post": {
+   "cn": "门灯（栏杆柱上一盏灯笼）",
+   "mount": "door",
+   "light": 15,
+   "blocks": [
+    [
+     1,
+     "$rail"
+    ],
+    [
+     2,
+     "minecraft:lantern[hanging=false]"
+    ]
+   ]
+  },
+  "shop_post": {
+   "cn": "店门角灯（两节栏杆上一盏灯笼）",
+   "mount": "corner",
+   "light": 15,
+   "blocks": [
+    [
+     1,
+     "$rail"
+    ],
+    [
+     2,
+     "$rail"
+    ],
+    [
+     3,
+     "minecraft:lantern[hanging=false]"
+    ]
+   ]
+  },
+  "jade_post": {
+   "cn": "玉石灯柱",
+   "mount": "post",
+   "light": 15,
+   "blocks": [
+    [
+     1,
+     "$jade"
+    ],
+    [
+     2,
+     "minecraft:diorite_wall[up=true]"
+    ],
+    [
+     3,
+     "minecraft:diorite_wall[up=true]"
+    ],
+    [
+     4,
+     "$jade"
+    ],
+    [
+     5,
+     "minecraft:lantern[hanging=false]"
+    ]
+   ]
+  },
+  "stone_lantern": {
+   "cn": "石灯",
+   "mount": "garden",
+   "light": 15,
+   "blocks": [
+    [
+     1,
+     "minecraft:stone_brick_wall"
+    ],
+    [
+     2,
+     "minecraft:stone_bricks"
+    ],
+    [
+     3,
+     "minecraft:lantern[hanging=false]"
+    ],
+    [
+     4,
+     "minecraft:stone_brick_slab[type=bottom]"
+    ]
+   ]
+  },
+  "rail_lantern": {
+   "cn": "栏杆灯笼",
+   "mount": "rail",
+   "light": 15,
+   "blocks": [
+    [
+     0,
+     "minecraft:lantern[hanging=false]"
+    ]
+   ]
+  },
+  "small_lantern": {
+   "cn": "小灯笼",
+   "mount": "stand",
+   "light": 15,
+   "blocks": [
+    [
+     0,
+     "minecraft:lantern[hanging=false]"
+    ]
+   ]
+  },
+  "candles": {
+   "cn": "蜡烛",
+   "mount": "table",
+   "light": 12,
+   "blocks": [
+    [
+     0,
+     "minecraft:candle[candles=$n,lit=true]"
+    ]
+   ]
+  }
+ }
+}

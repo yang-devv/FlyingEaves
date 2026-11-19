@@ -1,0 +1,46 @@
+{
+ "name": "体仁阁",
+ "note": "两层庑殿楼阁",
+ "tier": "mortal",
+ "look": 0,
+ "seed": 1,
+ "time": "",
+ "rooms": [
+  {
+   "x0": 0,
+   "z0": 0,
+   "x1": 24,
+   "z1": 14,
+   "y": 0,
+   "storeys": 2,
+   "roof": "wudian",
+   "walls": "palace",
+   "theme": "gold",
+   "bay_style": "auto",
+   "base": "white",
+   "front": "south",
+   "sh": 0,
+   "podium": 2,
+   "podium_style": "xumizuo",
+   "open": "closed",
+   "uses": [
+    "scripture_store",
+    "scripture_store",
+    "scripture_store",
+    "scripture_store",
+    "scripture_store",
+    "scripture_store",
+    "scripture_store",
+    "scripture_store"
+   ],
+   "special": "",
+   "round": false,
+   "seed": 764311255,
+   "variant": 0,
+   "roof_variant": 0,
+   "stack": false,
+   "caihua": "xuanzi",
+   "beasts": 2
+  }
+ ]
+}

@@ -1,0 +1,49 @@
+{
+ "name": "承启楼",
+ "note": "1:1 外径约63m、四层(16m)；圆形土楼只能做成实心圆楼，无内院",
+ "tier": "mortal",
+ "look": 0,
+ "seed": 1,
+ "time": "",
+ "rooms": [
+  {
+   "y": 0,
+   "bay_style": "auto",
+   "base": "rubble",
+   "front": "south",
+   "podium_style": "plain",
+   "open": "closed",
+   "special": "",
+   "round": true,
+   "variant": 0,
+   "roof_variant": 0,
+   "stack": false,
+   "taper": 0,
+   "beasts": 0,
+   "brackets": 0,
+   "caihua": "",
+   "storeys": 4,
+   "roof": "xieshan",
+   "walls": "mud",
+   "theme": "grey",
+   "shape": "round",
+   "round_roof": "cone",
+   "x0": 0,
+   "z0": 0,
+   "x1": 62,
+   "z1": 62,
+   "sh": 4,
+   "uses": [
+    "main_room",
+    "bedroom",
+    "bedroom",
+    "bedroom",
+    "bedroom",
+    "bedroom",
+    "bedroom",
+    "bedroom"
+   ],
+   "seed": 197380
+  }
+ ]
+}

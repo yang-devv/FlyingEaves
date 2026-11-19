@@ -1,0 +1,50 @@
+{
+ "name": "佛光寺东大殿",
+ "note": "1:1 面阔七间34m×进深约18m；唐代单檐庑殿，坡缓，斗拱硕大，出檐深",
+ "tier": "mortal",
+ "look": 0,
+ "seed": 1,
+ "time": "",
+ "rooms": [
+  {
+   "y": 0,
+   "bay_style": "auto",
+   "base": "greybrick",
+   "front": "south",
+   "podium_style": "plain",
+   "open": "closed",
+   "special": "",
+   "round": false,
+   "variant": 0,
+   "roof_variant": 0,
+   "stack": false,
+   "taper": 0,
+   "beasts": 0,
+   "brackets": 4,
+   "caihua": "",
+   "storeys": 1,
+   "roof": "wudian",
+   "walls": "palace",
+   "theme": "grey",
+   "x0": 0,
+   "z0": 0,
+   "x1": 34,
+   "z1": 18,
+   "sh": 8,
+   "podium": 2,
+   "pitch": 1,
+   "overhang": 4,
+   "uses": [
+    "temple_hall",
+    "temple_hall",
+    "temple_hall",
+    "temple_hall",
+    "temple_hall",
+    "temple_hall",
+    "temple_hall",
+    "temple_hall"
+   ],
+   "seed": 1469340
+  }
+ ]
+}

@@ -1,0 +1,53 @@
+{
+ "name": "佛香阁",
+ "note": "1:1 八面三层四重檐(以圆代)，逐层收进(收分2)，高约41m；方形石台(圆塔下方台基)，20m石台缩为12",
+ "tier": "mortal",
+ "look": 0,
+ "seed": 1,
+ "time": "",
+ "rooms": [
+  {
+   "y": 0,
+   "bay_style": "auto",
+   "base": "white",
+   "front": "south",
+   "podium_style": "xumizuo",
+   "open": "closed",
+   "special": "",
+   "round": true,
+   "variant": 0,
+   "roof_variant": 0,
+   "stack": false,
+   "taper": 2,
+   "beasts": 3,
+   "brackets": 0,
+   "caihua": "xuanzi",
+   "storeys": 3,
+   "roof": "xieshan",
+   "walls": "palace",
+   "theme": "gold",
+   "shape": "round",
+   "round_roof": "cone",
+   "x0": 0,
+   "z0": 0,
+   "x1": 26,
+   "z1": 26,
+   "sh": 8,
+   "double_eave": true,
+   "podium": 12,
+   "uses": [
+    "temple_hall",
+    "temple_hall",
+    "temple_hall",
+    "temple_hall",
+    "temple_hall",
+    "temple_hall",
+    "temple_hall",
+    "temple_hall"
+   ],
+   "seed": 7272870,
+   "podium_shape": "square",
+   "podium_margin": "6"
+  }
+ ]
+}

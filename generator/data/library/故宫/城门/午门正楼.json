@@ -1,0 +1,49 @@
+{
+ "name": "午门正楼",
+ "note": "城台五门洞，重檐庑殿",
+ "tier": "mortal",
+ "look": 0,
+ "seed": 1,
+ "time": "",
+ "rooms": [
+  {
+   "x0": 0,
+   "z0": 0,
+   "x1": 62,
+   "z1": 16,
+   "y": 0,
+   "storeys": 1,
+   "roof": "wudian",
+   "walls": "palace",
+   "theme": "gold",
+   "bay_style": "auto",
+   "base": "auto",
+   "front": "south",
+   "sh": 0,
+   "podium": 12,
+   "podium_style": "chengtai",
+   "open": "closed",
+   "uses": [
+    "lookout",
+    "lookout",
+    "lookout",
+    "lookout",
+    "lookout",
+    "lookout",
+    "lookout",
+    "lookout"
+   ],
+   "special": "",
+   "round": false,
+   "seed": 645406427,
+   "variant": 0,
+   "roof_variant": 0,
+   "stack": false,
+   "double_eave": true,
+   "tunnels": 4,
+   "caihua": "hexi",
+   "beasts": 3,
+   "pitch": 3
+  }
+ ]
+}

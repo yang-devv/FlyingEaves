@@ -1,0 +1,44 @@
+{
+ "name": "戏台",
+ "note": "1层歇山，高台，正面敞开，建造菜单 opera_stage",
+ "tier": "mortal",
+ "look": 0,
+ "seed": 1,
+ "time": "",
+ "rooms": [
+  {
+   "x0": 0,
+   "z0": 0,
+   "x1": 12,
+   "z1": 10,
+   "y": 0,
+   "storeys": 1,
+   "roof": "xieshan",
+   "walls": "palace",
+   "theme": "grey",
+   "bay_style": "auto",
+   "base": "auto",
+   "front": "south",
+   "sh": 7,
+   "podium": 4,
+   "podium_style": "plain",
+   "open": "front",
+   "uses": [
+    "backstage",
+    "backstage",
+    "backstage",
+    "backstage",
+    "backstage",
+    "backstage",
+    "backstage",
+    "backstage"
+   ],
+   "special": "",
+   "round": false,
+   "seed": 852709932,
+   "variant": 0,
+   "roof_variant": 0,
+   "stack": false
+  }
+ ]
+}

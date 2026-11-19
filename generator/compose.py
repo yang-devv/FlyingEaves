@@ -7,7 +7,8 @@ exactly that footprint, on its own canvas, then merged:
 - joinparts.join: a room owns its column (inside its walls, plinth to roof top), so a lower wing's roof stops at the
   taller hall's wall and the hall's skirt roof and balcony stop over the wing; outside the footprints the roof zone of a
   column belongs to whichever room reaches highest there, so two eaves never sit on top of each other;
-- every storey can have its own use ("uses": one per storey; household uses get a bay plan with companion rooms);
+- every storey can have its own use ("uses": one per storey; household uses get a bay plan with companion rooms;
+  "empty" (空房): nothing inside); "interior": false (内饰：无) builds every room without furniture and lamps;
 - rooms that touch get doorways in the shared walls (every storey both rooms have; they share one storey height),
   placed clear of corners, front doors and stairs; furniture and partitions keep them free;
 - touching rooms within two blocks of each other in height are put on one floor level;
@@ -52,7 +53,8 @@ USES = [("main_room", "堂屋"), ("bedroom", "卧房"), ("study", "书房"), ("k
         ("guardroom", "门房（守卫）"), ("barracks", "营房"), ("courtroom", "公堂"), ("jail", "牢房"), ("classroom", "学堂"),
         ("discipline_hall", "戒律堂"), ("array_control", "阵枢"), ("spirit_stone_vault", "灵石库"),
         ("artifact_shop", "法器铺"), ("pill_shop", "丹药铺"), ("talisman_shop", "符箓铺"), ("material_shop", "材料铺"),
-        ("cultivator_inn_room", "修士客房"), ("auction_box", "拍卖雅间"), ("ship_cabin", "船舱")]
+        ("cultivator_inn_room", "修士客房"), ("auction_box", "拍卖雅间"), ("ship_cabin", "船舱"),
+        ("empty", "空房")]   # (空房: no furniture, no lamps - bgen.EMPTY_ROOM)
 SHOP_USES = ("inn_hall", "teahouse", "pharmacy", "general_store", "smithy", "tofu", "cloth_shop", "pawnshop", "bookshop",
              "clinic", "coffin_shop", "gambling_den", "artifact_shop", "pill_shop", "talisman_shop", "material_shop")   # 铺面: a shop front
 FRONTS = [("south", "南"), ("east", "东"), ("north", "北"), ("west", "西")]
@@ -1191,6 +1193,8 @@ def build_compose(req, cv):
                     _caihua=r.get("caihua") if r.get("caihua") in bgen.CAIHUA else None,   # 彩画
                     _round_roof=r.get("round_roof") if r.get("round_roof") in bgen.ROUND_ROOFS else None,   # 圆塔的屋顶
                     _bay_style=r.get("bay_style") if r.get("bay_style") not in (None, "auto") else None)
+        if req.get("interior") is False:                 # 内饰：无 - no furniture, no lamps inside (stairs, ladders kept)
+            spec["_bare"] = True
         if r["_on"] is not None and r["_on"] in built:      # 叠放: on the room under it (its roof's terrace, or its wall top)
             r["y"] = built[r["_on"]]["wall_top"]
         ups = [o for o in rooms if o["_on"] == r["_i"]]

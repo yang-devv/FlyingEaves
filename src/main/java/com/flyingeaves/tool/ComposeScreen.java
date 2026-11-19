@@ -516,6 +516,10 @@ public class ComposeScreen extends Screen {
         y += adv(rowH);
 
         y += ui.section("每层：用途、开敞", x, y + 2, w - 6) + 2;
+        label("内饰", x, y, true);                         // 整栋的（不只这一间）：无 = 屋里空着，墙、隔断、楼梯、梯子照有
+        segment(vx, y, Math.min(vwid, 2 * 92), 2, i -> i == 0 ? "有（家具、灯）" : "无（整栋空着）", () -> Compose.interior ? 0 : 1,
+                v -> Compose.interior = v == 0, true);
+        y += adv(rowH);
         java.util.List<String[]> fopen = java.util.Arrays.asList(Compose.FLOOR_OPEN);
         int useW = vwid * 3 / 5;
         for (int fl = 0; fl < r.storeys; fl++) {          // 每一层各选用途，开敞也能一层一层设（戏台一楼正面敞开、楼上封闭）

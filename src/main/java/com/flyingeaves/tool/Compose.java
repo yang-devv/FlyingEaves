@@ -61,7 +61,8 @@ public final class Compose {
         STEPS("台阶", "滚轮调台基（台地）前面台阶的坡度：45° 一格一级，27°、18°、14° 缓的半砖一级、台阶也伸出去更长；要先有台基，城台没有台阶", true),
         MARGIN("边距", "滚轮调墙脚到台基边走得过去几格：自动（一格，窗台、门灯挡着的那边加宽）、1–4、6、8、12、16、20（三台、坛、大城台）", true),
         BASE("基座", "滚轮换台基和地基的材料（石砖、和墙脚一样、青砖、白石……）", true),
-        USE("用途", "滚轮换准星指着的那一层做什么用；右键列出来挑", true),
+        USE("用途", "滚轮换准星指着的那一层做什么用（空房：什么都不摆）；右键列出来挑", true),
+        INTERIOR("内饰", "滚轮切整栋有没有内饰：有（家具、灯）、无（只有墙、隔断、楼梯、梯子，屋里空着）；不用指着房间", true),
         ROOF("屋顶", "滚轮换屋顶，Shift+右键列出来挑", true),
         EAVE("檐", "滚轮切单檐、重檐、三重檐（屋檐下面再一圈、两圈下檐）", true),
         PITCH("坡度", "滚轮调屋顶坡度：自动、缓、中、陡、很陡（大殿陡）", true),
@@ -103,6 +104,8 @@ public final class Compose {
     static Tool tool = Tool.DRAW;
     /** 境界（kinds.json 里 tiers 的下标）和预览用的种子；「生成」用同一个种子，所以放下去的和预览一样。 */
     static int tier;
+    /** 内饰：整栋屋里摆不摆家具、灯（false = 无：墙、隔断、楼梯、梯子照有）。和境界一样是整栋的，不进撤销。 */
+    static boolean interior = true;
     static int seed = RNG.nextInt(100000);
     /** 整栋的样子（计数，往回减就回到原来的样子）。 */
     static int look;
@@ -380,6 +383,7 @@ public final class Compose {
         JsonObject req = new JsonObject();
         req.addProperty("tier", tierId);
         req.addProperty("look", look);
+        if (!interior) req.addProperty("interior", false);
         JsonArray rooms = new JsonArray();
         for (Room r : ROOMS) rooms.add(r.json(o));
         req.add("rooms", rooms);
@@ -885,6 +889,7 @@ public final class Compose {
         d.addProperty("tier", idOf(o.tiers.stream().map(t -> new String[]{t}).toList(), tier));
         d.addProperty("look", look);
         d.addProperty("seed", seed);
+        if (!interior) d.addProperty("interior", false);      // (only when 无: older saves read as 有)
         JsonArray rooms = new JsonArray();
         for (Room r : ROOMS) {
             JsonObject j = style(r, o);
@@ -1035,6 +1040,7 @@ public final class Compose {
             if (base != Integer.MIN_VALUE) for (Room r : ROOMS) r.y += base - at.getY();
             if (d.has("look")) look = d.get("look").getAsInt();
             if (d.has("seed")) seed = d.get("seed").getAsInt();
+            interior = !d.has("interior") || d.get("interior").getAsBoolean();
             if (d.has("tier")) {
                 String t = d.get("tier").getAsString();
                 for (int i = 0; i < o.tiers.size(); i++) if (o.tiers.get(i).equals(t)) tier = i;
@@ -1340,6 +1346,15 @@ public final class Compose {
     }
 
     /** 一间房的每个设置都随机（形状只在矩形和圆塔里挑：牌楼、墙这些不是房子）。 */
+    /** 随机一栋的用途：除了空房哪个都行。 */
+    static int randomUse(java.util.Random rng, ComposeScreen.Options o) {
+        int empty = -1;
+        for (int i = 0; i < o.uses.size(); i++) if (o.uses.get(i)[0].equals("empty")) empty = i;
+        if (empty < 0 || o.uses.size() < 2) return rng.nextInt(o.uses.size());
+        int u = rng.nextInt(o.uses.size() - 1);
+        return u >= empty ? u + 1 : u;
+    }
+
     static void randomizeAll(Room r, java.util.Random rng, ComposeScreen.Options o) {
         r.special = 0;
         r.round = rng.nextFloat() < 0.15f;
@@ -1367,7 +1382,7 @@ public final class Compose {
         float df = rng.nextFloat();
         r.doors = df < 0.7f ? 0 : df < 0.9f ? 1 : 2;         // (mostly the front only: 前后 / 四面 are for halls on an axis)
         for (int i = 0; i < 8; i++) {
-            r.uses[i] = rng.nextInt(o.uses.size());
+            r.uses[i] = randomUse(rng, o);
             r.floorOpen[i] = rng.nextFloat() < 0.25f ? rng.nextInt(FLOOR_OPEN.length) : 0;
         }
         r.variant = rng.nextInt(4);
@@ -1644,7 +1659,7 @@ public final class Compose {
         }
         if (!tool.wheel) return;
         Object[] h = aimedHit(mc);
-        if (h == null && tool != Tool.REROLL) return;          // not pointing at a room: the hotbar scrolls as usual
+        if (h == null && tool != Tool.REROLL && tool != Tool.INTERIOR) return;   // not pointing at a room: the hotbar scrolls as usual
         event.setCanceled(true);
         step(mc, h, d, Screen.hasControlDown());
     }
@@ -1700,7 +1715,7 @@ public final class Compose {
             return;
         }
         if (tool.wheel) {                                   // right = one notch up, left = one notch down
-            if (h == null && tool != Tool.REROLL) {
+            if (h == null && tool != Tool.REROLL && tool != Tool.INTERIOR) {
                 BuildTool.say("准星没指着房间（对着线框点）");
                 return;
             }
@@ -1800,9 +1815,18 @@ public final class Compose {
         };
     }
 
+    static String interiorSay() {
+        return interior ? "内饰：有（家具、灯）" : "内饰：无（屋里空着，楼梯、梯子照有）";
+    }
+
     /** 能用滚轮的工具往上（d = 1）或往下（d = -1）一格。h：准星指着的房间和碰到线框的点（换样子可以没有）。 */
     static void step(Minecraft mc, Object[] h, int d, boolean ctrl) {
         ComposeScreen.Options o = options();
+        if (tool == Tool.INTERIOR) {                        // 整栋的，指没指着房间都一样
+            interior = !interior;
+            BuildTool.say(interiorSay());
+            return;
+        }
         if (h == null) {                                    // 换样子，没指着房间：整栋换
             look = Math.max(0, look + d);
             BuildTool.say("整栋换样子：第 " + (look + 1) + " 个" + (look == 0 ? "（最初那个）" : ""));
@@ -2068,7 +2092,7 @@ public final class Compose {
     private static final Tool[][] GROUPS = {
             {Tool.DRAW, Tool.ROUND}, {Tool.MOVE}, {Tool.SHAPE, Tool.STACK, Tool.STACKON, Tool.HEIGHT, Tool.TAPER, Tool.PINGZUO},
             {Tool.PODIUM, Tool.PODSHAPE, Tool.STEPS, Tool.MARGIN, Tool.GATEWAY, Tool.BASE},
-            {Tool.USE, Tool.ROOF, Tool.EAVE, Tool.PITCH, Tool.EAVEOUT, Tool.LIFT, Tool.ZOUSHOU, Tool.DOUGONG, Tool.CAIHUA, Tool.WALLS, Tool.BAYSTYLE, Tool.THEME, Tool.GALLERY, Tool.GABLE, Tool.OPEN, Tool.FLOOROPEN, Tool.PALETTE, Tool.FRONT},
+            {Tool.USE, Tool.INTERIOR, Tool.ROOF, Tool.EAVE, Tool.PITCH, Tool.EAVEOUT, Tool.LIFT, Tool.ZOUSHOU, Tool.DOUGONG, Tool.CAIHUA, Tool.WALLS, Tool.BAYSTYLE, Tool.THEME, Tool.GALLERY, Tool.GABLE, Tool.OPEN, Tool.FLOOROPEN, Tool.PALETTE, Tool.FRONT},
             {Tool.REROLL, Tool.COPY, Tool.DELETE}};
 
     /**
@@ -2089,7 +2113,7 @@ public final class Compose {
         colW = Math.max(colW, font.width("预览 88888 格") + 2 * pad);
         String status = ROOMS.isEmpty() ? "还没有房间" : previewOff() ? "太大，不出预览" : BuildTool.previewPending() ? BuildTool.previewLabel() : Preview.shown() ? "预览 " + Preview.blocks() + " 格" : "";
         int rows = Tool.values().length;
-        int fixed = pad * 2 + 1 + 10 + (GROUPS.length - 1) * groupGap + (look > 0 ? 10 : 0);
+        int fixed = pad * 2 + 1 + 10 + (GROUPS.length - 1) * groupGap + (look > 0 ? 10 : 0) + (interior ? 0 : 10);
         if (fixed + rows * rowH > h - 8) rowH = Math.max(9, (h - 8 - fixed) / rows);
         int split = GROUPS.length;                     // still too tall: the later groups in a second column, split where the two are most even
         int colH = fixed + rows * rowH;
@@ -2113,6 +2137,10 @@ public final class Compose {
         ty += 10;
         if (look > 0) {
             g.drawString(font, "整栋第 " + (look + 1) + " 个样子", x + pad, ty, Ui.SUB, false);
+            ty += 10;
+        }
+        if (!interior) {
+            g.drawString(font, "内饰：无", x + pad, ty, Ui.GOLD, false);
             ty += 10;
         }
         g.fill(x + pad, ty, x + colW - pad, ty + 1, 0x40FFFFFF);

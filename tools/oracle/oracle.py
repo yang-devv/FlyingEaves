@@ -8,6 +8,8 @@ reference; the Java port must write the same .dvcr (block by block, byte by byte
       DIR/requests.json and run them
   python -I tools/oracle/oracle.py library | sites N | towns N [SECTS]
       every saved design (generator/data/library); 随机一院 plans; 随机城镇 / 随机宗门 designs (planned by the Python side)
+  python -I tools/oracle/oracle.py interior [N] [--seed S]
+      内饰：无 and 空房: N rooms of several profiles (and two saved designs) built bare and with empty floors
   python -I tools/oracle/oracle.py kinds [--seed S] [--only a,b] [--tiers all|ends]
       the build menu's kinds (bgen.build): every kind at every tier it lists (or only its first and last)
   python -I tools/oracle/oracle.py suite [N]
@@ -420,6 +422,33 @@ def design_request(d, rid, y=64, name=""):
                 seed=int(d.get("seed", 0) or 0), look=int(d.get("look", 0) or 0), rooms=rooms) if rooms else None
 
 
+def interior_requests(n=2, seed=7):
+    """内饰 (1.2): the same rooms built 内饰：无 ("interior": false, every room bare) and with 空房 floors (use "empty" on
+    every other storey, the ground floor first), for single rooms of several profiles, multi-room buildings and two
+    saved designs. Ids: bare_<id>, empty_<id>."""
+    reqs = []
+    base = []
+    for p in ("full", "storeys", "round_full", "multi_full", "mixed"):
+        base += random_rooms(n, seed=seed, profile=p)
+    base += library_requests()[:2]
+    for r in base:
+        reqs.append(dict(json.loads(json.dumps(r)), id="bare_" + r["id"], interior=False))
+    for r in base:
+        e = json.loads(json.dumps(r))
+        e["id"] = "empty_" + r["id"]
+        for room in e["rooms"]:
+            n = max(1, min(8, int(room.get("storeys", 1))))
+            uses = list(room.get("uses") or [])
+            if not uses:
+                uses = [room.get("use", "main_room")] + [room.get("use_upper", room.get("use", "bedroom"))] * (n - 1)
+            uses = (uses + [uses[-1]] * n)[:n]
+            room["uses"] = ["empty" if s % 2 == 0 else u for s, u in enumerate(uses)]
+            room["use"] = room["uses"][0]
+            room["use_upper"] = room["uses"][min(1, n - 1)]
+        reqs.append(e)
+    return reqs
+
+
 def site_requests(n):
     """随机一院 plans from the Python siteplan (house and palace, one to three courts, seeds 1..n; free plans
     randomized, seeds 1..n; the 宫城 city(1) when n >= 4) as compose requests."""
@@ -702,8 +731,10 @@ def main(argv):
         rf.write_text(json.dumps(reqs, ensure_ascii=False, indent=1), encoding="utf-8")
         files = [rf]
         ids = [r["id"] for r in reqs]
-    elif cmd in ("library", "sites", "towns", "kinds"):
-        if cmd == "kinds":
+    elif cmd in ("library", "sites", "towns", "kinds", "interior"):
+        if cmd == "interior":
+            reqs = interior_requests(int(pos[1]) if len(pos) > 1 else 2, int(opts.get("seed", 7)))
+        elif cmd == "kinds":
             reqs = kind_requests(int(opts.get("seed", 1)), set(opts["only"].split(",")) if opts.get("only") else None,
                                  opts.get("tiers", "all"))
         elif cmd == "library":

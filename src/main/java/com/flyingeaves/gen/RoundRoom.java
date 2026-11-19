@@ -229,13 +229,17 @@ public final class RoundRoom {
             doors.add(new int[]{0, -q});
             for (IntPair c : ladMore) doors.add(new int[]{c.a(), c.b()});
             for (IntPair c : here) doors.add(new int[]{c.a(), c.b()});
-            Furniture.furnish(f, rng, rt, -q, -q, q, q, ys, doors, "north", shs);
-            Set<IntPair> keep = new HashSet<>();
-            keep.add(ladC);
-            keep.add(IntPair.of(0, Rs - 1));
-            keep.addAll(ladMore);
-            keep.addAll(here);
-            Bgen.lightRoom(f, -Rs + 1, -Rs + 1, Rs - 1, Rs - 1, ys, shs, keep, Bgen.pickLight(rng, rt, tier, null), false, new HashSet<>(cs.inside.toList()));
+            if (!rt.equals(Bgen.EMPTY_ROOM)) {                       // (空房: nothing; 内饰：无: drawn, not kept)
+                boolean bare = House.t(spec, "_bare");
+                Furniture.furnish(bare ? Bgen.scratch(f) : f, rng, rt, -q, -q, q, q, ys, doors, "north", shs);
+                Set<IntPair> keep = new HashSet<>();
+                keep.add(ladC);
+                keep.add(IntPair.of(0, Rs - 1));
+                keep.addAll(ladMore);
+                keep.addAll(here);
+                Map<String, Object> fixture = Bgen.pickLight(rng, rt, tier, null);
+                if (!bare) Bgen.lightRoom(f, -Rs + 1, -Rs + 1, Rs - 1, Rs - 1, ys, shs, keep, fixture, false, new HashSet<>(cs.inside.toList()));
+            }
             if (s < n - 1) {
                 int top = ys + sh + Math.max(0, 7 - sh);
                 double rs = Rs + 0.5;

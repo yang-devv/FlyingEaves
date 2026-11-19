@@ -1,5 +1,23 @@
 # Changelog
 
+## Unreleased (1.2.0)
+
+- 单体建造: rooms without interior.
+  - **用途「空房」** (`empty`, the 74th use, last in the list: one notch down from 堂屋 with the wheel): that floor gets
+    no furniture and no lamps; walls, stairs and ladders as ever (a single use has no partitions).
+  - **内饰：有 / 无** for the whole building: a row in the room table (under 每层：用途、开敞) and a wheel tool **内饰**
+    next to 用途 (works without aiming at a room; the tool column shows 「内饰：无」 while it is off). 无: every room is
+    built without furniture and lamps; walls, partitions, doorways, stairs and ladders stay, so every floor is reachable.
+    The rest of the building is the same as with 有 (the furniture is drawn and thrown away, so the random draws match).
+    Kept for the session like 境界; a loaded design sets it (older saves: 有).
+  - Rooms without lamps are dark: mobs can spawn inside.
+- 随机一栋 never picks 空房.
+- Saves and requests: `"interior": false` only when 内饰 is 无, `"uses": [..., "empty", ...]`; older saves and the
+  presets are unchanged and build as before (byte for byte). `kinds.json` lists the new use.
+- Python generator (`-PwithPython=true`): the same (`bgen.EMPTY_ROOM`, `storey_interior(bare=)`, compose's
+  `"interior"`). Oracle: `oracle.py interior`, a new JUnit set `interior` (24 cases: bare and 空房 floors on rooms of
+  several profiles and two saved designs); the other sets unchanged, the start-up fixture only for the new use.
+
 ## Unreleased (1.1.0)
 
 - 单体建造: every setting of the room table now has a wheel tool in the world (36 tools, 31 on the wheel). New:

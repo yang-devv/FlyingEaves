@@ -9,6 +9,7 @@ states are strings). The Python version is the oracle: for the same request the 
 ```
 python -I tools/oracle/oracle.py rooms N --profile P [--seed S] [--tier T] [--set k=v,...] [--out DIR] [--quiet]
 python -I tools/oracle/oracle.py library [--out DIR]          # every design in generator/data/library
+python -I tools/oracle/oracle.py interior [N] [--seed S]      # 内饰：无 / 空房 floors on rooms of several profiles + 2 designs
 python -I tools/oracle/oracle.py kinds [--seed S] [--only a,b] [--tiers all|ends]   # the build menu: every kind x tier
 python -I tools/oracle/oracle.py run REQ.json [...]           # given daemon requests (a file: one request or a list)
 python -I tools/oracle/oracle.py plans GROUP [N] [--only S]   # the planners: sites | towns | sects | sentences | daemon | all

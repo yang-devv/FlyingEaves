@@ -306,7 +306,7 @@ public final class House {
             }
             int maxSide = t(spec, "_max_side") ? Dyn.toInt(spec.get("_max_side")) : (int) (8 * Math.min(k, 2));
             List<Bgen.Used> assigned = Bgen.storeyInterior(f, rng, hxs, hzs, ys, shs, program, ws(W, "fill"), keepFree, 0, maxSide, partitions,
-                    inner, tier, furnFree);
+                    inner, tier, furnFree, t(spec, "_bare"));
             Map<IntPair, Integer> level = new LinkedHashMap<>();
             for (int[] w : windows) {
                 int wu = w[0], wv = w[1];

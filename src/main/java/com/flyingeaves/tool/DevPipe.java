@@ -33,7 +33,11 @@ import java.util.Deque;
  *   needed), per chunk; the next {@code hash} of the same box says which chunks differ (undo restores exactly?).
  *   {@code rooms}: the rooms of 单体建造 and 48 around; no box: the last one</li>
  *   <li>{@code save} - save every level now, flushed (what quitting does; single player has no save-all)</li>
- *   <li>{@code undo}; {@code cmd <command without />} - a chat command; {@code newworld <name> [flat]} - a fresh creative
+ *   <li>{@code wheel <TOOL> <room> <d> [ctrl] [floor]} - one notch of a 单体建造 wheel tool (enum name, e.g. STEPS) on
+ *   room i (1-based; 0: no room aimed), d = 1 / -1, {@code ctrl} held, {@code floor} (1-based) aimed at; logs the
+ *   message and the room. {@code preview} - the preview now: blocks and a hash of its runs; {@code cundo} / {@code credo} -
+ *   单体建造's Ctrl+Z / Ctrl+Y</li>
+ *   <li>{@code undo} (the last placement); {@code cmd <command without />} - a chat command; {@code newworld <name> [flat]} - a fresh creative
  *   world (from the title screen); {@code quit} - close the game</li>
  * </ul>
  */
@@ -198,6 +202,25 @@ public final class DevPipe {
                     BuildTool.requestSite(a.length > 1 ? a[1] : "court");
                     log("site " + (a.length > 1 ? a[1] : "court"));
                 }
+                case "wheel" -> {
+                    Compose.Tool t = Compose.Tool.valueOf(a[1]);
+                    boolean ctrl = false;
+                    int floor = -1;
+                    for (int k = 4; k < a.length; k++) {
+                        if (a[k].equals("ctrl")) ctrl = true;
+                        else floor = Integer.parseInt(a[k]) - 1;
+                    }
+                    int i = Integer.parseInt(a[2]) - 1;
+                    Compose.testStep(t, i, 'c', Integer.parseInt(a[3]), ctrl, floor);
+                    log("wheel " + t + " (" + t.cn + "): " + (i >= 0 && i < Compose.ROOMS.size() ? Compose.ROOMS.get(i).key() : Compose.describe()));
+                }
+                case "cundo", "credo" -> {                      // 单体建造's own Ctrl+Z / Ctrl+Y
+                    if (a[0].equals("cundo")) Compose.undo();
+                    else Compose.redo();
+                    log(a[0] + ": " + Compose.describe());
+                }
+                case "preview" -> log("preview: " + (Preview.shown() ? Preview.blocks() + " blocks, runs " + Preview.fingerprint() : "none")
+                        + (BuildTool.previewPending() ? " (a newer one pending)" : ""));
                 case "undo" -> {
                     BuildTool.undo();
                     log("undo");

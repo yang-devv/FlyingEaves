@@ -34,8 +34,9 @@ import java.util.Random;
 /**
  * 单体建造（参考 The Mighty Architect）：按 H 进入，一次搭一栋。
  * <ul>
- * <li>工具（Alt + 滚轮换）：画房间、挪动、叠层、层高、用途、屋顶、墙、瓦、正面、换样子、照搬、删房间。除了画房间，其余工具都是对准星
- * 指着的那个房间用；能用滚轮的工具，右键等于往上滚一格、左键等于往下滚一格。</li>
+ * <li>工具（Alt + 滚轮换）：画房间、挪动、形状、叠层、层高、台基、用途、屋顶、墙、瓦、开敞、正面、换样子、照搬、删房间……房间表里的
+ * 每一项都有一个滚轮工具。除了画房间，其余工具都是对准星指着的那个房间用（用途、每层开敞对着的是那一层）；能用滚轮的工具，
+ * 右键等于往上滚一格、左键等于往下滚一格；对这间用不上的工具在工具栏里变暗（{@link #whyNot}）。</li>
  * <li>换样子像 TMA 那样用计数，不换种子：往回滚就回到刚才那个样子。不指着房间滚是整栋换；指着房间滚只换这一间；按住 Ctrl 只换它的屋顶。</li>
  * <li>Ctrl+Z 撤销、Ctrl+Y（或 Ctrl+Shift+Z）重做：房间表的每一次变化都记下来（画、挪、改选项、换样子都算）。</li>
  * <li>边改边看：房间或选项一变，就向生成器要一份新的预览，画成半透明方块（{@link Preview}），不写进世界。</li>
@@ -48,14 +49,19 @@ public final class Compose {
         DRAW("画房间", "右键点两个对角；后画的要贴着已有房间；左键删最后一个", false),
         ROUND("画圆塔", "右键点两个对角，圆塔放在这个框里（直径取短的一边）；左键删最后一个", false),
         MOVE("挪动", "滚轮沿你看的方向挪（往上滚往前）；按住 Ctrl 上下挪", true),
+        SHAPE("形状", "滚轮换这间的形状：矩形、圆塔，和房间设置组合不出来的牌楼、影壁、随墙门、琉璃门、垂花门、宫墙、铺地、河桥、陈设、台地、街道、石阶、石桥、地块（16 种）", true),
         STACK("叠层", "滚轮加减层数", true),
         GATEWAY("门洞", "滚轮调城台的门洞：自动（按台宽）、无、一个、三个、五个", true),
         STACKON("叠放", "滚轮切放在地上 / 叠在下面那间顶上（在别的房间里面画框会自动叠上去）", true),
-        HEIGHT("层高", "滚轮调这间每层多高（4–10 格）", true),
+        HEIGHT("层高", "滚轮调这间每层多高（4–16 格；调过的从 4 再往下滚回到自动）", true),
         TAPER("收分", "滚轮调每往上一层四边收几格（0 不收，1–3）：塔、楼阁往上变小", true),
+        PINGZUO("平座", "滚轮切有没有平座：圆塔每层楼板高度一圈带栏杆的走廊，搭在下层檐上（应县木塔）；两层以上的圆塔才有", true),
         PODIUM("台基", "滚轮调台基高度（没有、1–3 格）；按住 Ctrl 换样式：平台、须弥座、三层、城台（带门洞，城楼用）", true),
+        PODSHAPE("台基形状", "滚轮换台基形状：跟随（房间方台基方、圆塔台基圆）、方（圆塔下一座方台、城台）、圆（方殿下一座圆坛）；要先有台基", true),
+        STEPS("台阶", "滚轮调台基（台地）前面台阶的坡度：45° 一格一级，27°、18°、14° 缓的半砖一级、台阶也伸出去更长；要先有台基，城台没有台阶", true),
+        MARGIN("边距", "滚轮调墙脚到台基边走得过去几格：自动（一格，窗台、门灯挡着的那边加宽）、1–4、6、8、12、16、20（三台、坛、大城台）", true),
         BASE("基座", "滚轮换台基和地基的材料（石砖、和墙脚一样、青砖、白石……）", true),
-        USE("用途", "右键选准星指着的那一层做什么用", false),
+        USE("用途", "滚轮换准星指着的那一层做什么用；右键列出来挑", true),
         ROOF("屋顶", "滚轮换屋顶，Shift+右键列出来挑", true),
         EAVE("檐", "滚轮切单檐、重檐、三重檐（屋檐下面再一圈、两圈下檐）", true),
         PITCH("坡度", "滚轮调屋顶坡度：自动、缓、中、陡、很陡（大殿陡）", true),
@@ -70,6 +76,7 @@ public final class Compose {
         GALLERY("廊", "滚轮切无廊、前廊、后廊、前后廊（一排檐柱和披檐）、周围廊（四面一圈）", true),
         GABLE("山墙", "滚轮切普通山墙、马头墙（徽派，高出屋顶）", true),
         OPEN("开敞", "滚轮切封闭、正面敞开（戏台）、全敞开（四面只有柱子和矮栏杆，亭子）、穿堂（后面正中间通开到檩下、一楼不隔间，门殿）；按住 Ctrl 切出入口：前、前后（前后都有门和台阶，中轴上的殿、门殿）、四面（方殿）", true),
+        FLOOROPEN("每层开敞", "滚轮调准星指着的那一层：同整间（跟「开敞」）、封闭、正面敞开、全敞开、穿堂（戏台一楼正面敞开、楼上封闭）", true),
         PALETTE("材料", "右键一间房，在面前摆出材料板：往格子里放方块换那一部分的材料；再右键这间房存下来，左键取消", false),
         FRONT("正面", "滚轮转正面朝向", true),
         REROLL("换样子", "指着房间滚：只换这间；按住 Ctrl：只换它的屋顶；不指着房间：整栋换。往回滚回到原来的样子", true),
@@ -1669,9 +1676,13 @@ public final class Compose {
         if (h != null && right && (tool == Tool.USE || (Screen.hasShiftDown() && (tool == Tool.ROOF || tool == Tool.WALLS || tool == Tool.THEME)))) {
             Room r = (Room) h[0];
             selected = ROOMS.indexOf(r);
+            if (tool == Tool.USE && whyNot(Tool.USE, r, o) != null) {
+                BuildTool.say("房间 " + (selected + 1) + "：" + whyNot(Tool.USE, r, o));
+                return;
+            }
             switch (tool) {
                 case USE -> {
-                    int fl = Math.max(0, Math.min(r.storeys - 1, (int) ((((Vec3) h[1]).y - (r.y + 1)) / r.storeyHeight())));
+                    int fl = floorOf(r, (Vec3) h[1]);
                     mc.setScreen(new PickScreen((fl + 1) + " 楼做什么用（房间 " + (selected + 1) + "）", o.uses, () -> r.uses[fl], v -> r.uses[fl] = v, i -> 0));
                 }
                 case ROOF -> {
@@ -1761,6 +1772,34 @@ public final class Compose {
         }
     }
 
+    /** 准星碰到线框的点在这间的第几层（0 = 一楼；用途、每层开敞用，和准星信息里标出来的那层一样）。 */
+    static int floorOf(Room r, Vec3 p) {
+        return WheelSteps.floorAt(p.y, r.y, r.storeyHeight(), r.storeys);
+    }
+
+    /**
+     * 这个工具对这间房用不上的原因（和房间表里那一行变灰的条件一样），用得上返回 null。用不上的工具在左边工具栏里变暗，
+     * 滚了也不改，只说为什么。
+     */
+    static String whyNot(Tool t, Room r, ComposeScreen.Options o) {
+        boolean sp = r.special > 0;
+        String spn = sp && r.special < SPECIALS.length ? "「" + SPECIALS[r.special][1] + "」" : "";
+        return switch (t) {
+            case STACKON -> stackBase(r) == null && !r.stacked ? "下面没有房间（叠放要在前面画的另一间里面）" : null;
+            case PINGZUO -> sp ? spn + "没有平座" : !r.round ? "平座只有圆塔有（先用「形状」换成圆塔）"
+                    : r.storeys < 2 ? "平座在楼上：圆塔要两层以上（先用「叠层」加一层）" : null;
+            case PODSHAPE, MARGIN -> sp ? spn + "没有台基" : r.podium == 0 ? "还没有台基：先用「台基」滚出高度" : null;
+            case STEPS -> terrace(r) ? null : sp ? spn + "没有台阶" : r.podium == 0 ? "还没有台基：先用「台基」滚出高度"
+                    : r.podiumStyle == 3 ? "城台没有台阶（从门洞穿过去）：台阶坡度给平台、须弥座、三层" : null;
+            case GATEWAY -> r.podiumStyle != 3 || r.podium == 0 ? "门洞开在城台上：先把台基样式换成城台（台基工具按住 Ctrl 滚）" : null;
+            case ZOUSHOU -> o != null && !hipRoof(r, o) && !r.doubleEave ? "走兽骑在戗脊上：歇山、庑殿、攒尖、盝顶、十字脊才有（或者重檐的下檐）" : null;
+            case GABLE -> o != null && !gableRoof(r, o) ? "只有硬山、悬山顶两头有山墙，马头墙要先换这两种屋顶" : null;
+            case USE -> sp ? spn + "没有楼层，不分用途" : null;
+            case FLOOROPEN -> sp ? spn + "没有楼层" : r.round ? "圆塔不能一层层设开敞（整间的用「开敞」）" : null;
+            default -> null;
+        };
+    }
+
     /** 能用滚轮的工具往上（d = 1）或往下（d = -1）一格。h：准星指着的房间和碰到线框的点（换样子可以没有）。 */
     static void step(Minecraft mc, Object[] h, int d, boolean ctrl) {
         ComposeScreen.Options o = options();
@@ -1773,7 +1812,45 @@ public final class Compose {
         Vec3 p = (Vec3) h[1];
         selected = ROOMS.indexOf(r);
         String who = "房间 " + (selected + 1) + "：";
+        String no = whyNot(tool, r, o);
+        if (no != null) {
+            BuildTool.say(who + no);
+            return;
+        }
         switch (tool) {
+            case SHAPE -> {
+                int[] sh = WheelSteps.shapeOf(WheelSteps.cycle(WheelSteps.shapeIndex(r.round, r.special), d, SPECIALS.length + 1));
+                r.round = sh[0] == 1;
+                r.special = sh[1];
+                BuildTool.say(who + "形状：" + shapes().get(WheelSteps.shapeIndex(r.round, r.special))[1]);
+            }
+            case PINGZUO -> {
+                r.pingzuo = !r.pingzuo;
+                BuildTool.say(who + (r.pingzuo ? "平座：每层一圈" : "没有平座"));
+            }
+            case PODSHAPE -> {
+                r.podiumShape = WheelSteps.cycle(r.podiumShape, d, PODIUM_SHAPES.length);
+                BuildTool.say(who + "台基形状：" + PODIUM_SHAPES[r.podiumShape][1] + (r.podiumShape == 0 ? (r.round ? "（圆）" : "（方）") : ""));
+            }
+            case STEPS -> {
+                r.stepSlope = WheelSteps.cycle(r.stepSlope, d, STEP_SLOPES.length);
+                BuildTool.say(who + "台阶坡度：" + STEP_SLOPES[r.stepSlope][1]);
+            }
+            case MARGIN -> {
+                r.podiumMargin = WheelSteps.cycle(r.podiumMargin, d, PODIUM_MARGINS.length);
+                BuildTool.say(who + "台基边距：" + (r.podiumMargin == 0 ? "自动" : PODIUM_MARGINS[r.podiumMargin][1] + " 格"));
+            }
+            case USE -> {
+                int fl = floorOf(r, p);
+                r.uses[fl] = WheelSteps.cycle(r.uses[fl], d, o.uses.size());
+                BuildTool.say(who + (fl + 1) + " 楼：" + o.uses.get(r.uses[fl])[1]);
+            }
+            case FLOOROPEN -> {
+                int fl = floorOf(r, p);
+                r.floorOpen[fl] = WheelSteps.cycle(r.floorOpen[fl], d, FLOOR_OPEN.length);
+                BuildTool.say(who + (fl + 1) + " 楼开敞：" + FLOOR_OPEN[r.floorOpen[fl]][1]
+                        + (r.floorOpen[fl] == 0 ? "（" + OPENNESS[r.openness][1] + "）" : ""));
+            }
             case MOVE -> {
                 if (ctrl) {
                     r.y += d;
@@ -1792,27 +1869,19 @@ public final class Compose {
                 BuildTool.say(who + r.storeys + " 层");
             }
             case GATEWAY -> {
-                if (r.podiumStyle != 3 || r.podium == 0) {
-                    BuildTool.say(who + "门洞开在城台上：先把台基样式换成城台");
-                    return;
-                }
                 r.tunnels = Math.floorMod(r.tunnels + d, TUNNEL_COUNTS.length);
                 BuildTool.say(who + "门洞：" + TUNNEL_COUNTS[r.tunnels]);
             }
             case STACKON -> {
                 Room b = stackBase(r);
-                if (b == null && !r.stacked) {
-                    BuildTool.say(who + "下面没有房间（叠放要在前面画的另一间里面）");
-                    return;
-                }
                 r.stacked = !r.stacked;
                 if (!r.stacked) r.y = groundUnder(r.x0, r.z0, r.x1, r.z1, r.round, r.y);
                 restack();
                 BuildTool.say(who + (r.stacked ? "叠在房间 " + (ROOMS.indexOf(b) + 1) + " 顶上" : "放在地上"));
             }
             case HEIGHT -> {
-                r.sh = Math.max(4, Math.min(16, r.storeyHeight() + d));
-                BuildTool.say(who + "每层 " + r.sh + " 格高");
+                r.sh = WheelSteps.storeyHeight(r.sh, autoSh, d);
+                BuildTool.say(who + (r.sh == 0 ? "层高自动（现在每层 " + autoSh + " 格）" : "每层 " + r.sh + " 格高"));
             }
             case PODIUM -> {
                 if (ctrl) {
@@ -1867,10 +1936,6 @@ public final class Compose {
                 BuildTool.say(who + "翘角：" + LIFTS[r.lift]);
             }
             case ZOUSHOU -> {
-                if (!hipRoof(r, o) && !r.doubleEave) {
-                    BuildTool.say(who + "走兽骑在戗脊上：歇山、庑殿、攒尖、盝顶、十字脊才有（或者重檐的下檐）");
-                    return;
-                }
                 r.beasts = Math.floorMod(r.beasts + d, BEAST_COUNTS.length);
                 BuildTool.say(who + "走兽：" + BEAST_COUNTS[r.beasts]);
             }
@@ -1883,10 +1948,6 @@ public final class Compose {
                 BuildTool.say(who + "彩画：" + CAIHUAS[r.caihua][1]);
             }
             case GABLE -> {
-                if (!gableRoof(r, o)) {
-                    BuildTool.say(who + "只有硬山、悬山顶两头有山墙，马头墙要先换这两种屋顶");
-                    return;
-                }
                 r.horsehead = !r.horsehead;
                 BuildTool.say(who + (r.horsehead ? "马头墙" : "普通山墙"));
             }
@@ -1930,8 +1991,9 @@ public final class Compose {
         }
     }
 
-    /** 测试用（buildtool tool …）：拿某个工具对第 i 个房间滚一格；face 是大小工具对着的墙（w e n s），i < 0 是没指着房间。 */
-    static void testStep(Tool t, int i, char face, int d, boolean ctrl) {
+    /** 测试用（开发管道 wheel …）：拿某个工具对第 i 个房间滚一格；face 是对着的墙（w e n s），i < 0 是没指着房间；
+     *  floor >= 0：对着那一层的半腰（用途、每层开敞）。 */
+    static void testStep(Tool t, int i, char face, int d, boolean ctrl, int floor) {
         Minecraft mc = Minecraft.getInstance();
         tool = t;
         if (i < 0 || i >= ROOMS.size()) {
@@ -1948,6 +2010,7 @@ public final class Compose {
             case 's' -> new Vec3(c.x, c.y, b.maxZ);
             default -> c;
         };
+        if (floor >= 0) p = new Vec3(p.x, r.y + 1 + (floor + 0.5) * r.storeyHeight(), p.z);
         step(mc, new Object[]{r, p}, d, ctrl);
     }
 
@@ -1998,10 +2061,14 @@ public final class Compose {
 
     // ------------------------------------------------------------------ 画：线框和屏幕上方的工具条
 
+    /** 左边工具栏里对准星指着的房间用不上的工具的颜色（比没选中的再暗一些）。 */
+    private static final int DIMMED = 0xFF3A424D;
+
     /** 工具分组（左边工具栏里组和组之间空一点）。 */
     private static final Tool[][] GROUPS = {
-            {Tool.DRAW, Tool.ROUND}, {Tool.MOVE}, {Tool.STACK, Tool.STACKON, Tool.HEIGHT, Tool.TAPER, Tool.PODIUM, Tool.GATEWAY, Tool.BASE},
-            {Tool.USE, Tool.ROOF, Tool.EAVE, Tool.PITCH, Tool.EAVEOUT, Tool.LIFT, Tool.ZOUSHOU, Tool.DOUGONG, Tool.CAIHUA, Tool.WALLS, Tool.BAYSTYLE, Tool.THEME, Tool.GALLERY, Tool.GABLE, Tool.OPEN, Tool.PALETTE, Tool.FRONT},
+            {Tool.DRAW, Tool.ROUND}, {Tool.MOVE}, {Tool.SHAPE, Tool.STACK, Tool.STACKON, Tool.HEIGHT, Tool.TAPER, Tool.PINGZUO},
+            {Tool.PODIUM, Tool.PODSHAPE, Tool.STEPS, Tool.MARGIN, Tool.GATEWAY, Tool.BASE},
+            {Tool.USE, Tool.ROOF, Tool.EAVE, Tool.PITCH, Tool.EAVEOUT, Tool.LIFT, Tool.ZOUSHOU, Tool.DOUGONG, Tool.CAIHUA, Tool.WALLS, Tool.BAYSTYLE, Tool.THEME, Tool.GALLERY, Tool.GABLE, Tool.OPEN, Tool.FLOOROPEN, Tool.PALETTE, Tool.FRONT},
             {Tool.REROLL, Tool.COPY, Tool.DELETE}};
 
     /**
@@ -2024,12 +2091,18 @@ public final class Compose {
         int rows = Tool.values().length;
         int fixed = pad * 2 + 1 + 10 + (GROUPS.length - 1) * groupGap + (look > 0 ? 10 : 0);
         if (fixed + rows * rowH > h - 8) rowH = Math.max(9, (h - 8 - fixed) / rows);
-        int split = fixed + rows * rowH > h - 8 ? 3 : GROUPS.length;   // still too tall: groups 3.. in a second column
+        int split = GROUPS.length;                     // still too tall: the later groups in a second column, split where the two are most even
         int colH = fixed + rows * rowH;
-        if (split < GROUPS.length) {
-            int a = 0;
-            for (int gi = 0; gi < split; gi++) a += GROUPS[gi].length;
-            colH = fixed + Math.max(a, rows - a) * rowH;
+        if (colH > h - 8) {
+            int best = Integer.MAX_VALUE, a = 0;
+            for (int gi = 1; gi < GROUPS.length; gi++) {
+                a += GROUPS[gi - 1].length;
+                if (Math.max(a, rows - a) < best) {
+                    best = Math.max(a, rows - a);
+                    split = gi;
+                }
+            }
+            colH = fixed + best * rowH;
         }
         int x = 4, y = Math.max(4, (h - colH) / 2 - 10);
         if (split < GROUPS.length) colW = colW * 2;
@@ -2045,6 +2118,9 @@ public final class Compose {
         g.fill(x + pad, ty, x + colW - pad, ty + 1, 0x40FFFFFF);
         ty += 3;
         int ty0 = ty, cx0 = x, cw = split < GROUPS.length ? colW / 2 : colW;
+        Object[] aimHit = ROOMS.isEmpty() ? null : aimedHit(mc);   // the tools that do nothing for the room under the crosshair: dimmed
+        Room aimRoom = aimHit == null ? null : (Room) aimHit[0];
+        ComposeScreen.Options ao = options();
         for (int gi = 0; gi < GROUPS.length; gi++) {
             if (gi == split) {                         // the second column
                 ty = ty0;
@@ -2056,7 +2132,8 @@ public final class Compose {
                     Ui.round(g, cx0 + 3, ty - 1, cw - 6, rowH, 0x9038B68D);
                     g.fill(cx0 + 3, ty, cx0 + 5, ty + rowH - 2, Ui.ACCENT);
                 }
-                g.drawString(font, t.cn, cx0 + pad + 4, ty + Math.max(0, (rowH - 9) / 2), cur ? 0xFFFFFFFF : Ui.MUTED, false);
+                boolean off = aimRoom != null && whyNot(t, aimRoom, ao) != null;
+                g.drawString(font, t.cn, cx0 + pad + 4, ty + Math.max(0, (rowH - 9) / 2), cur ? (off ? Ui.SUB : 0xFFFFFFFF) : off ? DIMMED : Ui.MUTED, false);
                 ty += rowH;
             }
             ty += groupGap;
@@ -2078,10 +2155,14 @@ public final class Compose {
             }
         }
         if (lines.size() > 3) lines = lines.subList(0, 3);
+        String off = board == null && aimRoom != null ? whyNot(tool, aimRoom, ao) : null;   // why the current tool does nothing here
+        List<net.minecraft.util.FormattedCharSequence> offLines = off == null ? List.of()
+                : font.split(net.minecraft.network.chat.Component.literal("这间用不上：" + off), maxW - 16);
         int bw = 0;
         for (var l : lines) bw = Math.max(bw, font.width(l));
+        for (var l : offLines) bw = Math.max(bw, font.width(l));
         bw = Math.min(maxW, Math.max(bw, font.width(keys)) + 16);
-        int bh = 8 + lines.size() * 10 + 11;
+        int bh = 8 + (lines.size() + offLines.size()) * 10 + 11;
         int bx = (w - bw) / 2, by = 4;      // at the top: the hotbar area is where the game's own messages and item names go
         Ui.round(g, bx, by, bw, bh, 0xB0101418);
         g.drawString(font, tool.cn, bx + 8, by + 4, Ui.ACCENT, false);
@@ -2091,9 +2172,13 @@ public final class Compose {
             g.drawString(font, lines.get(i), bx + 8 + (i == 0 && board == null ? indent : 0), ly + (i == 0 || board != null ? 0 : 0), Ui.TEXT, false);
             ly += 10;
         }
+        for (var l : offLines) {
+            g.drawString(font, l, bx + 8, ly, Ui.GOLD, false);
+            ly += 10;
+        }
         String k2 = font.width(keys) > bw - 16 ? font.plainSubstrByWidth(keys, bw - 20) + "…" : keys;
         g.drawString(font, k2, bx + 8, ly + 1, Ui.MUTED, false);
-        if (tool == Tool.USE) aimedInfo(g, font, w, by + bh + 3, maxW);     // only while picking what the floors are for
+        if (tool == Tool.USE || tool == Tool.FLOOROPEN) aimedInfo(g, font, w, by + bh + 3, maxW);     // only while setting the floors one by one
     }
 
     private static String plain(net.minecraft.util.FormattedCharSequence seq) {
@@ -2114,8 +2199,7 @@ public final class Compose {
         Room r = (Room) hit[0];
         int idx = ROOMS.indexOf(r);
         int shh = Math.max(1, r.storeyHeight());
-        int fl = (int) Math.floor((((Vec3) hit[1]).y - (r.y + 1 + r.podium)) / shh);
-        fl = Math.max(0, Math.min(r.storeys - 1, fl));
+        int fl = floorOf(r, (Vec3) hit[1]);              // (the floor the wheel and the list change)
         String head = "房间 " + (idx + 1) + (r.special > 0 ? "「" + SPECIALS[r.special][1] + "」" : "") + (r.recipe >= 0 && r.recipe < recipeData().size() ? "「" + recipeData().get(r.recipe).get("name").getAsString() + "」" : "") + "  " + (r.round ? "圆塔 直径 " + (r.x1 - r.x0 + 1) : (r.x1 - r.x0 + 1) + "×" + (r.z1 - r.z0 + 1))
                 + " · " + r.storeys + " 层（每层 " + shh + " 格）" + (r.taper > 0 ? " · 收分 每层" + (r.round ? "半径" : "") + "收 " + r.taper + " 格" : "") + (r.round && r.pingzuo && r.storeys > 1 ? " · 平座" : "")
                 + (r.pitch > 0 ? " · 坡度" + PITCHES[r.pitch] : "") + (r.overhang > 0 ? " · 出檐" + EAVE_OUTS[r.overhang] : "")
@@ -2125,7 +2209,9 @@ public final class Compose {
                 + (r.podium > 0 ? " · 台基 " + r.podium + " 格" : "")
                 + (r.podium > 0 && r.podiumStyle == 3 && r.tunnels > 0 ? " · 门洞" + TUNNEL_COUNTS[Math.min(r.tunnels, TUNNEL_COUNTS.length - 1)] : "");
         List<String> floors = new ArrayList<>();
-        for (int s = 0; s < r.storeys; s++) floors.add((s + 1) + "楼 " + o.uses.get(Math.min(r.uses[s], o.uses.size() - 1))[1]);
+        for (int s = 0; s < r.storeys; s++)
+            floors.add((s + 1) + "楼 " + o.uses.get(Math.min(r.uses[s], o.uses.size() - 1))[1]
+                    + (r.floorOpen[s] > 0 ? "·" + FLOOR_OPEN[Math.min(r.floorOpen[s], FLOOR_OPEN.length - 1)][1] : ""));
         String mat = "屋顶 " + (r.round ? ROUND_ROOFS[Math.min(r.roundRoof, ROUND_ROOFS.length - 1)][1] : o.roofs.get(Math.min(r.roof, o.roofs.size() - 1))[1]) + (r.tripleEave ? "（三重檐）" : r.doubleEave ? "（重檐）" : "")
                 + " · 墙 " + o.walls.get(Math.min(r.walls, o.walls.size() - 1))[1]
                 + " · 瓦 " + o.themes.get(Math.min(r.theme, o.themes.size() - 1))[1]

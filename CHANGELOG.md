@@ -1,5 +1,20 @@
 # Changelog
 
+## Unreleased (1.1.0)
+
+- 单体建造: every setting of the room table now has a wheel tool in the world (36 tools, 31 on the wheel). New:
+  **形状** (16 shapes), **平座**, **台基形状** (跟随 / 方 / 圆), **台阶** (45° / 27° / 18° / 14°), **边距** (自动, 1–4, 6, 8,
+  12, 16, 20) and **每层开敞** (the floor under the crosshair); **用途** now also turns with the wheel (right-click still
+  lists them); **层高** scrolls back to 自动 below 4. The tool column has a 台基 group of its own.
+- Tools that do nothing for the room under the crosshair are dimmed in the tool column, and the hint box says why
+  (平座: round towers of 2+ storeys; 门洞: 城台; 台阶: a podium that is not a 城台, or a 台地; 台基形状 / 边距: a
+  podium; 用途 / 每层开敞: not for gates, walls and the other special shapes; 每层开敞: not round towers); scrolling
+  them changes nothing.
+- 用途 and 每层开敞 pick the floor by the room's frame, the same floor the aim info highlights (before, the list and
+  the highlight could disagree by the podium's height).
+- Saves, undo/redo and the generator's request are unchanged (same JSON fields).
+- Dev pipe: `wheel <TOOL> <room> <d> [ctrl] [floor]`, `preview`.
+
 ## 1.0.0 — pure Java (first public release)
 
 - The generator is ported to Java (`com.flyingeaves.gen`) and runs inside the game on one worker thread: the O menu's

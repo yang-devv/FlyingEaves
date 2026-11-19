@@ -29,16 +29,22 @@ Minecraft **Forge 1.20.1** 模组 · 纯 Java，不需要 Python · MIT 许可�
 在地上右键两个对角画一间房（或一座圆塔）；可以画好几间，相连、叠层都行。每改一样东西，准星前就出一份**半透明的实时预览**
 （只画不写，不动世界），满意了再「生成」。所有操作都能 **Ctrl+Z 撤销 / Ctrl+Y 重做**。
 
-左边的工具栏一共 30 个工具，其中 24 个用**滚轮**调（右键、左键等于滚一格；Alt+滚轮换工具）：
+左边的工具栏一共 36 个工具，其中 31 个用**滚轮**调（右键、左键等于滚一格；Alt+滚轮换工具）——房间表里的每一项都有一个滚轮工具。
+对准星指着的那间用不上的工具在工具栏里变暗（比如平座只给两层以上的圆塔、门洞只给城台、台阶坡度要先有台基），滚了也不改，只说为什么：
 
 | 工具 | 滚轮调什么 | 选项 |
 |---|---|---|
 | 挪动 | 沿视线挪房间；Ctrl 上下挪 | — |
+| 形状 | 这间是什么 | 16 种：矩形、圆塔、牌楼、影壁、随墙门、琉璃门、垂花门、宫墙、铺地、河桥、陈设、台地、街道、石阶、石桥、地块 |
 | 叠层 | 层数 | 加减 |
 | 叠放 | 放在地上 / 叠在下面那间顶上 | 2 |
-| 层高 | 每层多高 | 自动、4–10、12、14、16 格（11 档） |
+| 层高 | 每层多高 | 4–16 格；调过的从 4 再往下回到自动 |
 | 收分 | 每往上一层四边收几格（塔、楼阁） | 0–3 |
+| 平座 | 圆塔每层一圈带栏杆的走廊（两层以上的圆塔） | 2：无、每层一圈 |
 | 台基 | 台基高度；Ctrl 换样式 | 高 0–6、8、10、12 格（10 档）；样式 4 种：平台、须弥座、三层、城台 |
+| 台基形状 | 台基方圆（要先有台基） | 3 种：跟随、方、圆 |
+| 台阶 | 台基、台地前台阶的坡度（要先有台基；城台没有） | 4 档：45°、27°、18°、14° |
+| 边距 | 墙脚到台基边几格（要先有台基） | 10 档：自动、1、2、3、4、6、8、12、16、20 |
 | 门洞 | 城台的门洞 | 5 种：自动、无、一个、三个、五个 |
 | 基座 | 台基和地基的材料 | 9 种：石砖、和墙脚一样、青砖、白石、夯土、土砖、毛石、砂岩、黑石 |
 | 屋顶 | 屋顶形式 | 9 种：歇山、庑殿、悬山、硬山、卷棚、攒尖、盝顶、十字脊、圆攒尖（圆塔另有 5 种：攒尖、盔顶、圆顶、盝顶、平顶） |
@@ -54,12 +60,13 @@ Minecraft **Forge 1.20.1** 模组 · 纯 Java，不需要 Python · MIT 许可�
 | 瓦 | 屋瓦 | 10 种：灰瓦、绿琉璃、黄琉璃、黑瓦、红瓦、碧瓦、石板、木板、茅草、泥瓦 |
 | 廊 | 檐柱和披檐 | 5 种：无廊、前廊、后廊、前后廊、周围廊 |
 | 山墙 | 普通山墙 / 马头墙（徽派） | 2 |
+| 用途 | 准星指着的那一层做什么用（右键列出来挑） | 73 种：堂屋、卧房、书房、客栈大堂、茶馆、药铺、祠堂、丹房、藏经、大殿（宝座）…… |
 | 开敞 | 墙面开敞；Ctrl 切出入口 | 开敞 4 种：封闭、正面敞开（戏台）、全敞开（亭）、穿堂；出入口 3 种：前、前后、四面 |
+| 每层开敞 | 准星指着的那一层的开敞（圆塔没有） | 5 种：同整间、封闭、正面敞开、全敞开、穿堂 |
 | 正面 | 正面朝向 | 4 个方向 |
 | 换样子 | 指着房间：只换这间；Ctrl：只换屋顶；不指着：整栋换；往回滚回到原来的样子 | 不限 |
 
-不用滚轮的 6 个：**画房间**、**画圆塔**、**用途**（右键选这一层做什么用，73 种：堂屋、卧房、书房、客栈大堂、茶馆、药铺、祠堂、
-丹房、藏经、大殿（宝座）……）、**材料**（在面前摆出材料板，往格子里放任何方块——包括其他模组的——替换那一部分的材料）、
+不用滚轮的 5 个：**画房间**、**画圆塔**、**材料**（在面前摆出材料板，往格子里放任何方块——包括其他模组的——替换那一部分的材料）、
 **照搬**（把一间的样子照搬到另一间）、**删房间**。
 
 **房间表**（再按 H）：每间房一组设置——形状（矩形、圆塔，以及牌楼、影壁、随墙门、琉璃门、垂花门、宫墙、铺地、河桥、陈设、
@@ -196,11 +203,12 @@ Python needed**. Chinese UI only; single player (or a LAN host) only.
 ### Features
 
 - **H — single building (单体建造)**: right-click two corners to draw rooms (rectangles or round towers; joined or
-  stacked). 24 scroll-wheel tools set every part of each room: storeys, storey height, taper, podium (height, 4
-  styles, 3 shapes, 4 step slopes, 10 margins, gate tunnels, 9 base materials), 9 roof forms (+5 for round towers),
-  single/double/triple eaves, pitch, overhang, corner lift, ridge beasts, bracket sets, 4 painted-beam styles, 12 wall
-  styles, 6 window/bay styles, 10 roof tiles, 5 veranda layouts, horse-head gables, openness and entrances, facing,
-  and "reroll". Plus 73 room uses per floor, a material board that accepts any block (other mods' too), copy-style,
+  stacked). 31 scroll-wheel tools set every setting of each room, the room table's included: shape (16), storeys,
+  storey height, taper, pingzuo balconies, podium (height, 4 styles, 3 shapes, 4 step slopes, 10 margins, gate
+  tunnels, 9 base materials), 9 roof forms (+5 for round towers), single/double/triple eaves, pitch, overhang, corner
+  lift, ridge beasts, bracket sets, 4 painted-beam styles, 12 wall styles, 6 window/bay styles, 10 roof tiles, 5
+  veranda layouts, horse-head gables, openness and entrances (also per floor), 73 room uses per floor, facing, and
+  "reroll"; tools that do nothing for the aimed room are dimmed. Plus a material board that accepts any block (other mods' too), copy-style,
   and 16 shapes in all (gates, screen walls, palace walls, bridges, streets, terraces…). A **translucent live
   preview** follows every change; Ctrl+Z / Ctrl+Y undo and redo. Press H again for the **room table**: every setting
   per room, saves, a default style, and the preset library.

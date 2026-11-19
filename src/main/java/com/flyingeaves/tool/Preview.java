@@ -72,6 +72,19 @@ public final class Preview {
         return blocks;
     }
 
+    /** 开发管道用：最近一份列段的指纹（换了设置，预览变没变）。 */
+    static String fingerprint() {
+        CanvasStamp.Runs r = last;
+        if (r == null) return "-";
+        long h = java.util.Objects.hash(r.x0(), r.z0(), r.w(), r.d());
+        h = h * 31 + java.util.Arrays.hashCode(r.start());
+        h = h * 31 + java.util.Arrays.hashCode(r.y0());
+        h = h * 31 + java.util.Arrays.hashCode(r.y1());
+        h = h * 31 + java.util.Arrays.hashCode(r.pal());
+        h = h * 31 + java.util.Arrays.hashCode(r.palette());
+        return Long.toHexString(h);
+    }
+
     /** 传进显卡的预览（以 origin 为原点），和画它用的一个缓冲。 */
     private static VertexBuffer vbo;
     private static BlockPos origin = BlockPos.ZERO;

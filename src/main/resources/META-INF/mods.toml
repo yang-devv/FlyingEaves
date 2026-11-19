@@ -8,6 +8,7 @@ modId="${mod_id}"
 version="${mod_version}"
 displayName="${mod_name}"
 displayURL="https://github.com/yang-devv/FlyingEaves"
+logoFile="flyingeaves_logo.png"
 authors="${mod_authors}"
 credits="Inspired by the approach of The Mighty Architect (simibubi); not affiliated."
 description='''${mod_description}'''

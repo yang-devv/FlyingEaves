@@ -1,3 +1,5 @@
+<img src="docs/images/icon.png" width="128" align="right" alt="Flying Eaves icon">
+
 # 营造 · Flying Eaves
 
 **一键生成中式古建筑：从单体的大殿、楼阁，到院落，乃至整座城镇；1:1 紫禁城。**

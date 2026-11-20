@@ -112,6 +112,13 @@ tasks.register('writeBuildInfo') {
 tasks.named('processResources', ProcessResources).configure {
     from(generatorFiles) { into 'flyingeaves/generator' }
     from(tasks.named('writeBuildInfo'))
+    // 繁体中文 (zh_tw, zh_hk) shows the zh_cn text rather than falling back to English
+    ['zh_tw', 'zh_hk'].each { lang ->
+        from('src/main/resources/assets/flyingeaves/lang/zh_cn.json') {
+            into 'assets/flyingeaves/lang'
+            rename { "${lang}.json" }
+        }
+    }
     inputs.property 'withPython', withPython
     var replaceProperties = [
             minecraft_version: minecraft_version, minecraft_version_range: minecraft_version_range,

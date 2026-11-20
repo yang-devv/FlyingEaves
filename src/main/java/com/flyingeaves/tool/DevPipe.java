@@ -37,6 +37,9 @@ import java.util.Deque;
  *   room i (1-based; 0: no room aimed), d = 1 / -1, {@code ctrl} held, {@code floor} (1-based) aimed at; logs the
  *   message and the room. {@code preview} - the preview now: blocks and a hash of its runs; {@code cundo} / {@code credo} -
  *   单体建造's Ctrl+Z / Ctrl+Y</li>
+ *   <li>{@code texts} - every string the next frame draws (screens, the tool column, hints), " [cut]" where it did not
+ *   fit, [CJK] where it has Chinese; {@code screen compose|menu [kind]|lib [folder]|mine|close}; {@code tool <TOOL>};
+ *   {@code lang <code>} - switch the game's language (reloads the resources)</li>
  *   <li>{@code undo} (the last placement); {@code cmd <command without />} - a chat command; {@code newworld <name> [flat]} - a fresh creative
  *   world (from the title screen); {@code quit} - close the game</li>
  * </ul>
@@ -86,6 +89,18 @@ public final class DevPipe {
     }
 
     private static void tick() {
+        java.util.List<String> cap = Ui.CAPTURE;
+        if (cap != null && !cap.isEmpty()) {                    // (a frame drew since {@code texts}: what it drew)
+            Ui.CAPTURE = null;
+            java.util.Set<String> seen = new java.util.LinkedHashSet<>(cap);
+            int cjk = 0;
+            for (String s : seen) {
+                boolean c = s.codePoints().anyMatch(ch -> Character.UnicodeScript.of(ch) == Character.UnicodeScript.HAN);
+                if (c) cjk++;
+                log("text: " + (c ? "[CJK] " : "") + s);
+            }
+            log("texts: " + seen.size() + " strings, " + cjk + " with Chinese");
+        }
         peak = Math.max(peak, used());
         afterGcPeak = Math.max(afterGcPeak, afterGc());
         try {
@@ -118,6 +133,36 @@ public final class DevPipe {
                                     : net.minecraft.world.level.levelgen.presets.WorldPresets.NORMAL)
                             .value().createWorldDimensions());
                     log("newworld " + name + (flat ? " flat" : ""));
+                }
+                case "texts" -> Ui.CAPTURE = new java.util.ArrayList<>();
+                case "screen" -> {
+                    String what = a.length > 1 ? a[1] : "close";
+                    switch (what) {
+                        case "compose" -> {
+                            ComposeScreen.showDesigns(false);
+                            mc.setScreen(new ComposeScreen());
+                        }
+                        case "lib", "mine" -> {
+                            ComposeScreen.showDesigns(what.equals("lib"), a.length > 2 ? job.substring(job.indexOf(a[2])).trim() : "");
+                            mc.setScreen(new ComposeScreen());
+                        }
+                        case "menu" -> {
+                            if (a.length > 2) BuildToolScreen.remember(a[2]);
+                            mc.setScreen(new BuildToolScreen());
+                        }
+                        default -> mc.setScreen(null);
+                    }
+                    log("screen " + what);
+                }
+                case "tool" -> {
+                    Compose.tool = Compose.Tool.valueOf(a[1]);
+                    log("tool " + Compose.tool + " (" + Compose.tool.cn() + ")");
+                }
+                case "lang" -> {
+                    mc.options.languageCode = a[1];
+                    mc.getLanguageManager().setSelected(a[1]);
+                    mc.options.save();
+                    mc.reloadResourcePacks().thenRun(() -> mc.execute(() -> log("lang " + a[1] + ": " + L.t("compose.title") + " / " + Compose.PITCHES[1])));
                 }
                 case "quit" -> {
                     log("quit");
@@ -212,7 +257,7 @@ public final class DevPipe {
                     }
                     int i = Integer.parseInt(a[2]) - 1;
                     Compose.testStep(t, i, 'c', Integer.parseInt(a[3]), ctrl, floor);
-                    log("wheel " + t + " (" + t.cn + "): " + (i >= 0 && i < Compose.ROOMS.size() ? Compose.ROOMS.get(i).key() : Compose.describe()));
+                    log("wheel " + t + " (" + t.cn() + "): " + (i >= 0 && i < Compose.ROOMS.size() ? Compose.ROOMS.get(i).key() : Compose.describe()));
                 }
                 case "cundo", "credo" -> {                      // 单体建造's own Ctrl+Z / Ctrl+Y
                     if (a[0].equals("cundo")) Compose.undo();

@@ -12,6 +12,7 @@ import com.flyingeaves.gen.Platforms;
 import com.flyingeaves.gen.RunFiles;
 import com.flyingeaves.gen.py.PyRandom;
 import com.flyingeaves.tool.CanvasStamp;
+import com.flyingeaves.tool.L;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.minecraftforge.fml.ModList;
@@ -175,10 +176,11 @@ public final class JavaBackend {
 
     /** For the player's messages when something is missing: how the in-game generator is. */
     public static String status() {
-        return status;
+        return status.get();
     }
 
-    private static volatile String status = "游戏内生成器还没起来";
+    /** (a line of the lang file, put together when it is shown: the game's language then) */
+    private static volatile java.util.function.Supplier<String> status = () -> L.t("gen.java_not_up");
 
     /** Requests waiting or being built (for status lines). */
     public static int pending() {
@@ -229,7 +231,7 @@ public final class JavaBackend {
                 try {
                     prepare();
                 } catch (Throwable t) {
-                    status = "游戏内生成器读不了数据：" + t;
+                    status = () -> L.t("gen.java_no_data", t);
                     FlyingEaves.LOGGER.warn("java generator: could not load its data", t);
                 }
                 continue;
@@ -260,8 +262,7 @@ public final class JavaBackend {
             if (need > free) {
                 FlyingEaves.LOGGER.warn("java generator: {} needs about {} MB of heap, {} MB free (max {} MB)", job.id, need >> 20,
                         free >> 20, Runtime.getRuntime().maxMemory() >> 20);
-                fail(job, String.format("内存不够：这个要约 %d MB，游戏只剩 %d MB（最多 %d MB）。在启动器里把 -Xmx 调大（紫禁城 1:1 建议 -Xmx4G）",
-                        need >> 20, free >> 20, Runtime.getRuntime().maxMemory() >> 20));
+                fail(job, L.t("gen.no_memory", need >> 20, free >> 20, Runtime.getRuntime().maxMemory() >> 20));
                 return;
             }
         }
@@ -304,7 +305,7 @@ public final class JavaBackend {
                 return;
             }
             FlyingEaves.LOGGER.warn("java generator: {} ran out of memory (max {} MB)", job.id, Runtime.getRuntime().maxMemory() >> 20);
-            fail(job, "内存不够（游戏最多 " + (Runtime.getRuntime().maxMemory() >> 20) + " MB）：在启动器里把 -Xmx 调大（紫禁城 1:1 建议 -Xmx4G）");
+            fail(job, L.t("gen.out_of_memory", Runtime.getRuntime().maxMemory() >> 20));
             return;
         } catch (Exception | StackOverflowError e) {
             FlyingEaves.LOGGER.warn("java generator: {} failed", job.id, e);
@@ -397,7 +398,7 @@ public final class JavaBackend {
     private static void toPython(Job job, String why) {
         if (!Build.PYTHON) {                                // (a release build: there is no Python generator)
             FlyingEaves.LOGGER.warn("java generator: {} cannot be built ({})", job.id, why);
-            fail(job, "游戏内生成器做不了这个：" + why);
+            fail(job, L.t("gen.cannot", why));
             return;
         }
         FlyingEaves.LOGGER.info("java generator: {} -> python ({})", job.id, why);
@@ -442,9 +443,9 @@ public final class JavaBackend {
         try {
             int n = RunFiles.write(run);
             FlyingEaves.LOGGER.info("java generator: wrote kinds.json ({} kinds), presets, library, sites", n);
-            status = "游戏内生成器在运行";
+            status = () -> L.t("gen.java_running");
         } catch (IOException e) {
-            status = "游戏内生成器写不了 " + run + "：" + e;
+            status = () -> L.t("gen.java_cant_write", run, e);
             FlyingEaves.LOGGER.warn("java generator: could not write kinds.json and the rest", e);
         }
     }

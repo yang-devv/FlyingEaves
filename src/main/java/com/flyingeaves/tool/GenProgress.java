@@ -87,7 +87,7 @@ final class GenProgress {
     }
 
     String warning(long now) {
-        return "生成器 " + silentMs(now) / 1000 + " 秒没动静……（" + com.flyingeaves.backend.GeneratorProcess.hint() + "）";
+        return L.t("prog.silent", silentMs(now) / 1000, com.flyingeaves.backend.GeneratorProcess.hint());
     }
 
     String text() {
@@ -109,11 +109,11 @@ final class GenProgress {
     /** 「生成中 45% · 建筑 37/97 · 23 秒」；排着队是「排队中（生成器在忙前一个）· 5 秒」。 */
     static String text(JsonObject o, long elapsedMs) {
         String stage = o.has("stage") ? o.get("stage").getAsString() : "";
-        String secs = " · " + elapsedMs / 1000 + " 秒";
-        if (stage.equals("排队")) return "排队中（生成器在忙前一个）" + secs;
-        StringBuilder sb = new StringBuilder("生成中");
+        String secs = L.t("prog.secs", elapsedMs / 1000);
+        if (stage.equals("排队")) return L.t("prog.queued") + secs;      // (the stages are the generator's: Chinese ids)
+        StringBuilder sb = new StringBuilder(L.t("prog.generating"));
         if (o.has("pct")) sb.append(' ').append(o.get("pct").getAsInt()).append('%');
-        if (!stage.isEmpty()) sb.append(" · ").append(stage);
+        if (!stage.isEmpty()) sb.append(" · ").append(L.stage(stage));
         if (o.has("done") && o.has("total")) sb.append(' ').append(o.get("done").getAsInt()).append('/').append(o.get("total").getAsInt());
         return sb.append(secs).toString();
     }

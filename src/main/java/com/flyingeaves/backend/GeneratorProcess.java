@@ -3,6 +3,7 @@ package com.flyingeaves.backend;
 import com.flyingeaves.Build;
 import com.flyingeaves.Config;
 import com.flyingeaves.FlyingEaves;
+import com.flyingeaves.tool.L;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.FMLPaths;
 
@@ -39,7 +40,8 @@ import java.util.stream.Stream;
  */
 public final class GeneratorProcess {
     private static volatile Process process;
-    private static volatile String status = "生成器还没启动";
+    /** (a line of the lang file, put together when it is shown: the game's language then) */
+    private static volatile java.util.function.Supplier<String> status = () -> L.t("gen.py_not_started");
     private static volatile boolean stopping;
     private static boolean hooked;
     /** start() was called (backend = java: only once a request needs Python). */
@@ -54,9 +56,9 @@ public final class GeneratorProcess {
     public static String hint() {
         if (!Build.PYTHON) return JavaBackend.status();
         Process p = process;
-        if (p != null && p.isAlive()) return "生成器在运行，但没回应；看 logs/flyingeaves-generator.log";
+        if (p != null && p.isAlive()) return L.t("gen.py_silent");
         if (!attempted && JavaBackend.enabled()) return JavaBackend.status();
-        return status;
+        return status.get();
     }
 
     public static boolean running() {
@@ -69,7 +71,7 @@ public final class GeneratorProcess {
         if (!Build.PYTHON) return;                         // (a release build: no Python generator at all)
         attempted = true;
         if (!Config.AUTO_START.get()) {
-            status = "生成器没自动启动（config/flyingeaves-client.toml 里 autoStart = false）";
+            status = () -> L.t("gen.py_no_autostart");
             failed = true;
             return;
         }
@@ -83,14 +85,14 @@ public final class GeneratorProcess {
         try {
             Path gen = generatorDir();
             if (!Files.exists(gen.resolve("bgen_daemon.py"))) {
-                status = "生成器没起来：" + gen + " 里没有 bgen_daemon.py";
+                status = () -> L.t("gen.py_no_daemon", gen);
                 failed = true;
                 FlyingEaves.LOGGER.warn("generator: no bgen_daemon.py in {}", gen);
                 return;
             }
             List<String> python = findPython();
             if (python == null) {
-                status = "生成器没起来：找不到 Python 3.10+（装 Python，或在 config/flyingeaves-client.toml 里填 pythonPath）";
+                status = () -> L.t("gen.py_no_python");
                 failed = true;
                 FlyingEaves.LOGGER.warn("generator: no Python 3.10+ found");
                 return;
@@ -116,17 +118,17 @@ public final class GeneratorProcess {
                     Runtime.getRuntime().addShutdownHook(new Thread(GeneratorProcess::stop, "flyingeaves-generator-stop"));
                 }
             }
-            status = "生成器在运行";
+            status = () -> L.t("gen.py_running");
             FlyingEaves.LOGGER.info("generator started: {} (pid {}), log {}", String.join(" ", cmd), process.pid(), log);
             Process p = process;
             p.onExit().thenAccept(q -> {
                 if (!stopping) {
-                    status = "生成器退出了（退出码 " + q.exitValue() + "）；看 logs/flyingeaves-generator.log";
+                    status = () -> L.t("gen.py_exited", q.exitValue());
                     FlyingEaves.LOGGER.warn("generator exited with {}", q.exitValue());
                 }
             });
         } catch (Exception e) {
-            status = "生成器没起来：" + e;
+            status = () -> L.t("gen.py_failed", e);
             failed = true;
             FlyingEaves.LOGGER.warn("generator failed to start", e);
         }

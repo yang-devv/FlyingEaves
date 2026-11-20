@@ -82,12 +82,12 @@ public final class PartCommands {
         ServerPlayer p = c.getSource().getPlayerOrException();
         BlockPos[] cs = CORNERS.get(p.getUUID());
         if (cs == null || cs[0] == null || cs[1] == null) {
-            c.getSource().sendFailure(Component.literal("先用 /flyingeaves part pos1 和 pos2 点两个对角"));
+            c.getSource().sendFailure(Component.translatable("flyingeaves.cmd.pos_first"));
             return 0;
         }
         String name = StringArgumentType.getString(c, "name"), role = StringArgumentType.getString(c, "role");
         if (!java.util.Set.of("window", "door", "plain", "shop").contains(role)) {
-            c.getSource().sendFailure(Component.literal("用途只能是 window、door、plain、shop"));
+            c.getSource().sendFailure(Component.translatable("flyingeaves.cmd.bad_role"));
             return 0;
         }
         ServerLevel level = p.serverLevel();
@@ -100,7 +100,7 @@ public final class PartCommands {
         int depth = alongX ? hi.getZ() - lo.getZ() + 1 : hi.getX() - lo.getX() + 1;
         int height = hi.getY() - lo.getY() + 1;
         if (depth > 2 || width > 8 || height > 12) {
-            c.getSource().sendFailure(Component.literal("框太大：一段墙最多 8 宽、12 高、2 层厚（墙和墙外）"));
+            c.getSource().sendFailure(Component.translatable("flyingeaves.cmd.bay_too_big"));
             return 0;
         }
         // the material slots of the style (kinds.json, written by the generator)
@@ -115,7 +115,7 @@ public final class PartCommands {
             }
             if (slots.has("trim_trapdoor")) hood = blockId(slots.get("trim_trapdoor").getAsString());
         } catch (Exception e) {
-            c.getSource().sendFailure(Component.literal("读不到墙样式 " + style + " 的材料（生成器没开？）：" + e));
+            c.getSource().sendFailure(Component.translatable("flyingeaves.cmd.no_style", style, String.valueOf(e)));
             return 0;
         }
         // outward (toward the player) becomes south, as every part is drawn
@@ -148,7 +148,7 @@ public final class PartCommands {
             rows.add(wall + (anyOut ? "|" + out : ""));
         }
         if (key.size() > POOL.length()) {
-            c.getSource().sendFailure(Component.literal("方块种类太多"));
+            c.getSource().sendFailure(Component.translatable("flyingeaves.cmd.too_many_kinds"));
             return 0;
         }
         try {
@@ -170,10 +170,10 @@ public final class PartCommands {
             root.add("bays", bays);
             Files.writeString(file, new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create().toJson(root), StandardCharsets.UTF_8);
             int w = width;
-            c.getSource().sendSuccess(() -> Component.literal("存好了墙开间：" + name + "（" + role + "，" + w + " 宽 " + height + " 高）→ " + file), false);
+            c.getSource().sendSuccess(() -> Component.translatable("flyingeaves.cmd.bay_saved", name, role, w, height, String.valueOf(file)), false);
             return 1;
         } catch (Exception ex) {
-            c.getSource().sendFailure(Component.literal("存不了：" + ex));
+            c.getSource().sendFailure(Component.translatable("flyingeaves.cmd.save_failed", String.valueOf(ex)));
             return 0;
         }
     }
@@ -188,12 +188,12 @@ public final class PartCommands {
         ServerPlayer p = c.getSource().getPlayerOrException();
         BlockPos[] cs = CORNERS.get(p.getUUID());
         if (cs == null || cs[0] == null || cs[1] == null) {
-            c.getSource().sendFailure(Component.literal("先用 /flyingeaves part pos1（装饰坐的那一格）和 pos2（对角）点两下"));
+            c.getSource().sendFailure(Component.translatable("flyingeaves.cmd.pos_first_ornament"));
             return 0;
         }
         String name = StringArgumentType.getString(c, "name"), point = StringArgumentType.getString(c, "point");
         if (!java.util.Set.of("ridge_end", "ridge_mid", "finial", "bracket").contains(point)) {
-            c.getSource().sendFailure(Component.literal("位置只能是 ridge_end、ridge_mid、finial、bracket"));
+            c.getSource().sendFailure(Component.translatable("flyingeaves.cmd.bad_point"));
             return 0;
         }
         ServerLevel level = p.serverLevel();
@@ -201,7 +201,7 @@ public final class PartCommands {
         BlockPos lo = new BlockPos(Math.min(cs[0].getX(), cs[1].getX()), Math.min(cs[0].getY(), cs[1].getY()), Math.min(cs[0].getZ(), cs[1].getZ()));
         BlockPos hi = new BlockPos(Math.max(cs[0].getX(), cs[1].getX()), Math.max(cs[0].getY(), cs[1].getY()), Math.max(cs[0].getZ(), cs[1].getZ()));
         if ((hi.getX() - lo.getX() + 1) * (hi.getY() - lo.getY() + 1) * (hi.getZ() - lo.getZ() + 1) > 1024) {
-            c.getSource().sendFailure(Component.literal("太大了（最多 1024 格）"));
+            c.getSource().sendFailure(Component.translatable("flyingeaves.cmd.too_big", 1024));
             return 0;
         }
         // the player faces out: that direction becomes +du (east) for ridge ends, +dv (south, out of the wall) for brackets
@@ -232,7 +232,7 @@ public final class PartCommands {
             cells.add(cell);
         }
         if (cells.isEmpty()) {
-            c.getSource().sendFailure(Component.literal("框里没有方块"));
+            c.getSource().sendFailure(Component.translatable("flyingeaves.cmd.empty_box"));
             return 0;
         }
         try {
@@ -250,10 +250,10 @@ public final class PartCommands {
             root.add("ornaments", orns);
             Files.writeString(file, new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create().toJson(root), StandardCharsets.UTF_8);
             int n = cells.size();
-            c.getSource().sendSuccess(() -> Component.literal("存好了装饰：" + name + "（" + point + "，" + n + " 格）→ " + file), false);
+            c.getSource().sendSuccess(() -> Component.translatable("flyingeaves.cmd.ornament_saved", name, point, n, String.valueOf(file)), false);
             return 1;
         } catch (Exception ex) {
-            c.getSource().sendFailure(Component.literal("存不了：" + ex));
+            c.getSource().sendFailure(Component.translatable("flyingeaves.cmd.save_failed", String.valueOf(ex)));
             return 0;
         }
     }
@@ -286,12 +286,12 @@ public final class PartCommands {
         ServerPlayer p = c.getSource().getPlayerOrException();
         HitResult hit = p.pick(20, 0, false);
         if (!(hit instanceof BlockHitResult bh) || hit.getType() == HitResult.Type.MISS) {
-            c.getSource().sendFailure(Component.literal("准星没对着方块"));
+            c.getSource().sendFailure(Component.translatable("flyingeaves.cmd.no_block"));
             return 0;
         }
         BlockPos pos = bh.getBlockPos().immutable();
         CORNERS.computeIfAbsent(p.getUUID(), k -> new BlockPos[2])[which] = pos;
-        c.getSource().sendSuccess(() -> Component.literal("第 " + (which + 1) + " 个角：" + pos.toShortString()), false);
+        c.getSource().sendSuccess(() -> Component.translatable("flyingeaves.cmd.corner", which + 1, pos.toShortString()), false);
         return 1;
     }
 
@@ -299,7 +299,7 @@ public final class PartCommands {
         ServerPlayer p = c.getSource().getPlayerOrException();
         BlockPos[] cs = CORNERS.get(p.getUUID());
         if (cs == null || cs[0] == null || cs[1] == null) {
-            c.getSource().sendFailure(Component.literal("先用 /flyingeaves part pos1 和 pos2 点两个对角"));
+            c.getSource().sendFailure(Component.translatable("flyingeaves.cmd.pos_first"));
             return 0;
         }
         String name = StringArgumentType.getString(c, "name");
@@ -308,7 +308,7 @@ public final class PartCommands {
         BlockPos hi = new BlockPos(Math.max(cs[0].getX(), cs[1].getX()), Math.max(cs[0].getY(), cs[1].getY()), Math.max(cs[0].getZ(), cs[1].getZ()));
         int w = hi.getX() - lo.getX() + 1, d = hi.getZ() - lo.getZ() + 1;
         if (w * d * (hi.getY() - lo.getY() + 1) > 4096) {
-            c.getSource().sendFailure(Component.literal("太大了（最多 4096 格）"));
+            c.getSource().sendFailure(Component.translatable("flyingeaves.cmd.too_big", 4096));
             return 0;
         }
         // the piece faces the player; turn it so it faces south (+v into the room) like every piece
@@ -355,7 +355,7 @@ public final class PartCommands {
             count++;
         }
         if (count == 0) {
-            c.getSource().sendFailure(Component.literal("框里没有方块"));
+            c.getSource().sendFailure(Component.translatable("flyingeaves.cmd.empty_box"));
             return 0;
         }
         try {
@@ -378,10 +378,10 @@ public final class PartCommands {
             Gson gson = new GsonBuilder().disableHtmlEscaping().create();
             Files.writeString(file, gson.toJson(root), StandardCharsets.UTF_8);
             int nv = variants.size();
-            c.getSource().sendSuccess(() -> Component.literal("存好了：" + name + "（" + pw + "×" + pd + "，" + nv + " 个样子）→ " + file), false);
+            c.getSource().sendSuccess(() -> Component.translatable("flyingeaves.cmd.part_saved", name, pw, pd, nv, String.valueOf(file)), false);
             return 1;
         } catch (Exception e) {
-            c.getSource().sendFailure(Component.literal("存不了：" + e));
+            c.getSource().sendFailure(Component.translatable("flyingeaves.cmd.save_failed", String.valueOf(e)));
             return 0;
         }
     }

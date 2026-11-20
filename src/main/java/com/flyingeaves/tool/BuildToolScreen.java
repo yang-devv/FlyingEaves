@@ -23,10 +23,12 @@ import java.util.Random;
  * 右边选中的建筑和放置按钮。位置都按卡片大小算，文字放不下就截断，所以界面放大也不溢出。
  */
 public class BuildToolScreen extends Screen {
-    record Kind(String name, String cn, List<String> tiers, String group) {
+    /** name: the kind's id; cn: its name in the game's language (kinds.json's Chinese, or the lang file's English); zh: the Chinese. */
+    record Kind(String name, String cn, String zh, List<String> tiers, String group) {
     }
 
-    private static final String[][] GROUPS = {{"", "全部"}, {"凡人·住宅", "住宅"}, {"凡人·城镇", "城镇"}, {"修士", "修士"}, {"宗门·特殊地点", "宗门"}};
+    /** {kinds.json 的分组, 短名字}。 */
+    private static final String[][] GROUPS = L.pairs("menu.group", "", "凡人·住宅", "凡人·城镇", "修士", "宗门·特殊地点");
     private static final Random RNG = new Random();
     private static String rememberedKind;
     private static String rememberedTier;
@@ -47,18 +49,21 @@ public class BuildToolScreen extends Screen {
     private int cx, cy, cw, ch, lx, lw, rx, rw, bodyTop, bodyBottom, listTop;
 
     public BuildToolScreen() {
-        super(Component.literal("建造"));
+        super(Component.literal(L.t("menu.title")));
+        L.sync();
         try {
             JsonObject root = JsonParser.parseString(Files.readString(BuildTool.RUN.resolve("kinds.json"), StandardCharsets.UTF_8)).getAsJsonObject();
             tierIds = strings(root.getAsJsonArray("tiers"));
-            tierCn = strings(root.getAsJsonArray("tier_cn"));
+            tierCn = new ArrayList<>(strings(root.getAsJsonArray("tier_cn")));
+            for (int i = 0; i < tierCn.size() && i < tierIds.size(); i++) tierCn.set(i, L.name("tier", tierIds.get(i), tierCn.get(i)));
             for (JsonElement e : root.getAsJsonArray("kinds")) {
                 JsonObject k = e.getAsJsonObject();
-                kinds.add(new Kind(k.get("name").getAsString(), k.get("cn").getAsString(), strings(k.getAsJsonArray("tiers")), k.get("group").getAsString()));
+                String id = k.get("name").getAsString(), cn = k.get("cn").getAsString();
+                kinds.add(new Kind(id, L.name("kind", id, cn), cn, strings(k.getAsJsonArray("tiers")), k.get("group").getAsString()));
             }
             kinds.sort((a, b) -> a.group.equals(b.group) ? 0 : a.group.compareTo(b.group));
         } catch (Exception e) {
-            loadError = "读不到建筑列表（flyingeaves/kinds.json）：" + com.flyingeaves.backend.GeneratorProcess.hint();
+            loadError = L.t("menu.no_kinds", com.flyingeaves.backend.GeneratorProcess.hint());
         }
     }
 
@@ -91,17 +96,17 @@ public class BuildToolScreen extends Screen {
         rx = lx + lw + 10;
         rw = cx + cw - 8 - rx;
         String old = search == null ? "" : search.getValue();
-        search = new EditBox(font, lx + 6, bodyTop + 4, lw - 12, 10, Component.literal("搜索"));
+        search = new EditBox(font, lx + 6, bodyTop + 4, lw - 12, 10, Component.literal(L.t("menu.search")));
         search.setBordered(false);
         search.setTextColor(Ui.TEXT);
-        search.setHint(Component.literal("搜索建筑…"));
+        search.setHint(Component.literal(L.t("menu.search_hint")));
         search.setValue(old);
         search.setResponder(s -> refill());
         addRenderableWidget(search);
         listTop = bodyTop + 22 + 20;
         String oldSeed = seedBox == null ? Integer.toString(RNG.nextInt(100000)) : seedBox.getValue();
-        int sl = font.width("种子") + 8, rnd = font.width("随机") + 16;
-        seedBox = new EditBox(font, rx + sl + 6, 0, Math.max(30, rw - sl - rnd - 4 - 12), 10, Component.literal("种子"));
+        int sl = font.width(L.t("menu.seed")) + 8, rnd = font.width(L.t("menu.random")) + 16;
+        seedBox = new EditBox(font, rx + sl + 6, 0, Math.max(30, rw - sl - rnd - 4 - 12), 10, Component.literal(L.t("menu.seed")));
         seedBox.setBordered(false);
         seedBox.setTextColor(Ui.TEXT);
         seedBox.setMaxLength(9);
@@ -118,8 +123,13 @@ public class BuildToolScreen extends Screen {
         shown.clear();
         for (Kind k : kinds) {
             if (!rememberedGroup.isEmpty() && !k.group.equals(rememberedGroup)) continue;
-            if (q.isEmpty() || k.cn.contains(q) || k.name.contains(q) || k.group.contains(q)) shown.add(k);
+            if (q.isEmpty() || k.cn.toLowerCase(Locale.ROOT).contains(q) || k.zh.contains(q) || k.name.contains(q) || k.group.contains(q)) shown.add(k);
         }
+    }
+
+    /** Development (dev pipe {@code screen menu <kind>}): the kind shown when the menu opens. */
+    static void remember(String kind) {
+        rememberedKind = kind;
     }
 
     void select(Kind k) {
@@ -129,7 +139,7 @@ public class BuildToolScreen extends Screen {
 
     private void place() {
         if (selected == null) {
-            BuildTool.say("先在左边选一种建筑");
+            BuildTool.say(L.t("menu.pick_first"));
             return;
         }
         int seed;
@@ -140,7 +150,7 @@ public class BuildToolScreen extends Screen {
         }
         BlockPos ground = BuildTool.target(minecraft);
         if (ground == null) {
-            BuildTool.say("准星没对着地面（最远 300 格）");
+            BuildTool.say(L.t("menu.no_ground"));
             return;
         }
         rememberedKind = selected.name;
@@ -160,11 +170,12 @@ public class BuildToolScreen extends Screen {
         ui.hit(cx, cy, cw, ch, () -> {
         }, null);
         // 标题栏
-        ui.text("建造", cx + 10, cy + 9, Ui.TEXT);
-        String keyHint = BuildTool.COMPOSE.getTranslatedKeyMessage().getString() + "：单体建造（画房间）";
+        String title = L.t("menu.title"), count = L.t("menu.kinds_count", kinds.size());
+        ui.text(title, cx + 10, cy + 9, Ui.TEXT);
+        String keyHint = L.t("menu.key_hint", BuildTool.COMPOSE.getTranslatedKeyMessage().getString());
         int closeX = cx + cw - 20;
-        int hintW = Math.min(ui.textW(keyHint), closeX - (cx + 40 + ui.textW("建造")) - 8);
-        ui.text(kinds.size() + " 种", cx + 14 + ui.textW("建造"), cy + 9, Ui.MUTED);
+        int hintW = Math.min(ui.textW(keyHint), closeX - (cx + 22 + ui.textW(title) + ui.textW(count)) - 8);
+        ui.text(count, cx + 14 + ui.textW(title), cy + 9, Ui.MUTED);
         if (hintW > 30) ui.text(keyHint, closeX - 6 - hintW, cy + 9, hintW, Ui.MUTED);
         ui.button(closeX, cy + 5, 14, 14, "×", Ui.Kind.GHOST, true, this::onClose);
         ui.hline(cx + 1, cy + 22, cw - 2);
@@ -215,15 +226,15 @@ public class BuildToolScreen extends Screen {
             ui.hit(lx, ry, lw - 4, rowH, () -> select(k), null);
         }
         ui.popClip();
-        if (shown.isEmpty()) ui.text("没有匹配的建筑", lx + 7, top + 6, lw - 10, Ui.MUTED);
+        if (shown.isEmpty()) ui.text(L.t("menu.no_match"), lx + 7, top + 6, lw - 10, Ui.MUTED);
         ui.scrollbar(lx + lw - 2, top, h, shown.size(), visible, listScroll);
     }
 
     private void renderRight() {
         int x = rx, y = bodyTop, w = rw;
         if (selected == null) {
-            ui.text("选一种建筑", x, y + 2, w, Ui.SUB);
-            ui.wrap("左边可以搜索，也可以按分组看。选好后在这里挑境界和种子，再放到准星指着的地方。", x, y + 16, w, bodyBottom, Ui.MUTED);
+            ui.text(L.t("menu.choose"), x, y + 2, w, Ui.SUB);
+            ui.wrap(L.t("menu.choose_text"), x, y + 16, w, bodyBottom, Ui.MUTED);
             seedBox.visible = false;
             return;
         }
@@ -232,7 +243,7 @@ public class BuildToolScreen extends Screen {
         ui.text(shortGroup(selected.group) + " · " + selected.name, x, y + 13, w, Ui.MUTED);
         y += 28;
         // 境界
-        ui.text("境界", x, y, Ui.SUB);
+        ui.text(L.t("footer.tier"), x, y, Ui.SUB);
         y += 11;
         int cx0 = x;
         for (int i = 0; i < tierIds.size(); i++) {
@@ -248,31 +259,31 @@ public class BuildToolScreen extends Screen {
         }
         y += 22;
         // 种子
-        int sl = ui.textW("种子") + 8, rnd = ui.textW("随机") + 16;
-        ui.text("种子", x, y + 5, Ui.SUB);
+        int sl = ui.textW(L.t("menu.seed")) + 8, rnd = ui.textW(L.t("menu.random")) + 16;
+        ui.text(L.t("menu.seed"), x, y + 5, Ui.SUB);
         ui.field(x + sl, y, w - sl - rnd - 4, 18, seedBox.isFocused());
         seedBox.setX(x + sl + 6);
         seedBox.setY(y + 5);
-        ui.button(x + w - rnd, y, rnd, 18, "随机", Ui.Kind.NORMAL, true, () -> seedBox.setValue(Integer.toString(RNG.nextInt(100000))));
+        ui.button(x + w - rnd, y, rnd, 18, L.t("menu.random"), Ui.Kind.NORMAL, true, () -> seedBox.setValue(Integer.toString(RNG.nextInt(100000))));
         y += 26;
-        ui.button(x, y, w, 20, "放在准星处", Ui.Kind.PRIMARY, true, this::place);
+        ui.button(x, y, w, 20, L.t("menu.place"), Ui.Kind.PRIMARY, true, this::place);
         y += 24;
         int half = (w - 4) / 2;
-        ui.button(x, y, half, 18, "换一个", Ui.Kind.NORMAL, true, () -> {
+        ui.button(x, y, half, 18, L.t("menu.reroll"), Ui.Kind.NORMAL, true, () -> {
             onClose();
             BuildTool.reroll();
         });
-        ui.button(x + half + 4, y, w - half - 4, 18, "撤销上一栋", Ui.Kind.NORMAL, true, () -> {
+        ui.button(x + half + 4, y, w - half - 4, 18, L.t("menu.undo_last"), Ui.Kind.NORMAL, true, () -> {
             onClose();
             BuildTool.undo();
         });
         y += 26;
         BlockPos t = BuildTool.target(minecraft);
         if (y + 9 <= bodyBottom) {
-            ui.text(t == null ? "准星没对着地面" : "放在 " + t.getX() + ", " + t.getY() + ", " + t.getZ() + " · 正面朝你", x, y, w,
+            ui.text(t == null ? L.t("compose.no_ground") : L.t("menu.place_at", t.getX(), t.getY(), t.getZ()), x, y, w,
                     t == null ? Ui.DANGER : Ui.SUB);
         }
-        ui.wrap("生成要几秒。大建筑（主殿、坊市街、宗门地点）占地上百格，先站远一点。回车也能放置。", x, y + 13, w, bodyBottom, Ui.MUTED);
+        ui.wrap(L.t("menu.place_note"), x, y + 13, w, bodyBottom, Ui.MUTED);
     }
 
     // ------------------------------------------------------------------ 输入

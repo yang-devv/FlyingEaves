@@ -229,7 +229,7 @@ public final class CanvasStamp {
      * 别的格子不存，所以放回去时周围的地形不动。写到 flyingeaves/exports/<名字>.nbt，再拷一份到存档的
      * generated/flyingeaves/structures/，结构方块里填 flyingeaves:<名字> 就能载入。返回说明，没有可导出的返回 null。
      */
-    public static String exportLast(net.minecraft.server.MinecraftServer server, String name) throws Exception {
+    public static net.minecraft.network.chat.Component exportLast(net.minecraft.server.MinecraftServer server, String name) throws Exception {
         Undo e = UNDO.peek();
         if (e == null) return null;
         ServerLevel level = e.level();
@@ -270,8 +270,8 @@ public final class CanvasStamp {
         Path gen = server.getWorldPath(net.minecraft.world.level.storage.LevelResource.GENERATED_DIR).resolve(FlyingEaves.MODID).resolve("structures").resolve(name + ".nbt");
         Files.createDirectories(gen.getParent());
         Files.copy(out, gen, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
-        return String.format(Locale.ROOT, "%d 格，%d×%d×%d，%d 种方块 → %s（结构方块里填 flyingeaves:%s）", blocks.size(), bx - ax + 1, by - ay + 1,
-                bz - az + 1, palette.size(), out.toAbsolutePath().normalize(), name);
+        return net.minecraft.network.chat.Component.translatable("flyingeaves.cmd.exported_info", blocks.size(), bx - ax + 1, by - ay + 1,
+                bz - az + 1, palette.size(), String.valueOf(out.toAbsolutePath().normalize()), name);
     }
 
     /** 撤销记录的概况：每次放的格数和范围，从新到旧。 */

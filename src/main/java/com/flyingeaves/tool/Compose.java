@@ -46,52 +46,59 @@ import java.util.Random;
 @Mod.EventBusSubscriber(modid = FlyingEaves.MODID, value = Dist.CLIENT)
 public final class Compose {
     enum Tool {
-        DRAW("画房间", "右键点两个对角；后画的要贴着已有房间；左键删最后一个", false),
-        ROUND("画圆塔", "右键点两个对角，圆塔放在这个框里（直径取短的一边）；左键删最后一个", false),
-        MOVE("挪动", "滚轮沿你看的方向挪（往上滚往前）；按住 Ctrl 上下挪", true),
-        SHAPE("形状", "滚轮换这间的形状：矩形、圆塔，和房间设置组合不出来的牌楼、影壁、随墙门、琉璃门、垂花门、宫墙、铺地、河桥、陈设、台地、街道、石阶、石桥、地块（16 种）", true),
-        STACK("叠层", "滚轮加减层数", true),
-        GATEWAY("门洞", "滚轮调城台的门洞：自动（按台宽）、无、一个、三个、五个", true),
-        STACKON("叠放", "滚轮切放在地上 / 叠在下面那间顶上（在别的房间里面画框会自动叠上去）", true),
-        HEIGHT("层高", "滚轮调这间每层多高（4–16 格；调过的从 4 再往下滚回到自动）", true),
-        TAPER("收分", "滚轮调每往上一层四边收几格（0 不收，1–3）：塔、楼阁往上变小", true),
-        PINGZUO("平座", "滚轮切有没有平座：圆塔每层楼板高度一圈带栏杆的走廊，搭在下层檐上（应县木塔）；两层以上的圆塔才有", true),
-        PODIUM("台基", "滚轮调台基高度（没有、1–3 格）；按住 Ctrl 换样式：平台、须弥座、三层、城台（带门洞，城楼用）", true),
-        PODSHAPE("台基形状", "滚轮换台基形状：跟随（房间方台基方、圆塔台基圆）、方（圆塔下一座方台、城台）、圆（方殿下一座圆坛）；要先有台基", true),
-        STEPS("台阶", "滚轮调台基（台地）前面台阶的坡度：45° 一格一级，27°、18°、14° 缓的半砖一级、台阶也伸出去更长；要先有台基，城台没有台阶", true),
-        MARGIN("边距", "滚轮调墙脚到台基边走得过去几格：自动（一格，窗台、门灯挡着的那边加宽）、1–4、6、8、12、16、20（三台、坛、大城台）", true),
-        BASE("基座", "滚轮换台基和地基的材料（石砖、和墙脚一样、青砖、白石……）", true),
-        USE("用途", "滚轮换准星指着的那一层做什么用（空房：什么都不摆）；右键列出来挑", true),
-        INTERIOR("内饰", "滚轮切整栋有没有内饰：有（家具、灯）、无（只有墙、隔断、楼梯、梯子，屋里空着）；不用指着房间", true),
-        ROOF("屋顶", "滚轮换屋顶，Shift+右键列出来挑", true),
-        EAVE("檐", "滚轮切单檐、重檐、三重檐（屋檐下面再一圈、两圈下檐）", true),
-        PITCH("坡度", "滚轮调屋顶坡度：自动、缓、中、陡、很陡（大殿陡）", true),
-        EAVEOUT("出檐", "滚轮调屋檐伸出墙外多远：自动、短、中、长、很长", true),
-        LIFT("翘角", "滚轮调屋檐四角翘起多少：自动、无、小、中、大", true),
-        ZOUSHOU("走兽", "滚轮调每条戗脊上的小兽：自动、无、3、5、7、9（前面一个仙人）", true),
-        DOUGONG("斗拱", "滚轮调檐下斗拱：自动、无、一层、两层、三层（层多屋檐抬高、伸得更远）", true),
-        CAIHUA("彩画", "滚轮换梁枋上的彩画：无、旋子、和玺、苏式", true),
-        WALLS("墙", "滚轮换墙，Shift+右键列出来挑", true),
-        BAYSTYLE("墙样", "滚轮换这间的窗和墙段样式（随机、小窗、槛窗、隔扇、直棂窗、花窗……）", true),
-        THEME("瓦", "滚轮换瓦，Shift+右键列出来挑", true),
-        GALLERY("廊", "滚轮切无廊、前廊、后廊、前后廊（一排檐柱和披檐）、周围廊（四面一圈）", true),
-        GABLE("山墙", "滚轮切普通山墙、马头墙（徽派，高出屋顶）", true),
-        OPEN("开敞", "滚轮切封闭、正面敞开（戏台）、全敞开（四面只有柱子和矮栏杆，亭子）、穿堂（后面正中间通开到檩下、一楼不隔间，门殿）；按住 Ctrl 切出入口：前、前后（前后都有门和台阶，中轴上的殿、门殿）、四面（方殿）", true),
-        FLOOROPEN("每层开敞", "滚轮调准星指着的那一层：同整间（跟「开敞」）、封闭、正面敞开、全敞开、穿堂（戏台一楼正面敞开、楼上封闭）", true),
-        PALETTE("材料", "右键一间房，在面前摆出材料板：往格子里放方块换那一部分的材料；再右键这间房存下来，左键取消", false),
-        FRONT("正面", "滚轮转正面朝向", true),
-        REROLL("换样子", "指着房间滚：只换这间；按住 Ctrl：只换它的屋顶；不指着房间：整栋换。往回滚回到原来的样子", true),
-        COPY("照搬", "Shift+右键记下一间的样子（屋顶、墙、墙样、瓦、层高、样子），右键照搬到另一间", false),
-        DELETE("删房间", "右键删掉准星指着的房间", false);
+        DRAW(false),
+        ROUND(false),
+        MOVE(true),
+        SHAPE(true),
+        STACK(true),
+        GATEWAY(true),
+        STACKON(true),
+        HEIGHT(true),
+        TAPER(true),
+        PINGZUO(true),
+        PODIUM(true),
+        PODSHAPE(true),
+        STEPS(true),
+        MARGIN(true),
+        BASE(true),
+        USE(true),
+        INTERIOR(true),
+        ROOF(true),
+        EAVE(true),
+        PITCH(true),
+        EAVEOUT(true),
+        LIFT(true),
+        ZOUSHOU(true),
+        DOUGONG(true),
+        CAIHUA(true),
+        WALLS(true),
+        BAYSTYLE(true),
+        THEME(true),
+        GALLERY(true),
+        GABLE(true),
+        OPEN(true),
+        FLOOROPEN(true),
+        PALETTE(false),
+        FRONT(true),
+        REROLL(true),
+        COPY(false),
+        DELETE(false);
 
-        final String cn, hint;
         /** 能用滚轮（右键、左键等于滚一格）。 */
         final boolean wheel;
 
-        Tool(String cn, String hint, boolean wheel) {
-            this.cn = cn;
-            this.hint = hint;
+        Tool(boolean wheel) {
             this.wheel = wheel;
+        }
+
+        /** 工具的名字（lang：flyingeaves.tool.&lt;名字&gt;）。 */
+        String cn() {
+            return L.t("tool." + name().toLowerCase(java.util.Locale.ROOT));
+        }
+
+        /** 工具的说明（flyingeaves.tool.&lt;名字&gt;.hint）。 */
+        String hint() {
+            return L.t("tool." + name().toLowerCase(java.util.Locale.ROOT) + ".hint");
         }
     }
 
@@ -115,6 +122,7 @@ public final class Compose {
     private static Room clip;
     private static ComposeScreen.Options opts;
     private static long optsStamp;
+    private static int optsLang;
     private static String lastRequest = "";
     private static String pendingRequest = "";
     private static long changedAt;
@@ -293,9 +301,10 @@ public final class Compose {
     static ComposeScreen.Options options() {
         try {
             long m = Files.getLastModifiedTime(BuildTool.RUN.resolve("kinds.json")).toMillis();
-            if (opts == null || m != optsStamp) {
+            if (opts == null || m != optsStamp || optsLang != L.version()) {
                 opts = ComposeScreen.load();
                 optsStamp = m;
+                optsLang = L.version();
             }
         } catch (Exception e) {
             return opts;
@@ -324,7 +333,7 @@ public final class Compose {
         REDO.clear();
         histKey = null;
         Preview.clear();
-        BuildTool.say("搭一栋：右键点两个对角画房间；Alt+滚轮换工具；Ctrl+Z 撤销；按" + key() + "打开房间表");
+        BuildTool.say(L.t("compose.start", key()));
     }
 
     /**
@@ -403,8 +412,8 @@ public final class Compose {
         r.z0 = Math.min(a.getZ(), b.getZ());
         r.z1 = Math.max(a.getZ(), b.getZ());
         r.y = Math.min(a.getY(), b.getY());
-        if (r.x1 - r.x0 < 4 || r.z1 - r.z0 < 4) return (round ? "圆塔" : "房间") + "太小（至少 5×5）";
-        if (r.x1 - r.x0 >= MAX_SIDE || r.z1 - r.z0 >= MAX_SIDE) return "房间太大（每边最多 " + MAX_SIDE + " 格）";
+        if (r.x1 - r.x0 < 4 || r.z1 - r.z0 < 4) return L.t(round ? "compose.too_small_tower" : "compose.too_small_room");
+        if (r.x1 - r.x0 >= MAX_SIDE || r.z1 - r.z0 >= MAX_SIDE) return L.t("compose.too_big", MAX_SIDE);
         if (round) {                                      // the tower's square: the shorter side, centred in the frame
             int d = Math.min(r.x1 - r.x0, r.z1 - r.z0);
             if (d % 2 == 1) d--;
@@ -418,7 +427,7 @@ public final class Compose {
         r.y = groundUnder(r.x0, r.z0, r.x1, r.z1, r.round, clicked);
         int low = lowestGround;
         if (!connects(r.x0, r.z0, r.x1, r.z1)) {       // one building at a time
-            return "这间和前面的房间不挨着：一次只搭一栋，新房间要贴着已有房间的墙（共用一段）或叠在一起";
+            return L.t("compose.not_touching");
         }
         Room under = null;                              // drawn inside another room's walls (and smaller): it stands on top of it
         for (Room p : ROOMS)
@@ -448,52 +457,52 @@ public final class Compose {
             r.stacked = true;
             r.podium = 0;                               // (it stands on the lower room's terrace)
             restack();
-            BuildTool.say((round ? "圆塔 " : "房间 ") + ROOMS.size() + " 叠在房间 " + (ROOMS.indexOf(under) + 1) + " 顶上（那间屋顶在它墙边截平成平座）；"
-                    + "要放在地上：房间表「叠放」选「地上」");
+            BuildTool.say(L.t(round ? "compose.stacked_tower" : "compose.stacked_room", ROOMS.size(), ROOMS.indexOf(under) + 1));
             return null;
         }
-        BuildTool.say((round ? "圆塔 " : "房间 ") + ROOMS.size() + "：" + (round ? "直径 " + (r.x1 - r.x0 + 1) : (r.x1 - r.x0 + 1) + "×" + (r.z1 - r.z0 + 1))
-                + (r.y - low > 0 ? "，地面放在框里最高的地上，低的一边高出 " + (r.y - low) + " 格（放下时垫石台、门口接台阶；Ctrl+滚轮可上下挪）" : ""));
+        BuildTool.say((round ? L.t("compose.added_tower", ROOMS.size(), r.x1 - r.x0 + 1) : L.t("compose.added_room", ROOMS.size(), r.x1 - r.x0 + 1, r.z1 - r.z0 + 1))
+                + (r.y - low > 0 ? L.t("compose.added_slope", r.y - low) : ""));
         return null;
     }
 
     /** 台基样式 {生成器里的名字, 中文}；廊的三种。 */
-    static final String[][] PODIUM_STYLES = {{"plain", "平台"}, {"xumizuo", "须弥座"}, {"tiers", "三层"}, {"chengtai", "城台"}};
+    static final String[][] PODIUM_STYLES = L.pairs("opt.podium_style", "plain", "xumizuo", "tiers", "chengtai");
     /** 台阶坡度（step_slope）：45° 一格高一格；27° 一格半格（半砖、双半砖相间）；18° 三格一格；14° 两格半格。 */
     static final String[][] STEP_SLOPES = {{"45", "45°"}, {"27", "27°"}, {"18", "18°"}, {"14", "14°"}};
     /** 台基边距（podium_margin）：墙脚到台基边（须弥座：到栏杆）走得过去的格数；自动 = 一格，窗台、门灯伸出来挡着的那边自己加宽。
      *  4 以上是比房子大得多的台：三台、坛、钟楼的城台（三层的每层往外跨边距的三分之一，每层一道台阶）。 */
-    static final String[][] PODIUM_MARGINS = {{"auto", "自动"}, {"1", "1"}, {"2", "2"}, {"3", "3"}, {"4", "4"}, {"6", "6"}, {"8", "8"},
-            {"12", "12"}, {"16", "16"}, {"20", "20"}};
+    static final String[][] PODIUM_MARGINS = L.pairs("opt.podium_margin", "auto", "1", "2", "3", "4", "6", "8", "12", "16", "20");
     /** 台基形状（podium_shape）{生成器里的名字, 中文}：跟随房间，或者方、圆（圆塔下方台、方殿下圆坛）。 */
-    static final String[][] PODIUM_SHAPES = {{"", "跟随"}, {"square", "方"}, {"round", "圆"}};
+    static final String[][] PODIUM_SHAPES = L.pairs("opt.podium_shape", "", "square", "round");
     /** 形状里房间设置组合不出来的那几种 {生成器里的名字, 中文}。 */
-    static final String[][] SPECIALS = {{"", ""}, {"paifang", "牌楼"}, {"screen", "影壁"}, {"gate", "随墙门"}, {"glazedgate", "琉璃门"},
-            {"chuihua", "垂花门"}, {"wall", "宫墙"}, {"paving", "铺地"}, {"river", "河桥"}, {"ornament", "陈设"},
-            {"terrace", "台地"}, {"street", "街道"}, {"stairs", "石阶"}, {"bridge", "石桥"}, {"patch", "地块"}};   // (石阶：一排高一格的地面，正面朝低的那头)   // (台地、街道：只是一块地面，各在自己的高度；城镇用，高低之间生成器砌挡土墙、接台阶)
+    static final String[][] SPECIALS = L.pairs("opt.special", "", "paifang", "screen", "gate", "glazedgate",
+            "chuihua", "wall", "paving", "river", "ornament",
+            "terrace", "street", "stairs", "bridge", "patch");   // (石阶：一排高一格的地面，正面朝低的那头)   // (台地、街道：只是一块地面，各在自己的高度；城镇用，高低之间生成器砌挡土墙、接台阶)
 
     /** 形状一栏能选的：矩形、圆塔，再加 SPECIALS 里的。 */
     static List<String[]> shapes() {
         List<String[]> out = new ArrayList<>();
-        out.add(new String[]{"rect", "矩形"});
-        out.add(new String[]{"round", "圆塔"});
+        out.add(new String[]{"rect", L.t("opt.shape.rect")});
+        out.add(new String[]{"round", L.t("opt.shape.round")});
         for (int i = 1; i < SPECIALS.length; i++) out.add(SPECIALS[i]);
         return out;
     }
-    static final String[] GALLERIES = {"无廊", "前廊", "后廊", "前后廊", "周围廊"};
-    static final String[][] OPENNESS = {{"closed", "封闭"}, {"front", "正面敞开"}, {"open", "全敞开"}, {"through", "穿堂"}};
-    static final String[][] DOORS = {{"front", "前"}, {"front_back", "前后"}, {"four", "四面"}};
-    static final String[] PITCHES = {"自动", "缓", "中", "陡", "很陡"}, EAVE_OUTS = {"自动", "短", "中", "长", "很长"},
-            LIFTS = {"自动", "无", "小", "中", "大"};
+    static final String[] GALLERIES = L.list("opt.gallery", 5);
+    static final String[][] OPENNESS = L.pairs("opt.open", "closed", "front", "open", "through");
+    static final String[][] DOORS = L.pairs("opt.doors", "front", "front_back", "four");
+    static final String[] PITCHES = L.list("opt.pitch", 5), EAVE_OUTS = L.list("opt.overhang", 5),
+            LIFTS = L.list("opt.lift", 5);
+    /** 单檐、重檐、三重檐。 */
+    static final String[] EAVES = L.list("opt.eaves", 3);
     /** 一间房每边最多几格（生成器那边 compose.MAX_SIDE 一样）：只防画错框；200 格见方的一间生成也只要两三秒。 */
     static final int MAX_SIDE = 256;
     /** 每层的开敞：第一个是「跟整间」。 */
-    static final String[][] FLOOR_OPEN = {{"", "同整间"}, {"closed", "封闭"}, {"front", "正面敞开"}, {"open", "全敞开"}, {"through", "穿堂"}};
-    static final String[] TUNNEL_COUNTS = {"自动", "无", "一个", "三个", "五个"};
-    static final String[] BEAST_COUNTS = {"自动", "无", "3", "5", "7", "9"}, BRACKET_ROWS = {"自动", "无", "一层", "两层", "三层"};
+    static final String[][] FLOOR_OPEN = L.pairs("opt.floor_open", "", "closed", "front", "open", "through");
+    static final String[] TUNNEL_COUNTS = L.list("opt.tunnels", 5);
+    static final String[] BEAST_COUNTS = L.list("opt.beasts", 6), BRACKET_ROWS = L.list("opt.brackets", 5);
     /** 圆塔的屋顶 {生成器里的名字, 中文}。 */
-    static final String[][] ROUND_ROOFS = {{"cone", "攒尖"}, {"helmet", "盔顶"}, {"dome", "圆顶"}, {"luding", "盝顶"}, {"flat", "平顶"}};
-    static final String[][] CAIHUAS = {{"", "无"}, {"xuanzi", "旋子"}, {"hexi", "和玺"}, {"sushi", "苏式"}};
+    static final String[][] ROUND_ROOFS = L.pairs("opt.round_roof", "cone", "helmet", "dome", "luding", "flat");
+    static final String[][] CAIHUAS = L.pairs("opt.caihua", "", "xuanzi", "hexi", "sushi");
     /** 台基高能选的格数（各种台基样式都照这个高度）。 */
     static final int[] PODIUM_HEIGHTS = {0, 1, 2, 3, 4, 5, 6, 8, 10, 12};
     /** 层高能选的格数（0 = 自动）：大殿一层要 12 到 16 格。 */
@@ -925,7 +934,20 @@ public final class Compose {
 
     /** 存档面板里的一项：文件夹，或一份设计（几间房、时间、说明）；site 不空的是预设库里「宫城」那种：不是房间表，
      *  选了就像以前那几个按钮一样叫生成器排（city 随机宫城，city_real 紫禁城 1:1）。 */
-    record Entry(String name, java.nio.file.Path path, boolean dir, int rooms, String time, String note, String site) {
+    record Entry(String name, String label, java.nio.file.Path path, boolean dir, int rooms, String time, String note, String site) {
+    }
+
+    /** 存档的文件名给玩家看的样子：「_自动存档」「生成 …」照游戏的语言。 */
+    static String shownName(String fileName) {
+        String s = fileName.replace(AUTO, L.t("compose.autosave"));
+        if (s.startsWith(AUTO_KEPT)) s = L.t("compose.generated", s.substring(AUTO_KEPT.length()));
+        return s;
+    }
+
+    /** 自动存的那几种（存档列表里用金色）。 */
+    static boolean isAuto(java.nio.file.Path p) {
+        String fn = p.getFileName().toString();
+        return fn.startsWith(AUTO) || fn.startsWith("上次生成") || fn.startsWith(AUTO_KEPT);
     }
 
     /** root 下 rel 这个文件夹里有什么：文件夹在前（按名字），设计在后（我的存档新的在前，预设按名字）。 */
@@ -936,7 +958,7 @@ public final class Compose {
             for (java.nio.file.Path p : st.toList()) {
                 String fn = p.getFileName().toString();
                 if (java.nio.file.Files.isDirectory(p)) {
-                    dirs.add(new Entry(fn, p, true, 0, "", "", ""));
+                    dirs.add(new Entry(fn, root.equals(LIBRARY) ? L.name("lib_dir", fn, fn) : fn, p, true, 0, "", "", ""));
                     continue;
                 }
                 if (!fn.endsWith(".json") || fn.startsWith(DEFAULT_STYLE)) continue;
@@ -944,16 +966,23 @@ public final class Compose {
                     JsonObject d = com.google.gson.JsonParser.parseString(java.nio.file.Files.readString(p, java.nio.charset.StandardCharsets.UTF_8)).getAsJsonObject();
                     String site = d.has("site") ? d.get("site").getAsString() : "";
                     String nm = !site.isEmpty() && d.has("name") ? d.get("name").getAsString() : fn.substring(0, fn.length() - 5).replace(AUTO, "自动存档");
-                    files.add(new Entry(nm, p, false, site.isEmpty() ? d.getAsJsonArray("rooms").size() : 0,
-                            d.has("time") ? d.get("time").getAsString() : "", d.has("note") ? d.get("note").getAsString() : "", site));
+                    String note = d.has("note") ? d.get("note").getAsString() : "";
+                    String label = shownName(fn.substring(0, fn.length() - 5)), id = fn.substring(0, fn.length() - 5);
+                    if (root.equals(LIBRARY)) {                  // the library's names and notes: the lang file's tables in English
+                        label = L.name("lib", site.isEmpty() ? id : nm, nm);
+                        String rp = (rel.isEmpty() ? "" : rel + "/") + id;
+                        note = L.name("lib_note", rp, note);
+                    }
+                    files.add(new Entry(nm, label, p, false, site.isEmpty() ? d.getAsJsonArray("rooms").size() : 0,
+                            d.has("time") ? d.get("time").getAsString() : "", note, site));
                 } catch (Exception ignored) {
                 }
             }
         } catch (Exception ignored) {
         }
-        dirs.sort(java.util.Comparator.comparing(Entry::name));
+        dirs.sort(java.util.Comparator.comparing(Entry::label));          // (by what is shown: the same as the name in Chinese)
         if (root.equals(DESIGNS)) files.sort((a, b) -> b.time().compareTo(a.time()));
-        else files.sort(java.util.Comparator.comparing(Entry::name));
+        else files.sort(java.util.Comparator.comparing(Entry::label));
         dirs.addAll(files);
         return dirs;
     }
@@ -971,7 +1000,7 @@ public final class Compose {
     /** 存当前这一栋（名字就是文件名）。 */
     static String saveDesign(String name) {
         ComposeScreen.Options o = options();
-        if (o == null || ROOMS.isEmpty()) return "还没有房间可存";
+        if (o == null || ROOMS.isEmpty()) return L.t("compose.nothing_to_save");
         write(name, design(name, o));
         return null;
     }
@@ -1001,7 +1030,7 @@ public final class Compose {
                 if (fn.startsWith(DEFAULT_STYLE)) continue;
                 try {
                     JsonObject d = com.google.gson.JsonParser.parseString(java.nio.file.Files.readString(p, java.nio.charset.StandardCharsets.UTF_8)).getAsJsonObject();
-                    out.add(new Saved(fn.substring(0, fn.length() - 5).replace(AUTO, "自动存档"), p, d.getAsJsonArray("rooms").size(),
+                    out.add(new Saved(shownName(fn.substring(0, fn.length() - 5)), p, d.getAsJsonArray("rooms").size(),
                             d.has("time") ? d.get("time").getAsString() : ""));
                 } catch (Exception ignored) {
                 }
@@ -1015,7 +1044,7 @@ public final class Compose {
     /** 载入一份设计：最小的那个角放在 at（null 就放回存的时候的地方不可知，放在玩家脚下）。 */
     static String loadDesign(java.nio.file.Path p, BlockPos at) {
         ComposeScreen.Options o = options();
-        if (o == null) return "选项还没读到";
+        if (o == null) return L.t("compose.no_options");
         try {
             JsonObject d = com.google.gson.JsonParser.parseString(java.nio.file.Files.readString(p, java.nio.charset.StandardCharsets.UTF_8)).getAsJsonObject();
             if (!drawing) start();
@@ -1048,7 +1077,7 @@ public final class Compose {
             selected = 0;
             return null;
         } catch (Exception e) {
-            return "读不了：" + e.getMessage();
+            return L.t("compose.cant_read", e.getMessage());
         }
     }
 
@@ -1091,8 +1120,13 @@ public final class Compose {
     static java.util.List<String[]> recipes() {
         java.util.List<String[]> out = new ArrayList<>();
         java.util.List<JsonObject> d = recipeData();
-        for (int i = 0; i < d.size(); i++) out.add(new String[]{"" + i, d.get(i).get("name").getAsString(), "", d.get(i).has("note") ? d.get(i).get("note").getAsString() : ""});
+        for (int i = 0; i < d.size(); i++) out.add(new String[]{"" + i, recipeName(d.get(i)), "", d.get(i).has("note") ? L.name("recipe_note", d.get(i).get("id").getAsString(), d.get(i).get("note").getAsString()) : ""});
         return out;
+    }
+
+    /** 做法的名字（游戏的语言）。 */
+    static String recipeName(JsonObject rec) {
+        return L.name("recipe", rec.has("id") ? rec.get("id").getAsString() : null, rec.get("name").getAsString());
     }
 
     /** 一种做法按这个框的大小定下来的设置（和存档里一样的写法）：set 照抄，pick 挑一个，by_size 看短边。 */
@@ -1146,7 +1180,7 @@ public final class Compose {
     static String randomBuilding() {
         Minecraft mc = Minecraft.getInstance();
         ComposeScreen.Options o = options();
-        if (o == null || recipeData().isEmpty()) return "还没读到做法（" + com.flyingeaves.backend.GeneratorProcess.hint() + "）";
+        if (o == null || recipeData().isEmpty()) return L.t("compose.no_recipes", com.flyingeaves.backend.GeneratorProcess.hint());
         java.util.Random rng = new java.security.SecureRandom();
         java.util.List<Frame0> fr = new ArrayList<>();
         String plan;
@@ -1226,8 +1260,8 @@ public final class Compose {
         look = 0;
         selected = 0;
         StringBuilder sb = new StringBuilder();
-        for (Room r : ROOMS) if (r.recipe >= 0 && r.wingOf == 0) sb.append(sb.length() > 0 ? " + " : "").append(recipeData().get(r.recipe).get("name").getAsString());
-        BuildTool.say("随机一栋：" + plan + "，" + ROOMS.size() + " 个房间，每个参数都随机；不满意再点一次（或按" + randomKey() + "），Ctrl+Z 回到原来的");
+        for (Room r : ROOMS) if (r.recipe >= 0 && r.wingOf == 0) sb.append(sb.length() > 0 ? " + " : "").append(recipeName(recipeData().get(r.recipe)));
+        BuildTool.say(L.t("compose.random_building", W, D, ROOMS.size(), randomKey()));
         return null;
     }
 
@@ -1243,20 +1277,20 @@ public final class Compose {
     static String randomSite(boolean city) {
         Minecraft mc = Minecraft.getInstance();
         ComposeScreen.Options o = options();
-        if (o == null) return "还没读到选项（" + com.flyingeaves.backend.GeneratorProcess.hint() + "）";
+        if (o == null) return L.t("compose.no_options_hint", com.flyingeaves.backend.GeneratorProcess.hint());
         List<java.nio.file.Path> files = new ArrayList<>();
         try (var st = java.nio.file.Files.list(BuildTool.RUN.resolve("sites"))) {
             st.filter(p -> p.toString().endsWith(".json") && p.getFileName().toString().startsWith("city") == city).forEach(files::add);
         } catch (Exception e) {
-            return "还没有院落（" + com.flyingeaves.backend.GeneratorProcess.hint() + "）";
+            return L.t("compose.no_sites", com.flyingeaves.backend.GeneratorProcess.hint());
         }
-        if (files.isEmpty()) return "还没有院落（" + com.flyingeaves.backend.GeneratorProcess.hint() + "）";
+        if (files.isEmpty()) return L.t("compose.no_sites", com.flyingeaves.backend.GeneratorProcess.hint());
         JsonObject d;
         try {
             d = com.google.gson.JsonParser.parseString(java.nio.file.Files.readString(files.get(new java.security.SecureRandom().nextInt(files.size())),
                     java.nio.charset.StandardCharsets.UTF_8)).getAsJsonObject();
         } catch (Exception e) {
-            return "院落读不了：" + e.getMessage();
+            return L.t("compose.site_unreadable", e.getMessage());
         }
         return loadSite(d);
     }
@@ -1265,7 +1299,7 @@ public final class Compose {
     static String loadSite(JsonObject d) {
         Minecraft mc = Minecraft.getInstance();
         ComposeScreen.Options o = options();
-        if (o == null) return "还没读到选项（" + com.flyingeaves.backend.GeneratorProcess.hint() + "）";
+        if (o == null) return L.t("compose.no_options_hint", com.flyingeaves.backend.GeneratorProcess.hint());
         BlockPos at = BuildTool.target(mc);
         if (at == null) at = mc.player.blockPosition().below();
         int k = turnOf(BuildTool.facingToPlayer(mc));
@@ -1332,16 +1366,13 @@ public final class Compose {
             int nb = 0;
             for (Room r : ROOMS) if (r.special == 0) nb++;
             boolean sect = d.has("kind") && d.get("kind").getAsString().equals("sect");
-            BuildTool.say((sect ? "随机宗门：" : "随机城镇：") + d.get("name").getAsString() + "，" + nb + " 栋房子、" + ROOMS.size()
-                    + (sect ? " 个房间（台地、石阶、街道也是房间，能一间间改）；" : " 个房间（街道、台地也是房间，能一间间改）；")
-                    + (anchored ? "照着这里的地形排的；" : "") + "不满意再点一次，Ctrl+Z 回到原来的");
+            BuildTool.say(L.t(sect ? "compose.sect_loaded" : "compose.town_loaded", L.siteName(d.get("name").getAsString()), nb, ROOMS.size(),
+                    anchored ? L.t("compose.on_terrain") : ""));
         } else if (level) {
-            BuildTool.say(d.get("name").getAsString() + "：" + ROOMS.size() + " 个房间（殿、墙、门、河、铺地都是房间，能一间间改），"
-                    + (u1 - u0 + 1) + "×" + (v1 - v0 + 1) + " 格；午门在准星处朝你，整片在准星这一层的地面上（高出的削平、低处垫实）；"
-                    + (previewOff() ? "太大不出预览，看线框；" : "") + "按" + key() + "打开房间表点生成：生成器算一分多钟，再写进世界一分钟左右");
+            BuildTool.say(L.t("compose.city_loaded", L.siteName(d.get("name").getAsString()), ROOMS.size(), u1 - u0 + 1, v1 - v0 + 1,
+                    previewOff() ? L.t("compose.no_preview_frames") : "", key()));
         } else if (!d.get("name").getAsString().startsWith("一句话"))
-            BuildTool.say("随机一院：" + d.get("name").getAsString() + "，" + ROOMS.size() + " 个房间（殿、厢房、墙、门、铺地都是房间，能一间间改）；"
-                    + "不满意再点一次，Ctrl+Z 回到原来的");
+            BuildTool.say(L.t("compose.court_loaded", L.siteName(d.get("name").getAsString()), ROOMS.size()));
         return null;
     }
 
@@ -1445,8 +1476,7 @@ public final class Compose {
             }
         }
         selected = ROOMS.indexOf(r);
-        BuildTool.say("房间 " + (selected + 1) + " 做成「" + rec.get("name").getAsString() + "」" + (rec.has("wings") ? "，四面加了抱厦" : "")
-                + "");
+        BuildTool.say(L.t("compose.recipe", selected + 1, recipeName(rec)) + (rec.has("wings") ? L.t("compose.recipe_wings") : ""));
     }
 
     static void deleteDesign(java.nio.file.Path p) {
@@ -1552,22 +1582,22 @@ public final class Compose {
 
     static void undo() {
         if (UNDO.isEmpty()) {
-            BuildTool.say("没有可撤销的了");
+            BuildTool.say(L.t("compose.undo_none"));
             return;
         }
         REDO.push(snapshot());
         restore(UNDO.pop());
-        BuildTool.say("撤销（还能撤 " + UNDO.size() + " 步）");
+        BuildTool.say(L.t("compose.undo", UNDO.size()));
     }
 
     static void redo() {
         if (REDO.isEmpty()) {
-            BuildTool.say("没有可重做的了");
+            BuildTool.say(L.t("compose.redo_none"));
             return;
         }
         UNDO.push(snapshot());
         restore(REDO.pop());
-        BuildTool.say("重做（还能重做 " + REDO.size() + " 步）");
+        BuildTool.say(L.t("compose.redo", REDO.size()));
     }
 
     @SubscribeEvent
@@ -1677,7 +1707,7 @@ public final class Compose {
         if (tool == Tool.PALETTE && !right) {
             if (PaletteBoard.active()) {
                 PaletteBoard.cancel();
-                BuildTool.say("材料板收了，没改");
+                BuildTool.say(L.t("compose.board_cancelled"));
             }
             return;
         }
@@ -1692,38 +1722,38 @@ public final class Compose {
             Room r = (Room) h[0];
             selected = ROOMS.indexOf(r);
             if (tool == Tool.USE && whyNot(Tool.USE, r, o) != null) {
-                BuildTool.say("房间 " + (selected + 1) + "：" + whyNot(Tool.USE, r, o));
+                BuildTool.say(L.t("compose.room_prefix", selected + 1) + whyNot(Tool.USE, r, o));
                 return;
             }
             switch (tool) {
                 case USE -> {
                     int fl = floorOf(r, (Vec3) h[1]);
-                    mc.setScreen(new PickScreen((fl + 1) + " 楼做什么用（房间 " + (selected + 1) + "）", o.uses, () -> r.uses[fl], v -> r.uses[fl] = v, i -> 0));
+                    mc.setScreen(new PickScreen(L.t("compose.pick_use", fl + 1, selected + 1), o.uses, () -> r.uses[fl], v -> r.uses[fl] = v, i -> 0));
                 }
                 case ROOF -> {
-                    if (r.round) mc.setScreen(new PickScreen("圆塔的屋顶", java.util.Arrays.asList(ROUND_ROOFS), () -> r.roundRoof, v -> r.roundRoof = v, i -> 0));
-                    else mc.setScreen(new PickScreen("屋顶", o.roofs, () -> r.roof, v -> r.roof = v, i -> 0));
+                    if (r.round) mc.setScreen(new PickScreen(L.t("compose.pick_round_roof"), java.util.Arrays.asList(ROUND_ROOFS), () -> r.roundRoof, v -> r.roundRoof = v, i -> 0));
+                    else mc.setScreen(new PickScreen(L.t("compose.pick_roof"), o.roofs, () -> r.roof, v -> r.roof = v, i -> 0));
                 }
                 case WALLS -> {
                     List<Integer> wi = wallChoices(o, r.walls);
                     List<String[]> wl = new ArrayList<>();
                     for (int i : wi) wl.add(o.walls.get(i));
-                    mc.setScreen(new PickScreen("墙", wl, () -> Math.max(0, wi.indexOf(r.walls)), v -> r.walls = wi.get(v), i -> ComposeScreen.swatchOf(wl.get(i))));
+                    mc.setScreen(new PickScreen(L.t("compose.pick_walls"), wl, () -> Math.max(0, wi.indexOf(r.walls)), v -> r.walls = wi.get(v), i -> ComposeScreen.swatchOf(wl.get(i))));
                 }
-                default -> mc.setScreen(new PickScreen("瓦", o.themes, () -> r.theme, v -> r.theme = v, i -> ComposeScreen.swatchOf(o.themes.get(i))));
+                default -> mc.setScreen(new PickScreen(L.t("compose.pick_tiles"), o.themes, () -> r.theme, v -> r.theme = v, i -> ComposeScreen.swatchOf(o.themes.get(i))));
             }
             return;
         }
         if (tool.wheel) {                                   // right = one notch up, left = one notch down
             if (h == null && tool != Tool.REROLL && tool != Tool.INTERIOR) {
-                BuildTool.say("准星没指着房间（对着线框点）");
+                BuildTool.say(L.t("compose.no_room_aimed"));
                 return;
             }
             step(mc, h, right ? 1 : -1, Screen.hasControlDown());
             return;
         }
         if (h == null) {
-            BuildTool.say("准星没指着房间（对着线框点）");
+            BuildTool.say(L.t("compose.no_room_aimed"));
             return;
         }
         Room r = (Room) h[0];
@@ -1737,7 +1767,7 @@ public final class Compose {
                 if (!right) return;
                 if (Screen.hasShiftDown() || clip == null) {
                     clip = r.copy();
-                    BuildTool.say("记下了房间 " + (selected + 1) + " 的样子；右键另一间照搬过去");
+                    BuildTool.say(L.t("compose.copied", selected + 1));
                 } else {
                     r.roof = clip.roof;
                     r.walls = clip.walls;
@@ -1772,14 +1802,14 @@ public final class Compose {
                     r.seed = clip.seed;
                     r.variant = clip.variant;
                     r.roofVariant = clip.roofVariant;
-                    BuildTool.say("房间 " + (selected + 1) + " 照搬了记下的样子");
+                    BuildTool.say(L.t("compose.pasted", selected + 1));
                 }
             }
             case DELETE -> {
                 if (right) {
                     ROOMS.remove(r);
                     selected = Math.max(0, ROOMS.size() - 1);
-                    BuildTool.say("删掉了，还剩 " + ROOMS.size() + " 个房间（Ctrl+Z 撤销）");
+                    BuildTool.say(L.t("compose.deleted", ROOMS.size()));
                 }
             }
             default -> {
@@ -1798,25 +1828,25 @@ public final class Compose {
      */
     static String whyNot(Tool t, Room r, ComposeScreen.Options o) {
         boolean sp = r.special > 0;
-        String spn = sp && r.special < SPECIALS.length ? "「" + SPECIALS[r.special][1] + "」" : "";
+        String spn = sp && r.special < SPECIALS.length ? SPECIALS[r.special][1] : "";
         return switch (t) {
-            case STACKON -> stackBase(r) == null && !r.stacked ? "下面没有房间（叠放要在前面画的另一间里面）" : null;
-            case PINGZUO -> sp ? spn + "没有平座" : !r.round ? "平座只有圆塔有（先用「形状」换成圆塔）"
-                    : r.storeys < 2 ? "平座在楼上：圆塔要两层以上（先用「叠层」加一层）" : null;
-            case PODSHAPE, MARGIN -> sp ? spn + "没有台基" : r.podium == 0 ? "还没有台基：先用「台基」滚出高度" : null;
-            case STEPS -> terrace(r) ? null : sp ? spn + "没有台阶" : r.podium == 0 ? "还没有台基：先用「台基」滚出高度"
-                    : r.podiumStyle == 3 ? "城台没有台阶（从门洞穿过去）：台阶坡度给平台、须弥座、三层" : null;
-            case GATEWAY -> r.podiumStyle != 3 || r.podium == 0 ? "门洞开在城台上：先把台基样式换成城台（台基工具按住 Ctrl 滚）" : null;
-            case ZOUSHOU -> o != null && !hipRoof(r, o) && !r.doubleEave ? "走兽骑在戗脊上：歇山、庑殿、攒尖、盝顶、十字脊才有（或者重檐的下檐）" : null;
-            case GABLE -> o != null && !gableRoof(r, o) ? "只有硬山、悬山顶两头有山墙，马头墙要先换这两种屋顶" : null;
-            case USE -> sp ? spn + "没有楼层，不分用途" : null;
-            case FLOOROPEN -> sp ? spn + "没有楼层" : r.round ? "圆塔不能一层层设开敞（整间的用「开敞」）" : null;
+            case STACKON -> stackBase(r) == null && !r.stacked ? L.t("why.stackon") : null;
+            case PINGZUO -> sp ? L.t("why.sp_no_pingzuo", spn) : !r.round ? L.t("why.pingzuo_round")
+                    : r.storeys < 2 ? L.t("why.pingzuo_storeys") : null;
+            case PODSHAPE, MARGIN -> sp ? L.t("why.sp_no_podium", spn) : r.podium == 0 ? L.t("why.no_podium") : null;
+            case STEPS -> terrace(r) ? null : sp ? L.t("why.sp_no_steps", spn) : r.podium == 0 ? L.t("why.no_podium")
+                    : r.podiumStyle == 3 ? L.t("why.chengtai_steps") : null;
+            case GATEWAY -> r.podiumStyle != 3 || r.podium == 0 ? L.t("why.gateway") : null;
+            case ZOUSHOU -> o != null && !hipRoof(r, o) && !r.doubleEave ? L.t("why.beasts") : null;
+            case GABLE -> o != null && !gableRoof(r, o) ? L.t("why.gable") : null;
+            case USE -> sp ? L.t("why.sp_no_use", spn) : null;
+            case FLOOROPEN -> sp ? L.t("why.sp_no_floors", spn) : r.round ? L.t("why.floor_open_round") : null;
             default -> null;
         };
     }
 
     static String interiorSay() {
-        return interior ? "内饰：有（家具、灯）" : "内饰：无（屋里空着，楼梯、梯子照有）";
+        return L.t(interior ? "compose.interior_on" : "compose.interior_off");
     }
 
     /** 能用滚轮的工具往上（d = 1）或往下（d = -1）一格。h：准星指着的房间和碰到线框的点（换样子可以没有）。 */
@@ -1829,13 +1859,13 @@ public final class Compose {
         }
         if (h == null) {                                    // 换样子，没指着房间：整栋换
             look = Math.max(0, look + d);
-            BuildTool.say("整栋换样子：第 " + (look + 1) + " 个" + (look == 0 ? "（最初那个）" : ""));
+            BuildTool.say(L.t("compose.look_all", look + 1, look == 0 ? L.t("compose.look_first") : ""));
             return;
         }
         Room r = (Room) h[0];
         Vec3 p = (Vec3) h[1];
         selected = ROOMS.indexOf(r);
-        String who = "房间 " + (selected + 1) + "：";
+        String who = L.t("compose.room_prefix", selected + 1);
         String no = whyNot(tool, r, o);
         if (no != null) {
             BuildTool.say(who + no);
@@ -1846,92 +1876,92 @@ public final class Compose {
                 int[] sh = WheelSteps.shapeOf(WheelSteps.cycle(WheelSteps.shapeIndex(r.round, r.special), d, SPECIALS.length + 1));
                 r.round = sh[0] == 1;
                 r.special = sh[1];
-                BuildTool.say(who + "形状：" + shapes().get(WheelSteps.shapeIndex(r.round, r.special))[1]);
+                BuildTool.say(who + L.t("say.shape", shapes().get(WheelSteps.shapeIndex(r.round, r.special))[1]));
             }
             case PINGZUO -> {
                 r.pingzuo = !r.pingzuo;
-                BuildTool.say(who + (r.pingzuo ? "平座：每层一圈" : "没有平座"));
+                BuildTool.say(who + L.t(r.pingzuo ? "say.pingzuo_on" : "say.pingzuo_off"));
             }
             case PODSHAPE -> {
                 r.podiumShape = WheelSteps.cycle(r.podiumShape, d, PODIUM_SHAPES.length);
-                BuildTool.say(who + "台基形状：" + PODIUM_SHAPES[r.podiumShape][1] + (r.podiumShape == 0 ? (r.round ? "（圆）" : "（方）") : ""));
+                BuildTool.say(who + L.t("say.podshape", PODIUM_SHAPES[r.podiumShape][1]) + (r.podiumShape == 0 ? L.t(r.round ? "say.follow_round" : "say.follow_square") : ""));
             }
             case STEPS -> {
                 r.stepSlope = WheelSteps.cycle(r.stepSlope, d, STEP_SLOPES.length);
-                BuildTool.say(who + "台阶坡度：" + STEP_SLOPES[r.stepSlope][1]);
+                BuildTool.say(who + L.t("say.steps", STEP_SLOPES[r.stepSlope][1]));
             }
             case MARGIN -> {
                 r.podiumMargin = WheelSteps.cycle(r.podiumMargin, d, PODIUM_MARGINS.length);
-                BuildTool.say(who + "台基边距：" + (r.podiumMargin == 0 ? "自动" : PODIUM_MARGINS[r.podiumMargin][1] + " 格"));
+                BuildTool.say(who + (r.podiumMargin == 0 ? L.t("say.margin_auto") : L.t("say.margin", PODIUM_MARGINS[r.podiumMargin][1])));
             }
             case USE -> {
                 int fl = floorOf(r, p);
                 r.uses[fl] = WheelSteps.cycle(r.uses[fl], d, o.uses.size());
-                BuildTool.say(who + (fl + 1) + " 楼：" + o.uses.get(r.uses[fl])[1]);
+                BuildTool.say(who + L.t("say.floor_use", fl + 1, o.uses.get(r.uses[fl])[1]));
             }
             case FLOOROPEN -> {
                 int fl = floorOf(r, p);
                 r.floorOpen[fl] = WheelSteps.cycle(r.floorOpen[fl], d, FLOOR_OPEN.length);
-                BuildTool.say(who + (fl + 1) + " 楼开敞：" + FLOOR_OPEN[r.floorOpen[fl]][1]
-                        + (r.floorOpen[fl] == 0 ? "（" + OPENNESS[r.openness][1] + "）" : ""));
+                BuildTool.say(who + L.t("say.floor_open", fl + 1, FLOOR_OPEN[r.floorOpen[fl]][1])
+                        + (r.floorOpen[fl] == 0 ? L.t("say.paren", OPENNESS[r.openness][1]) : ""));
             }
             case MOVE -> {
                 if (ctrl) {
                     r.y += d;
-                    BuildTool.say(who + "地面高度 " + r.y);
+                    BuildTool.say(who + L.t("say.ground_y", r.y));
                 } else {
                     Direction dir = mc.player.getDirection();
                     r.x0 += d * dir.getStepX();
                     r.x1 += d * dir.getStepX();
                     r.z0 += d * dir.getStepZ();
                     r.z1 += d * dir.getStepZ();
-                    BuildTool.say(who + "往" + cnDir(d > 0 ? dir : dir.getOpposite()) + "挪了一格");
+                    BuildTool.say(who + L.t("say.moved", cnDir(d > 0 ? dir : dir.getOpposite())));
                 }
             }
             case STACK -> {
                 r.storeys = Math.max(1, Math.min(8, r.storeys + d));
-                BuildTool.say(who + r.storeys + " 层");
+                BuildTool.say(who + L.t("say.storeys", r.storeys));
             }
             case GATEWAY -> {
                 r.tunnels = Math.floorMod(r.tunnels + d, TUNNEL_COUNTS.length);
-                BuildTool.say(who + "门洞：" + TUNNEL_COUNTS[r.tunnels]);
+                BuildTool.say(who + L.t("say.gateways", TUNNEL_COUNTS[r.tunnels]));
             }
             case STACKON -> {
                 Room b = stackBase(r);
                 r.stacked = !r.stacked;
                 if (!r.stacked) r.y = groundUnder(r.x0, r.z0, r.x1, r.z1, r.round, r.y);
                 restack();
-                BuildTool.say(who + (r.stacked ? "叠在房间 " + (ROOMS.indexOf(b) + 1) + " 顶上" : "放在地上"));
+                BuildTool.say(who + (r.stacked ? L.t("say.stacked_on", ROOMS.indexOf(b) + 1) : L.t("say.on_ground")));
             }
             case HEIGHT -> {
                 r.sh = WheelSteps.storeyHeight(r.sh, autoSh, d);
-                BuildTool.say(who + (r.sh == 0 ? "层高自动（现在每层 " + autoSh + " 格）" : "每层 " + r.sh + " 格高"));
+                BuildTool.say(who + (r.sh == 0 ? L.t("say.sh_auto", autoSh) : L.t("say.sh", r.sh)));
             }
             case PODIUM -> {
                 if (ctrl) {
                     r.podiumStyle = Math.floorMod(r.podiumStyle + d, PODIUM_STYLES.length);
-                    BuildTool.say(who + "台基样式：" + PODIUM_STYLES[r.podiumStyle][1]);
+                    BuildTool.say(who + L.t("say.podium_style", PODIUM_STYLES[r.podiumStyle][1]));
                 } else {
                     int pi = 0;
                     while (pi < PODIUM_HEIGHTS.length - 1 && PODIUM_HEIGHTS[pi] < r.podium) pi++;
                     r.podium = PODIUM_HEIGHTS[Math.max(0, Math.min(PODIUM_HEIGHTS.length - 1, pi + d))];
-                    BuildTool.say(who + (r.podium == 0 ? "没有台基，一楼落在地上" : "台基 " + r.podium + " 格高"));
+                    BuildTool.say(who + (r.podium == 0 ? L.t("say.no_podium") : L.t("say.podium", r.podium)));
                 }
             }
             case TAPER -> {
                 r.taper = Math.max(0, Math.min(3, r.taper + d));
-                BuildTool.say(who + (wallish(r) ? (r.taper == 0 ? "墙不收分" : "收分：墙两面往上各收 " + r.taper + " 格（墙框 7 格以上深的城墙）")
-                        : r.taper == 0 ? "每层一样大" : (r.round ? "每往上一层半径收 " : "每往上一层四边各收 ") + r.taper + " 格"));
+                BuildTool.say(who + (wallish(r) ? (r.taper == 0 ? L.t("say.wall_no_taper") : L.t("say.wall_taper", r.taper))
+                        : r.taper == 0 ? L.t("say.no_taper") : L.t(r.round ? "say.taper_round" : "say.taper", r.taper)));
             }
             case BASE -> {
                 r.base = Math.floorMod(r.base + d, Math.max(1, o.bases.size()));
-                BuildTool.say(who + "基座：" + o.bases.get(r.base)[1]);
+                BuildTool.say(who + L.t("say.base", o.bases.get(r.base)[1]));
             }
             case EAVE -> {
                 int ev = Math.floorMod((r.tripleEave ? 2 : r.doubleEave ? 1 : 0) + d, 3);
                 r.doubleEave = ev >= 1;
                 r.tripleEave = ev == 2;
-                BuildTool.say(who + new String[]{"单檐", "重檐", "三重檐"}[ev]);
+                BuildTool.say(who + EAVES[ev]);
             }
             case GALLERY -> {
                 int g = Math.floorMod(r.gallery() + d, GALLERIES.length);
@@ -1941,7 +1971,7 @@ public final class Compose {
             case OPEN -> {
                 if (ctrl) {
                     r.doors = Math.floorMod(r.doors + d, DOORS.length);
-                    BuildTool.say(who + "出入口：" + DOORS[r.doors][1]);
+                    BuildTool.say(who + L.t("say.doors", DOORS[r.doors][1]));
                 } else {
                     r.openness = Math.floorMod(r.openness + d, OPENNESS.length);
                     BuildTool.say(who + OPENNESS[r.openness][1]);
@@ -1949,36 +1979,36 @@ public final class Compose {
             }
             case PITCH -> {
                 r.pitch = Math.floorMod(r.pitch + d, PITCHES.length);
-                BuildTool.say(who + "坡度：" + PITCHES[r.pitch]);
+                BuildTool.say(who + L.t("say.pitch", PITCHES[r.pitch]));
             }
             case EAVEOUT -> {
                 r.overhang = Math.floorMod(r.overhang + d, EAVE_OUTS.length);
-                BuildTool.say(who + "出檐：" + EAVE_OUTS[r.overhang]);
+                BuildTool.say(who + L.t("say.overhang", EAVE_OUTS[r.overhang]));
             }
             case LIFT -> {
                 r.lift = Math.floorMod(r.lift + d, LIFTS.length);
-                BuildTool.say(who + "翘角：" + LIFTS[r.lift]);
+                BuildTool.say(who + L.t("say.lift", LIFTS[r.lift]));
             }
             case ZOUSHOU -> {
                 r.beasts = Math.floorMod(r.beasts + d, BEAST_COUNTS.length);
-                BuildTool.say(who + "走兽：" + BEAST_COUNTS[r.beasts]);
+                BuildTool.say(who + L.t("say.beasts", BEAST_COUNTS[r.beasts]));
             }
             case DOUGONG -> {
                 r.brackets = Math.floorMod(r.brackets + d, BRACKET_ROWS.length);
-                BuildTool.say(who + "斗拱：" + BRACKET_ROWS[r.brackets]);
+                BuildTool.say(who + L.t("say.brackets", BRACKET_ROWS[r.brackets]));
             }
             case CAIHUA -> {
                 r.caihua = Math.floorMod(r.caihua + d, CAIHUAS.length);
-                BuildTool.say(who + "彩画：" + CAIHUAS[r.caihua][1]);
+                BuildTool.say(who + L.t("say.caihua", CAIHUAS[r.caihua][1]));
             }
             case GABLE -> {
                 r.horsehead = !r.horsehead;
-                BuildTool.say(who + (r.horsehead ? "马头墙" : "普通山墙"));
+                BuildTool.say(who + L.t(r.horsehead ? "say.horsehead" : "say.plain_gable"));
             }
             case ROOF -> {
                 if (r.round) {
                     r.roundRoof = Math.floorMod(r.roundRoof + d, ROUND_ROOFS.length);
-                    BuildTool.say(who + "圆塔屋顶：" + ROUND_ROOFS[r.roundRoof][1]);
+                    BuildTool.say(who + L.t("say.round_roof", ROUND_ROOFS[r.roundRoof][1]));
                     return;
                 }
                 r.roof = Math.floorMod(r.roof + d, o.roofs.size());
@@ -1995,19 +2025,19 @@ public final class Compose {
             }
             case BAYSTYLE -> {
                 r.bayStyle = Math.floorMod(r.bayStyle + d, Math.max(1, o.bayStyles.size()));
-                BuildTool.say(who + "墙样：" + o.bayStyles.get(r.bayStyle)[1]);
+                BuildTool.say(who + L.t("say.bay", o.bayStyles.get(r.bayStyle)[1]));
             }
             case FRONT -> {
                 r.front = Math.floorMod(r.front + d, 4);
-                BuildTool.say(who + "正面朝" + o.fronts.get(r.front)[1]);
+                BuildTool.say(who + L.t("say.front", o.fronts.get(r.front)[1]));
             }
             case REROLL -> {
                 if (ctrl) {
                     r.roofVariant = Math.max(0, r.roofVariant + d);
-                    BuildTool.say(who + "屋顶换样子：第 " + (r.roofVariant + 1) + " 个" + (r.roofVariant == 0 ? "（最初那个）" : ""));
+                    BuildTool.say(who + L.t("say.roof_look", r.roofVariant + 1, r.roofVariant == 0 ? L.t("compose.look_first") : ""));
                 } else {
                     r.variant = Math.max(0, r.variant + d);
-                    BuildTool.say(who + "换样子：第 " + (r.variant + 1) + " 个" + (r.variant == 0 ? "（最初那个）" : ""));
+                    BuildTool.say(who + L.t("say.look", r.variant + 1, r.variant == 0 ? L.t("compose.look_first") : ""));
                 }
             }
             default -> {
@@ -2046,10 +2076,10 @@ public final class Compose {
 
     private static String cnDir(Direction d) {
         return switch (d) {
-            case NORTH -> "北";
-            case SOUTH -> "南";
-            case EAST -> "东";
-            case WEST -> "西";
+            case NORTH -> L.t("dir.north");
+            case SOUTH -> L.t("dir.south");
+            case EAST -> L.t("dir.east");
+            case WEST -> L.t("dir.west");
             default -> "";
         };
     }
@@ -2058,12 +2088,12 @@ public final class Compose {
         if (right) {
             BlockPos t = BuildTool.target(mc);
             if (t == null) {
-                BuildTool.say("准星没对着地面");
+                BuildTool.say(L.t("compose.no_ground"));
                 return;
             }
             if (cornerA == null) {
                 cornerA = t;
-                BuildTool.say("第一个角：" + t.getX() + ", " + t.getZ() + "；再右键点对角");
+                BuildTool.say(L.t("compose.first_corner", t.getX(), t.getZ()));
             } else {
                 BlockPos a = cornerA;
                 cornerA = null;
@@ -2072,14 +2102,14 @@ public final class Compose {
             }
         } else if (cornerA != null) {
             cornerA = null;
-            BuildTool.say("取消了这个角");
+            BuildTool.say(L.t("compose.corner_cancelled"));
         } else if (!ROOMS.isEmpty()) {
             ROOMS.remove(ROOMS.size() - 1);
             selected = Math.max(0, ROOMS.size() - 1);
-            BuildTool.say("删掉了最后一个房间，还剩 " + ROOMS.size() + " 个");
+            BuildTool.say(L.t("compose.removed_last", ROOMS.size()));
         } else {                                           // nothing left to delete: leave the mode
             stop();
-            BuildTool.say("退出了单体建造模式");
+            BuildTool.say(L.t("compose.left_mode"));
         }
     }
 
@@ -2109,9 +2139,9 @@ public final class Compose {
         // ---- the tool column on the left
         int rowH = 11, groupGap = 4, pad = 6;
         int colW = 0;
-        for (Tool t : Tool.values()) colW = Math.max(colW, font.width(t.cn) + 22);
-        colW = Math.max(colW, font.width("预览 88888 格") + 2 * pad);
-        String status = ROOMS.isEmpty() ? "还没有房间" : previewOff() ? "太大，不出预览" : BuildTool.previewPending() ? BuildTool.previewLabel() : Preview.shown() ? "预览 " + Preview.blocks() + " 格" : "";
+        for (Tool t : Tool.values()) colW = Math.max(colW, font.width(t.cn()) + 22);
+        colW = Math.max(colW, font.width(L.t("hud.preview_blocks", 88888)) + 2 * pad);
+        String status = ROOMS.isEmpty() ? L.t("hud.no_rooms") : previewOff() ? L.t("hud.too_big") : BuildTool.previewPending() ? BuildTool.previewLabel() : Preview.shown() ? L.t("hud.preview_blocks", Preview.blocks()) : "";
         int rows = Tool.values().length;
         int fixed = pad * 2 + 1 + 10 + (GROUPS.length - 1) * groupGap + (look > 0 ? 10 : 0) + (interior ? 0 : 10);
         if (fixed + rows * rowH > h - 8) rowH = Math.max(9, (h - 8 - fixed) / rows);
@@ -2132,15 +2162,16 @@ public final class Compose {
         if (split < GROUPS.length) colW = colW * 2;
         Ui.round(g, x, y, colW, colH, 0xB0101418);
         int ty = y + pad;
+        Ui.cap(status, font.width(status) > colW - 2 * pad);
         g.drawString(font, font.width(status) > colW - 2 * pad ? font.plainSubstrByWidth(status, colW - 2 * pad - 4) + "…" : status,
                 x + pad, ty, Ui.SUB, false);
         ty += 10;
         if (look > 0) {
-            g.drawString(font, "整栋第 " + (look + 1) + " 个样子", x + pad, ty, Ui.SUB, false);
+            g.drawString(font, L.t("hud.look", look + 1), x + pad, ty, Ui.SUB, false);
             ty += 10;
         }
         if (!interior) {
-            g.drawString(font, "内饰：无", x + pad, ty, Ui.GOLD, false);
+            g.drawString(font, L.t("hud.interior_off"), x + pad, ty, Ui.GOLD, false);
             ty += 10;
         }
         g.fill(x + pad, ty, x + colW - pad, ty + 1, 0x40FFFFFF);
@@ -2161,17 +2192,18 @@ public final class Compose {
                     g.fill(cx0 + 3, ty, cx0 + 5, ty + rowH - 2, Ui.ACCENT);
                 }
                 boolean off = aimRoom != null && whyNot(t, aimRoom, ao) != null;
-                g.drawString(font, t.cn, cx0 + pad + 4, ty + Math.max(0, (rowH - 9) / 2), cur ? (off ? Ui.SUB : 0xFFFFFFFF) : off ? DIMMED : Ui.MUTED, false);
+                Ui.cap(t.cn(), font.width(t.cn()) > cw - pad - 8);
+                g.drawString(font, t.cn(), cx0 + pad + 4, ty + Math.max(0, (rowH - 9) / 2), cur ? (off ? Ui.SUB : 0xFFFFFFFF) : off ? DIMMED : Ui.MUTED, false);
                 ty += rowH;
             }
             ty += groupGap;
         }
         // ---- the hint of the current tool, above the hotbar
         String board = PaletteBoard.hudLine(mc);
-        String hint = board != null ? board : tool.hint;
-        String keys = "Alt+滚轮换工具 · Ctrl+Z 撤销 · Ctrl+Y 重做 · " + key() + " 房间表 · " + randomKey() + " 随机一栋";
+        String hint = board != null ? board : tool.hint();
+        String keys = L.t("hud.keys", key(), randomKey());
         int maxW = Math.min(w - 16, 360);
-        int indentW = font.width(tool.cn) + 6;           // the first line starts after the tool's name: wrap it that much shorter
+        int indentW = font.width(tool.cn()) + 6;           // the first line starts after the tool's name: wrap it that much shorter
         List<net.minecraft.util.FormattedCharSequence> lines = new ArrayList<>();
         if (board != null) lines.addAll(font.split(net.minecraft.network.chat.Component.literal(hint), maxW - 16));
         else {
@@ -2182,20 +2214,28 @@ public final class Compose {
                 if (!rest.isBlank()) lines.addAll(font.split(net.minecraft.network.chat.Component.literal(rest.strip()), maxW - 16));
             }
         }
-        if (lines.size() > 3) lines = lines.subList(0, 3);
+        Ui.cap(tool.cn(), false);
+        Ui.cap(hint, lines.size() > 5);
+        if (lines.size() > 5) lines = lines.subList(0, 5);   // (English runs longer than Chinese)
         String off = board == null && aimRoom != null ? whyNot(tool, aimRoom, ao) : null;   // why the current tool does nothing here
         List<net.minecraft.util.FormattedCharSequence> offLines = off == null ? List.of()
-                : font.split(net.minecraft.network.chat.Component.literal("这间用不上：" + off), maxW - 16);
+                : font.split(net.minecraft.network.chat.Component.literal(L.t("hud.not_here", off)), maxW - 16);
+        List<net.minecraft.util.FormattedCharSequence> keyLines = font.split(net.minecraft.network.chat.Component.literal(keys), maxW - 16);
         int bw = 0;
         for (var l : lines) bw = Math.max(bw, font.width(l));
         for (var l : offLines) bw = Math.max(bw, font.width(l));
-        bw = Math.min(maxW, Math.max(bw, font.width(keys)) + 16);
-        int bh = 8 + (lines.size() + offLines.size()) * 10 + 11;
+        for (var l : keyLines) bw = Math.max(bw, font.width(l));
+        Ui.cap(keys, false);
+        if (off != null) Ui.cap(L.t("hud.not_here", off), false);
+        if (look > 0) Ui.cap(L.t("hud.look", look + 1), false);
+        if (!interior) Ui.cap(L.t("hud.interior_off"), false);
+        bw = Math.min(maxW, bw + 16);
+        int bh = 8 + (lines.size() + offLines.size()) * 10 + 1 + keyLines.size() * 10;
         int bx = (w - bw) / 2, by = 4;      // at the top: the hotbar area is where the game's own messages and item names go
         Ui.round(g, bx, by, bw, bh, 0xB0101418);
-        g.drawString(font, tool.cn, bx + 8, by + 4, Ui.ACCENT, false);
+        g.drawString(font, tool.cn(), bx + 8, by + 4, Ui.ACCENT, false);
         int ly = by + 4;
-        int indent = font.width(tool.cn) + 6;
+        int indent = font.width(tool.cn()) + 6;
         for (int i = 0; i < lines.size(); i++) {
             g.drawString(font, lines.get(i), bx + 8 + (i == 0 && board == null ? indent : 0), ly + (i == 0 || board != null ? 0 : 0), Ui.TEXT, false);
             ly += 10;
@@ -2204,8 +2244,10 @@ public final class Compose {
             g.drawString(font, l, bx + 8, ly, Ui.GOLD, false);
             ly += 10;
         }
-        String k2 = font.width(keys) > bw - 16 ? font.plainSubstrByWidth(keys, bw - 20) + "…" : keys;
-        g.drawString(font, k2, bx + 8, ly + 1, Ui.MUTED, false);
+        for (var l : keyLines) {
+            g.drawString(font, l, bx + 8, ly + 1, Ui.MUTED, false);
+            ly += 10;
+        }
         if (tool == Tool.USE || tool == Tool.FLOOROPEN) aimedInfo(g, font, w, by + bh + 3, maxW);     // only while setting the floors one by one
     }
 
@@ -2228,29 +2270,35 @@ public final class Compose {
         int idx = ROOMS.indexOf(r);
         int shh = Math.max(1, r.storeyHeight());
         int fl = floorOf(r, (Vec3) hit[1]);              // (the floor the wheel and the list change)
-        String head = "房间 " + (idx + 1) + (r.special > 0 ? "「" + SPECIALS[r.special][1] + "」" : "") + (r.recipe >= 0 && r.recipe < recipeData().size() ? "「" + recipeData().get(r.recipe).get("name").getAsString() + "」" : "") + "  " + (r.round ? "圆塔 直径 " + (r.x1 - r.x0 + 1) : (r.x1 - r.x0 + 1) + "×" + (r.z1 - r.z0 + 1))
-                + " · " + r.storeys + " 层（每层 " + shh + " 格）" + (r.taper > 0 ? " · 收分 每层" + (r.round ? "半径" : "") + "收 " + r.taper + " 格" : "") + (r.round && r.pingzuo && r.storeys > 1 ? " · 平座" : "")
-                + (r.pitch > 0 ? " · 坡度" + PITCHES[r.pitch] : "") + (r.overhang > 0 ? " · 出檐" + EAVE_OUTS[r.overhang] : "")
-                + (r.lift > 0 ? " · 翘角" + LIFTS[r.lift] : "")
-                + (r.beasts > 0 ? " · 走兽" + BEAST_COUNTS[r.beasts] : "") + (r.brackets > 0 ? " · 斗拱" + BRACKET_ROWS[r.brackets] : "")
-                + (r.caihua > 0 ? " · " + CAIHUAS[r.caihua][1] + "彩画" : "")
-                + (r.podium > 0 ? " · 台基 " + r.podium + " 格" : "")
-                + (r.podium > 0 && r.podiumStyle == 3 && r.tunnels > 0 ? " · 门洞" + TUNNEL_COUNTS[Math.min(r.tunnels, TUNNEL_COUNTS.length - 1)] : "");
+        String head = L.t("info.room", idx + 1) + (r.special > 0 ? L.t("compose.quoted", SPECIALS[r.special][1]) : "") + (r.recipe >= 0 && r.recipe < recipeData().size() ? L.t("compose.quoted", recipeName(recipeData().get(r.recipe))) : "") + "  " + (r.round ? L.t("info.tower_d", r.x1 - r.x0 + 1) : (r.x1 - r.x0 + 1) + "×" + (r.z1 - r.z0 + 1))
+                + " · " + L.t("info.storeys", r.storeys, shh) + (r.taper > 0 ? " · " + L.t(r.round ? "info.taper_r" : "info.taper", r.taper) : "") + (r.round && r.pingzuo && r.storeys > 1 ? " · " + L.t("info.pingzuo") : "")
+                + (r.pitch > 0 ? " · " + L.t("info.pitch", PITCHES[r.pitch]) : "") + (r.overhang > 0 ? " · " + L.t("info.overhang", EAVE_OUTS[r.overhang]) : "")
+                + (r.lift > 0 ? " · " + L.t("info.lift", LIFTS[r.lift]) : "")
+                + (r.beasts > 0 ? " · " + L.t("info.beasts", BEAST_COUNTS[r.beasts]) : "") + (r.brackets > 0 ? " · " + L.t("info.brackets", BRACKET_ROWS[r.brackets]) : "")
+                + (r.caihua > 0 ? " · " + L.t("info.caihua", CAIHUAS[r.caihua][1]) : "")
+                + (r.podium > 0 ? " · " + L.t("info.podium", r.podium) : "")
+                + (r.podium > 0 && r.podiumStyle == 3 && r.tunnels > 0 ? " · " + L.t("info.gateways", TUNNEL_COUNTS[Math.min(r.tunnels, TUNNEL_COUNTS.length - 1)]) : "");
         List<String> floors = new ArrayList<>();
         for (int s = 0; s < r.storeys; s++)
-            floors.add((s + 1) + "楼 " + o.uses.get(Math.min(r.uses[s], o.uses.size() - 1))[1]
+            floors.add(L.t("info.floor", s + 1, o.uses.get(Math.min(r.uses[s], o.uses.size() - 1))[1])
                     + (r.floorOpen[s] > 0 ? "·" + FLOOR_OPEN[Math.min(r.floorOpen[s], FLOOR_OPEN.length - 1)][1] : ""));
-        String mat = "屋顶 " + (r.round ? ROUND_ROOFS[Math.min(r.roundRoof, ROUND_ROOFS.length - 1)][1] : o.roofs.get(Math.min(r.roof, o.roofs.size() - 1))[1]) + (r.tripleEave ? "（三重檐）" : r.doubleEave ? "（重檐）" : "")
-                + " · 墙 " + o.walls.get(Math.min(r.walls, o.walls.size() - 1))[1]
-                + " · 瓦 " + o.themes.get(Math.min(r.theme, o.themes.size() - 1))[1]
+        String mat = L.t("info.roof", r.round ? ROUND_ROOFS[Math.min(r.roundRoof, ROUND_ROOFS.length - 1)][1] : o.roofs.get(Math.min(r.roof, o.roofs.size() - 1))[1]) + (r.tripleEave ? L.t("info.triple") : r.doubleEave ? L.t("info.double") : "")
+                + " · " + L.t("info.walls", o.walls.get(Math.min(r.walls, o.walls.size() - 1))[1])
+                + " · " + L.t("info.tiles", o.themes.get(Math.min(r.theme, o.themes.size() - 1))[1])
                 + (r.podiumStyle > 0 ? " · " + PODIUM_STYLES[r.podiumStyle][1] : "")
-                + (r.stepSlope > 0 ? " · 台阶 " + STEP_SLOPES[Math.min(r.stepSlope, STEP_SLOPES.length - 1)][1] : "")
-                + (r.podiumMargin > 0 ? " · 边距 " + PODIUM_MARGINS[Math.min(r.podiumMargin, PODIUM_MARGINS.length - 1)][1] : "")
-                + (r.podiumShape > 0 ? " · " + PODIUM_SHAPES[Math.min(r.podiumShape, PODIUM_SHAPES.length - 1)][1] + "台基" : "")
-                + (r.base > 0 && r.base < o.bases.size() ? " · 基座 " + o.bases.get(r.base)[1] : "")
-                + (r.gallery() > 0 ? " · " + GALLERIES[r.gallery()] : "") + (r.horsehead ? " · 马头墙" : "")
-                + (r.openness > 0 ? " · " + OPENNESS[r.openness][1] : "") + (r.doors > 0 ? " · 出入口 " + DOORS[r.doors][1] : "");
-        int bw = Math.min(maxW, Math.max(font.width(head), font.width(mat)) + 16);
+                + (r.stepSlope > 0 ? " · " + L.t("info.steps", STEP_SLOPES[Math.min(r.stepSlope, STEP_SLOPES.length - 1)][1]) : "")
+                + (r.podiumMargin > 0 ? " · " + L.t("info.margin", PODIUM_MARGINS[Math.min(r.podiumMargin, PODIUM_MARGINS.length - 1)][1]) : "")
+                + (r.podiumShape > 0 ? " · " + L.t("info.podium_shape", PODIUM_SHAPES[Math.min(r.podiumShape, PODIUM_SHAPES.length - 1)][1]) : "")
+                + (r.base > 0 && r.base < o.bases.size() ? " · " + L.t("info.base", o.bases.get(r.base)[1]) : "")
+                + (r.gallery() > 0 ? " · " + GALLERIES[r.gallery()] : "") + (r.horsehead ? " · " + L.t("info.horsehead") : "")
+                + (r.openness > 0 ? " · " + OPENNESS[r.openness][1] : "") + (r.doors > 0 ? " · " + L.t("info.doors", DOORS[r.doors][1]) : "");
+        // the head and the materials wrap rather than run off (English runs longer)
+        var headLines = font.split(net.minecraft.network.chat.Component.literal(head), maxW - 16);
+        var matLines = font.split(net.minecraft.network.chat.Component.literal(mat), maxW - 16);
+        int bw = 0;
+        for (var l : headLines) bw = Math.max(bw, font.width(l));
+        for (var l : matLines) bw = Math.max(bw, font.width(l));
+        bw = Math.min(maxW, bw + 16);
         // the floors, wrapped into rows that fit; the aimed one in gold
         List<List<Integer>> rows = new ArrayList<>();
         List<Integer> cur = new ArrayList<>();
@@ -2267,11 +2315,17 @@ public final class Compose {
             bw = Math.max(bw, Math.min(maxW, cw + 16));
         }
         if (!cur.isEmpty()) rows.add(cur);
-        int bh = 6 + 10 + rows.size() * 10 + 10 + 3;
+        int bh = 6 + headLines.size() * 10 + rows.size() * 10 + matLines.size() * 10 + 3;
+        Ui.cap(head, false);
+        for (String fs : floors) Ui.cap(fs, false);
+        Ui.cap(mat, false);
         int bx = (w - bw) / 2;
         Ui.round(g, bx, top, bw, bh, 0xB0101418);
-        g.drawString(font, font.width(head) > bw - 16 ? font.plainSubstrByWidth(head, bw - 20) + "…" : head, bx + 8, top + 4, Ui.GOLD, false);
-        int ly = top + 14;
+        int ly = top + 4;
+        for (var l : headLines) {
+            g.drawString(font, l, bx + 8, ly, Ui.GOLD, false);
+            ly += 10;
+        }
         for (List<Integer> row : rows) {
             int lx = bx + 8;
             for (int s : row) {
@@ -2282,7 +2336,10 @@ public final class Compose {
             }
             ly += 10;
         }
-        g.drawString(font, font.width(mat) > bw - 16 ? font.plainSubstrByWidth(mat, bw - 20) + "…" : mat, bx + 8, ly + 1, Ui.MUTED, false);
+        for (var l : matLines) {
+            g.drawString(font, l, bx + 8, ly + 1, Ui.MUTED, false);
+            ly += 10;
+        }
     }
 
     private static void circle(PoseStack ps, VertexConsumer lines, double cx, double cz, double rad, double y, int rgb) {

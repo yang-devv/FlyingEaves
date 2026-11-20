@@ -1,5 +1,25 @@
 # Changelog
 
+## 1.2.1 — English UI
+
+- The whole interface in English as well as Chinese, following the game's language: the H tool column, its hints and
+  the aimed-room info, the room table, the save / preset library panel, the material board, the O build menu, the K
+  random building, every chat-bar message, progress and queue lines, errors, the key names under Controls and the
+  `/flyingeaves` command replies. Chinese (zh_cn, and zh_tw / zh_hk with the same text) shows Chinese as before; any
+  other language shows English.
+- All the text is in `assets/flyingeaves/lang/zh_cn.json` and `en_us.json` (the Chinese unchanged). The generator's
+  data stays Chinese and byte for byte the same (option lists, the 87 kinds, presets, the library, site names): the
+  English labels are tables in `en_us.json` keyed by their ids (`flyingeaves.roof.xieshan` "Hip-and-gable",
+  `flyingeaves.kind.main_hall`, `flyingeaves.lib.太和殿` …). Saves, requests and the generator's output are unchanged.
+- Architecture terms: 歇山 Hip-and-gable, 庑殿 Hip, 悬山 Overhanging gable, 硬山 Flush gable, 卷棚 Round ridge, 攒尖
+  Pyramidal, 盝顶 Flat-topped hip, 斗拱 Brackets (dougong), 须弥座 Sumeru podium, 城台 City-wall podium, 平座 Balconies
+  (pingzuo), 马头墙 Horse-head walls; cultivation tiers Mortal, Qi Refining, Foundation, Golden Core, Nascent Soul,
+  Deity Transformation; sect and town names in pinyin.
+- 一句话 (one-sentence designs) still reads Chinese only: in English the box says so, and a sentence without Chinese is
+  not sent.
+- Layout: widths come from the text drawn (the tool column, the room table's labels, the town-size box, the tier chips,
+  the delete buttons); the tool hint box wraps up to five lines and its key line wraps too.
+
 ## 1.2.0 — 2026-11-19
 
 - 单体建造: rooms without interior.

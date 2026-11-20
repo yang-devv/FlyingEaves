@@ -26,15 +26,15 @@ public final class ExportCommand {
                                 .executes(context -> {
                                     String name = StringArgumentType.getString(context, "name");
                                     try {
-                                        String r = CanvasStamp.exportLast(context.getSource().getServer(), name);
+                                        Component r = CanvasStamp.exportLast(context.getSource().getServer(), name);
                                         if (r == null) {
-                                            context.getSource().sendFailure(Component.literal("还没用建造工具放过房子"));
+                                            context.getSource().sendFailure(Component.translatable("flyingeaves.cmd.export_none"));
                                             return 0;
                                         }
-                                        context.getSource().sendSuccess(() -> Component.literal("导出了：" + r), false);
+                                        context.getSource().sendSuccess(() -> Component.translatable("flyingeaves.cmd.exported", r), false);
                                         return 1;
                                     } catch (Exception e) {
-                                        context.getSource().sendFailure(Component.literal("导出失败：" + e));
+                                        context.getSource().sendFailure(Component.translatable("flyingeaves.cmd.export_failed", String.valueOf(e)));
                                         return 0;
                                     }
                                 }))));

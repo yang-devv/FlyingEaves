@@ -7,7 +7,7 @@
 *One-click Chinese traditional architecture for Minecraft — from a single hall or tower to a courtyard, a whole town,
 and the Forbidden City at 1:1.*
 
-Minecraft **Forge 1.20.1** 模组 · 纯 Java，不需要 Python · MIT 许可证 · [English below](#english)
+Minecraft **Forge 1.20.1** 模组 · 纯 Java，不需要 Python · 中文 / English 界面 · MIT 许可证 · [English below](#english)
 
 ![太和殿（预设库「古建」）](docs/images/taihedian.jpg)
 
@@ -111,12 +111,12 @@ Minecraft **Forge 1.20.1** 模组 · 纯 Java，不需要 Python · MIT 许可�
 
 - 命令（需要 OP）：`/flyingeaves export <名字>` 把上一栋导出成结构 `.nbt`；`/flyingeaves part pos1|pos2|save|savebay|saveornament …`
   把自己搭的家具、墙段、装饰存成生成器的部件。
-- 只有中文界面。只能单人游戏（或开局域网的那台主机）用：方块经由内置服务器放置。
+- 界面有中文和英文，跟着游戏的语言（简体、繁体中文显示中文，其他语言显示英文）；「一句话」目前只认中文。只能单人游戏（或开局域网的那台主机）用：方块经由内置服务器放置。
 
 ## 安装
 
 1. 装好 **Minecraft 1.20.1 + Forge 47.x**（47.4.28 测过），**Java 17**。
-2. 从 [Releases](https://github.com/yang-devv/FlyingEaves/releases) 下载 `flyingeaves-1.2.0.jar`（或自己构建，见下），放进游戏目录的 `mods/`。
+2. 从 [Releases](https://github.com/yang-devv/FlyingEaves/releases) 下载 `flyingeaves-1.2.1.jar`（或自己构建，见下），放进游戏目录的 `mods/`。
 3. 启动游戏。不用装别的，也不用 Python。
 
 模组在 `<游戏目录>/flyingeaves/` 里放它的工作文件：玩家存的设计 `designs/`、自定材料 `materials/custom.json`、部件 `parts/`、
@@ -165,7 +165,7 @@ Python 生成器从 jar 解到 `<游戏目录>/flyingeaves/generator/`，以 `bg
 需要 JDK 17（Gradle 会通过 toolchain 自动找 / 下载）。
 
 ```
-./gradlew build --max-workers=4      # build/libs/flyingeaves-1.2.0.jar（纯 Java；含测试）
+./gradlew build --max-workers=4      # build/libs/flyingeaves-1.2.1.jar（纯 Java；含测试）
 ./gradlew build -PwithPython=true    # Python 后端的 jar
 ./gradlew runClient                  # 开发客户端（run/）
 ./gradlew runClient -Pdev=true       # 加开发命令管道：往 run/flyingeaves-commands.txt 追加命令，结果在 run/flyingeaves-dev.log
@@ -199,7 +199,7 @@ Python 生成器从 jar 解到 `<游戏目录>/flyingeaves/generator/`，以 `bg
 **Flying Eaves (营造)** is a Minecraft **Forge 1.20.1** mod that generates Chinese traditional architecture in one
 click: single halls, towers and pavilions, courtyards, whole towns laid out on the real terrain, cultivation sects,
 a random palace city — and the **Forbidden City at 1:1**. The generator runs inside the game in pure Java; **no
-Python needed**. Chinese UI only; single player (or a LAN host) only.
+Python needed**. English and Chinese UI (it follows the game's language; one-sentence designs read Chinese only for now); single player (or a LAN host) only.
 
 ### Features
 
@@ -229,7 +229,7 @@ Python needed**. Chinese UI only; single player (or a LAN host) only.
 
 ### Install
 
-Minecraft 1.20.1 with Forge 47.x (tested with 47.4.28) and Java 17. Drop `flyingeaves-1.2.0.jar` (from
+Minecraft 1.20.1 with Forge 47.x (tested with 47.4.28) and Java 17. Drop `flyingeaves-1.2.1.jar` (from
 [Releases](https://github.com/yang-devv/FlyingEaves/releases), or build it) into `mods/`. Nothing else.
 **Memory**: the default `-Xmx2G` is fine for buildings and courtyards, `-Xmx3G` for the palace city and big towns;
 **the 1:1 Forbidden City needs `-Xmx4G`** (about 2.16 M blocks; 30–40 s to generate, 15–90 s to place). If memory
@@ -242,7 +242,7 @@ building mode: scroll to change the current tool's setting, Alt+scroll to switch
 
 ### Two builds from one codebase
 
-- `./gradlew build` → `build/libs/flyingeaves-1.2.0.jar`: **pure Java** (the release; for players).
+- `./gradlew build` → `build/libs/flyingeaves-1.2.1.jar`: **pure Java** (the release; for players).
 - `./gradlew build -PwithPython=true` → the **Python-backed** jar: it carries the original Python generator
   (`generator/`, standard library only, **Python ≥ 3.10**), which the mod starts as a daemon and stops with the game.
   Config `backend = "python"` sends every request to it; `backend = "java"` (default) uses Java with Python as a

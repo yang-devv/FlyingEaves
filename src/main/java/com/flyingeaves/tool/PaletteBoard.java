@@ -49,7 +49,12 @@ import java.util.TreeMap;
  */
 final class PaletteBoard {
     /** 一格：材料里的名字、中文、要什么样的方块。 */
-    record Slot(String section, String key, String cn, Kind kind) {
+    record Slot(String section, String key, Kind kind) {
+        /** The cell's name (flyingeaves.slot.&lt;section&gt;.&lt;key&gt;). */
+        String cn() {
+            return L.t("slot." + section + "." + key);
+        }
+
     }
 
     enum Kind {
@@ -68,31 +73,31 @@ final class PaletteBoard {
 
         String need() {
             return switch (this) {
-                case STAIRS -> "要放台阶";
-                case SLAB -> "要放半砖";
-                case TRAPDOOR -> "要放活板门";
-                case DOOR -> "要放门";
-                case PANE -> "要放玻璃板或栏杆";
+                case STAIRS -> L.t("board.need_stairs");
+                case SLAB -> L.t("board.need_slab");
+                case TRAPDOOR -> L.t("board.need_trapdoor");
+                case DOOR -> L.t("board.need_door");
+                case PANE -> L.t("board.need_pane");
                 default -> "";
             };
         }
     }
 
     static final List<Slot> WALL = List.of(
-            new Slot("walls", "fill", "墙心", Kind.ANY), new Slot("walls", "post", "柱", Kind.ANY),
-            new Slot("walls", "beam", "梁", Kind.ANY), new Slot("walls", "base", "墙基", Kind.ANY),
-            new Slot("walls", "dado", "墙裙", Kind.ANY), new Slot("walls", "pane", "窗", Kind.PANE),
-            new Slot("walls", "door", "门", Kind.DOOR), new Slot("walls", "win", "店面板窗", Kind.TRAPDOOR),
-            new Slot("walls", "trim_stairs", "斗拱", Kind.STAIRS), new Slot("walls", "trim_slab", "窗台", Kind.SLAB),
-            new Slot("walls", "trim_trapdoor", "窗檐", Kind.TRAPDOOR), new Slot("walls", "base_stairs", "台基线脚", Kind.STAIRS),
-            new Slot("walls", "floor", "地面", Kind.ANY), new Slot("walls", "rail", "栏杆", Kind.ANY),
-            new Slot("walls", "steps", "门前台阶", Kind.STAIRS), new Slot("walls", "inner_stairs", "楼梯", Kind.STAIRS),
-            new Slot("walls", "ladder", "梯子", Kind.ANY));
+            new Slot("walls", "fill", Kind.ANY), new Slot("walls", "post", Kind.ANY),
+            new Slot("walls", "beam", Kind.ANY), new Slot("walls", "base", Kind.ANY),
+            new Slot("walls", "dado", Kind.ANY), new Slot("walls", "pane", Kind.PANE),
+            new Slot("walls", "door", Kind.DOOR), new Slot("walls", "win", Kind.TRAPDOOR),
+            new Slot("walls", "trim_stairs", Kind.STAIRS), new Slot("walls", "trim_slab", Kind.SLAB),
+            new Slot("walls", "trim_trapdoor", Kind.TRAPDOOR), new Slot("walls", "base_stairs", Kind.STAIRS),
+            new Slot("walls", "floor", Kind.ANY), new Slot("walls", "rail", Kind.ANY),
+            new Slot("walls", "steps", Kind.STAIRS), new Slot("walls", "inner_stairs", Kind.STAIRS),
+            new Slot("walls", "ladder", Kind.ANY));
     static final List<Slot> ROOF = List.of(
-            new Slot("roofs", "full", "瓦（整块）", Kind.ANY), new Slot("roofs", "stairs", "瓦（台阶）", Kind.STAIRS),
-            new Slot("roofs", "slab", "瓦（半砖）", Kind.SLAB), new Slot("roofs", "stripe_stairs", "瓦垄（台阶）", Kind.STAIRS),
-            new Slot("roofs", "stripe_slab", "瓦垄（半砖）", Kind.SLAB), new Slot("roofs", "ridge", "屋脊", Kind.ANY),
-            new Slot("roofs", "cap", "脊头", Kind.ANY));
+            new Slot("roofs", "full", Kind.ANY), new Slot("roofs", "stairs", Kind.STAIRS),
+            new Slot("roofs", "slab", Kind.SLAB), new Slot("roofs", "stripe_stairs", Kind.STAIRS),
+            new Slot("roofs", "stripe_slab", Kind.SLAB), new Slot("roofs", "ridge", Kind.ANY),
+            new Slot("roofs", "cap", Kind.ANY));
 
     static Compose.Room room;
     private static BlockPos[] wallCells = new BlockPos[0], roofCells = new BlockPos[0];
@@ -116,7 +121,7 @@ final class PaletteBoard {
         wallCells = row(mc, base.relative(fwd, 3), right, WALL.size());
         roofCells = row(mc, base.relative(fwd, 5), right, ROOF.size());
         loadBase();
-        BuildTool.say("材料板摆在你面前：前排是墙，后排是屋顶。往格子里放方块就换那一部分；再右键这间房存下来，左键取消");
+        BuildTool.say(L.t("board.started"));
     }
 
     private static BlockPos[] row(Minecraft mc, BlockPos mid, Direction right, int n) {
@@ -226,7 +231,7 @@ final class PaletteBoard {
         if (room == null) return;
         Map<String, String> w = overrides(mc, WALL, wallCells), r = overrides(mc, ROOF, roofCells);
         if (w.isEmpty() && r.isEmpty()) {
-            BuildTool.say("板上没放方块，什么都没改");
+            BuildTool.say(L.t("board.empty"));
             cancel();
             return;
         }
@@ -248,10 +253,9 @@ final class PaletteBoard {
             Files.writeString(tmp, new com.google.gson.GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create().toJson(root), StandardCharsets.UTF_8);
             Files.move(tmp, file, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
             Compose.assignWhenListed(room, wallId, roofId);
-            BuildTool.say("存下了" + (wallId != null ? "新的墙「" + wallId + "」" : "") + (roofId != null ? " 新的瓦「" + roofId + "」" : "")
-                    + "，这间房改用它们（flyingeaves/materials/custom.json）");
+            BuildTool.say(L.t("board.saved", (wallId != null ? L.t("board.saved_wall", wallId) : "") + (roofId != null ? L.t("board.saved_roof", roofId) : "")));
         } catch (Exception e) {
-            BuildTool.say("存材料失败：" + e);
+            BuildTool.say(L.t("board.save_failed", e));
             return;
         }
         clearBoard(mc);
@@ -336,7 +340,7 @@ final class PaletteBoard {
                 if (s != null) return s;
             }
         }
-        return "材料板：往格子里放方块换材料 · 右键这间房存下来 · 左键取消";
+        return L.t("board.hud");
     }
 
     private static String describe(Minecraft mc, BlockPos p, List<Slot> slots, BlockPos[] cells, Map<String, String> base) {
@@ -345,9 +349,9 @@ final class PaletteBoard {
             Slot s = slots.get(i);
             Block b = placed(mc, p);
             String now = base.getOrDefault(s.key(), "?").replace("minecraft:", "");
-            if (b == null) return s.cn() + "：现在是 " + now + (s.kind().need().isEmpty() ? "" : "（" + s.kind().need() + "）");
-            if (!s.kind().ok(b)) return s.cn() + "：" + s.kind().need() + "，" + id(b).replace("minecraft:", "") + " 不行";
-            return s.cn() + "：" + now + " → " + id(b).replace("minecraft:", "");
+            if (b == null) return L.t("board.cell_now", s.cn(), now) + (s.kind().need().isEmpty() ? "" : L.t("say.paren", s.kind().need()));
+            if (!s.kind().ok(b)) return L.t("board.cell_wrong", s.cn(), s.kind().need(), id(b).replace("minecraft:", ""));
+            return L.t("board.cell_change", s.cn(), now, id(b).replace("minecraft:", ""));
         }
         return null;
     }

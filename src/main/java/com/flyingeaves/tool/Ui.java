@@ -148,6 +148,14 @@ final class Ui {
 
     // ------------------------------------------------------------------ 文字
 
+    /** Development (dev pipe {@code texts}): every string drawn in the next frame, " [cut]" where it did not fit. */
+    static java.util.List<String> CAPTURE;
+
+    static void cap(String s, boolean cut) {
+        java.util.List<String> c = CAPTURE;
+        if (c != null && s != null && !s.isEmpty()) c.add(cut ? s + " [cut]" : s);
+    }
+
     String fit(String s, int w) {
         if (w <= 0) return "";
         if (font.width(s) <= w) return s;
@@ -155,22 +163,28 @@ final class Ui {
     }
 
     void text(String s, int x, int y, int color) {
+        cap(s, false);
         g.drawString(font, s, x, y, color, false);
     }
 
     void text(String s, int x, int y, int w, int color) {
-        g.drawString(font, fit(s, w), x, y, color, false);
+        String f = fit(s, w);
+        cap(s, !f.equals(s));
+        g.drawString(font, f, x, y, color, false);
     }
 
     void center(String s, int cx, int y, int w, int color) {
         String f = fit(s, w);
+        cap(s, !f.equals(s));
         g.drawString(font, f, cx - font.width(f) / 2, y, color, false);
     }
 
     /** 自动换行，只画放得下的行；返回画到的 y。 */
     int wrap(String s, int x, int y, int w, int bottom, int color) {
         if (w < 30) return y;
-        for (FormattedCharSequence line : font.split(Component.literal(s), w)) {
+        List<FormattedCharSequence> lines = font.split(Component.literal(s), w);
+        cap(s, lines.size() * 10 > bottom - y + 1);
+        for (FormattedCharSequence line : lines) {
             if (y + 9 > bottom) break;
             g.drawString(font, line, x, y, color, false);
             y += 10;

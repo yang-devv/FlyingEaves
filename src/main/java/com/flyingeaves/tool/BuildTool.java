@@ -74,6 +74,7 @@ public final class BuildTool {
         @SubscribeEvent
         public static void tick(TickEvent.ClientTickEvent event) {
             if (event.phase != TickEvent.Phase.END) return;
+            L.sync();                                        // (the language changed: relabel the option tables)
             Minecraft mc = Minecraft.getInstance();
             if (mc.player == null) return;
             if (!registryWritten) writeRegistry();
@@ -142,7 +143,7 @@ public final class BuildTool {
 
     static void place(String kind, String tier, int seed, BlockPos ground, String facing) {
         if (pending != null) {
-            say("上一栋还在生成，稍等");
+            say(L.t("build.busy"));
             return;
         }
         try {
@@ -162,16 +163,16 @@ public final class BuildTool {
             lastSeed = seed;
             lastPos = ground;
             lastFacing = facing;
-            say("生成中：" + kind + " · " + tier + " · 种子 " + seed);
+            say(L.t("build.generating", kind, tier, seed));
         } catch (Exception e) {
-            say("写请求失败：" + e);
+            say(L.t("build.request_failed", e));
         }
     }
 
     /** 单体建造：把画好的房间交给生成器。种子不同，墙、窗、屋顶细节和房间布置就不同。 */
     static void placeCompose(JsonObject req, int seed) {
         if (pending != null) {
-            say("上一栋还在生成，稍等");
+            say(L.t("build.busy"));
             return;
         }
         try {
@@ -183,9 +184,9 @@ public final class BuildTool {
             lastKind = null;
             lastCompose = req;
             lastSeed = seed;
-            say("生成中：单体建造 · " + req.getAsJsonArray("rooms").size() + " 个房间 · 种子 " + seed);
+            say(L.t("build.generating_compose", req.getAsJsonArray("rooms").size(), seed));
         } catch (Exception e) {
-            say("写请求失败：" + e);
+            say(L.t("build.request_failed", e));
         }
     }
 
@@ -203,7 +204,7 @@ public final class BuildTool {
     /** 单体建造状态栏上的预览进度。 */
     static String previewLabel() {
         int p = preview == null ? -1 : preview.prog.pct();
-        return p > 0 ? "预览 " + p + "%…" : "预览生成中…";
+        return p > 0 ? L.t("build.preview_pct", p) : L.t("build.preview_wait");
     }
 
     // ------------------------------------------------------------------ 一句话：句子交给生成器认，认出来的设计放在准星处
@@ -287,7 +288,7 @@ public final class BuildTool {
         townAt = at;
         townTurn = k;
         int R = which.equals("sect") ? sectR(sectTier) : townR();
-        if (mc.getSingleplayerServer() != null) say(String.format(Locale.ROOT, "取地形……（%d×%d 格，没生成的区块现生成）", 2 * R + 1, 2 * R + 1));
+        if (mc.getSingleplayerServer() != null) say(L.t("build.sampling", 2 * R + 1, 2 * R + 1));
         Compose.sampleHeights(at, k, R, h -> {          // (single player: once the server has every chunk of it)
             r.add("heights", h);
             sendSite(r, which);
@@ -300,16 +301,14 @@ public final class BuildTool {
             r.addProperty("id", id);
             sayReq = GenRequest.send(r);
             say(switch (which) {
-                case "city" -> "排一座宫城……（很大：预览要一分钟左右）";
-                case "city_real" -> "排紫禁城 1:1……（约 780×1070 格、575 个房间）";
-                case "town" -> townW > 0 && townD > 0
-                        ? "排一座 " + townW + "×" + townD + " 的城镇……（照着这里的地形；越大越久，几百格见方要几分钟）"
-                        : "排一座城镇……（照着这里的地形；预览要十几秒）";
-                case "sect" -> "排一座宗门……（照着这里的山；境界越高越大，预览要半分钟到两分钟）";
-                default -> "排一个院子……";
+                case "city" -> L.t("build.site_city");
+                case "city_real" -> L.t("build.site_city_real");
+                case "town" -> townW > 0 && townD > 0 ? L.t("build.site_town_sized", townW, townD) : L.t("build.site_town");
+                case "sect" -> L.t("build.site_sect");
+                default -> L.t("build.site_court");
             });
         } catch (Exception e) {
-            say("写请求失败：" + e);
+            say(L.t("build.request_failed", e));
         }
     }
 
@@ -321,9 +320,9 @@ public final class BuildTool {
             r.addProperty("type", "sentence");
             r.addProperty("text", text);
             sayReq = GenRequest.send(r);
-            say("照着「" + text + "」搭……");
+            say(L.t("build.sentence", text));
         } catch (Exception e) {
-            say("写请求失败：" + e);
+            say(L.t("build.request_failed", e));
         }
     }
 
@@ -341,7 +340,7 @@ public final class BuildTool {
             if (q.prog.poll(now)) say(q.prog.text());
             if (q.prog.silentMs(now) > 60_000) {
                 sayReq = null;
-                say("生成器一分钟没动静（" + com.flyingeaves.backend.GeneratorProcess.hint() + "）");
+                say(L.t("build.silent_minute", com.flyingeaves.backend.GeneratorProcess.hint()));
             } else if (q.prog.warnNow(now)) {
                 say(q.prog.warning(now));
             }
@@ -350,15 +349,15 @@ public final class BuildTool {
         sayReq = null;
         try {
             if (!res.get("ok").getAsBoolean()) {
-                say("没搭成：" + res.get("error").getAsString());
+                say(L.t("build.sentence_failed", L.gen(res.get("error").getAsString())));
                 return;
             }
             StringBuilder said = new StringBuilder();
-            for (var e : res.getAsJsonArray("said")) said.append(said.length() > 0 ? "、" : "").append(e.getAsString());
+            for (var e : res.getAsJsonArray("said")) said.append(said.length() > 0 ? L.t("build.list_sep") : "").append(e.getAsString());
             String err = Compose.loadSite(res.getAsJsonObject("design"));
             boolean site = res.has("site") && res.get("site").getAsBoolean();
             if (err != null) say(err);
-            else if (!site) say("认出：" + (said.length() > 0 ? said : "（没认出什么，按默认）") + "；房间表里都能接着改");
+            else if (!site) say(L.t("build.recognized", said.length() > 0 ? said.toString() : L.t("build.recognized_none")));
         } catch (Exception e) {
             FlyingEaves.LOGGER.warn("sentence load failed", e);
         } finally {
@@ -396,7 +395,7 @@ public final class BuildTool {
         try {
             if (res.has("sh")) Compose.autoSh = res.get("sh").getAsInt();   // storey height of rooms not set by hand
             if (res.get("ok").getAsBoolean() && Compose.drawing) Preview.load(q.runs());
-            else if (!res.get("ok").getAsBoolean()) say("预览失败：" + res.get("error").getAsString());
+            else if (!res.get("ok").getAsBoolean()) say(L.t("build.preview_failed", L.gen(res.get("error").getAsString())));
         } catch (Exception e) {
             FlyingEaves.LOGGER.warn("preview load failed", e);
         } finally {
@@ -408,16 +407,16 @@ public final class BuildTool {
         MinecraftServer server = Minecraft.getInstance().getSingleplayerServer();
         if (server == null) return;
         server.execute(() -> {
-            boolean any = CanvasStamp.undoLast(n -> Minecraft.getInstance().execute(() -> say("已撤销（恢复 " + n + " 格）")));
+            boolean any = CanvasStamp.undoLast(n -> Minecraft.getInstance().execute(() -> say(L.t("build.undone", n))));
             int ahead = CanvasStamp.queued() - 1;
-            Minecraft.getInstance().execute(() -> say(!any ? "没有可撤销的" : ahead > 0 ? "撤销排队：前面还有 " + ahead + " 栋没写完" : "撤销中……"));
+            Minecraft.getInstance().execute(() -> say(!any ? L.t("build.undo_none") : ahead > 0 ? L.t("build.undo_queued", ahead) : L.t("build.undoing")));
         });
     }
 
     /** 换一个：撤掉上一栋，种子加一，原地再生成。 */
     static void reroll() {
         if (lastKind == null && lastCompose == null) {
-            say("还没放过");
+            say(L.t("build.nothing_placed"));
             return;
         }
         undo();
@@ -449,7 +448,7 @@ public final class BuildTool {
         q.prog.delete();
         try {
             if (!res.get("ok").getAsBoolean()) {
-                say("生成失败：" + res.get("error").getAsString());
+                say(L.t("build.failed", L.gen(res.get("error").getAsString())));
                 return;
             }
             MinecraftServer server = mc.getSingleplayerServer();
@@ -458,16 +457,16 @@ public final class BuildTool {
             server.execute(() -> {
                 try {
                     ServerLevel level = server.getLevel(dim);
-                    CanvasStamp.stampForTool(level, q.runs(), n -> Minecraft.getInstance().execute(() -> say("已放置（" + n + " 格）· 按" + OPEN.getTranslatedKeyMessage().getString() + "打开菜单可换一个或撤销")));
+                    CanvasStamp.stampForTool(level, q.runs(), n -> Minecraft.getInstance().execute(() -> say(L.t("build.placed", n, OPEN.getTranslatedKeyMessage().getString()))));
                     int ahead = CanvasStamp.queued() - 1;
-                    if (ahead > 0) Minecraft.getInstance().execute(() -> say("排队写入：前面还有 " + ahead + " 栋没写完"));
+                    if (ahead > 0) Minecraft.getInstance().execute(() -> say(L.t("build.write_queued", ahead)));
                 } catch (Exception e) {
                     FlyingEaves.LOGGER.warn("build tool stamp failed", e);
-                    Minecraft.getInstance().execute(() -> say("写入失败：" + e));
+                    Minecraft.getInstance().execute(() -> say(L.t("build.write_failed", e)));
                 }
             });
         } catch (Exception e) {
-            say("读结果失败：" + e);
+            say(L.t("build.read_failed", e));
         }
     }
 }

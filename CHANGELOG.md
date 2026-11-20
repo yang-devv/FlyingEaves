@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased (1.1.0)
+## 1.1.0 — 2026-11-19
 
 - 单体建造: every setting of the room table now has a wheel tool in the world (36 tools, 31 on the wheel). New:
   **形状** (16 shapes), **平座**, **台基形状** (跟随 / 方 / 圆), **台阶** (45° / 27° / 18° / 14°), **边距** (自动, 1–4, 6, 8,

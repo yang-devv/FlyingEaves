@@ -1,6 +1,7 @@
 package com.flyingeaves;
 
 import com.flyingeaves.backend.GeneratorProcess;
+import com.flyingeaves.dev.BackgroundClient;
 import com.flyingeaves.tool.DevPipe;
 import com.mojang.logging.LogUtils;
 import net.minecraftforge.common.MinecraftForge;
@@ -29,6 +30,7 @@ public final class FlyingEaves {
             context.getModEventBus().addListener((FMLClientSetupEvent e) -> GeneratorProcess.startAtLaunch());
             MinecraftForge.EVENT_BUS.addListener((net.minecraftforge.event.GameShuttingDownEvent e) -> GeneratorProcess.stop());
             if (Boolean.getBoolean("flyingeaves.dev")) DevPipe.init();
+            if (BackgroundClient.enabled()) BackgroundClient.init();
         }
     }
 

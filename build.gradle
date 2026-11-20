@@ -20,6 +20,12 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 // oracle tooling (tools/oracle) runs generator/ from the repo and needs neither.
 def withPython = project.findProperty('withPython') == 'true'
 
+// Background dev client (on by default for runClient; -Pbg=false turns it off): the game window opens without taking the
+// focus and behind the other windows, never holds the mouse while it isn't the active window, and doesn't pause when it
+// loses the focus. Dev runs only: -Dflyingeaves.background=true plus --mixin.config flyingeaves.dev.mixins.json (the jar
+// leaves both the config and the mixin out). See dev/mixin/BackgroundWindowMixin and dev/BackgroundClient.
+def backgroundClient = project.findProperty('bg')?.toString() != 'false'
+
 minecraft {
     mappings channel: mapping_channel, version: mapping_version
     copyIdeResources = true
@@ -47,6 +53,10 @@ minecraft {
             jvmArgs '-XX:ActiveProcessorCount=8', "-Xmx${project.findProperty('clientXmx') ?: '2G'}"
             def quick = project.findProperty('quickPlay')
             if (quick) args '--quickPlaySingleplayer', quick
+            if (backgroundClient) {
+                property 'flyingeaves.background', 'true'
+                args '--mixin.config', 'flyingeaves.dev.mixins.json'
+            }
         }
 
         server {
@@ -137,6 +147,8 @@ tasks.named('processResources', ProcessResources).configure {
 
 tasks.named('jar', Jar).configure {
     if (!withPython) exclude '**/*.py'
+    // the background dev client's mixin (runClient only, see backgroundClient above) stays out of the release jar
+    exclude 'flyingeaves.dev.mixins.json', 'com/flyingeaves/dev/mixin/**'
     manifest {
         attributes([
                 'Specification-Title'     : mod_id,
@@ -153,4 +165,24 @@ tasks.named('jar', Jar).configure {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
+}
+
+// Background mode: Forge's early loading window grabs the focus as soon as it opens, before any mod is loaded, so the
+// run dir's fml.toml turns it off (Minecraft then creates the window itself, where BackgroundWindowMixin hooks in);
+// with -Pbg=false it goes back on.
+tasks.matching { it.name == 'runClient' }.configureEach {
+    doFirst {
+        def fmlToml = file('run/config/fml.toml')
+        def text = fmlToml.exists() ? fmlToml.getText('UTF-8') : ''
+        def line = "earlyWindowControl = ${!backgroundClient}"
+        if (text =~ '(?m)^earlyWindowControl\\s*=') {
+            text = text.replaceAll('(?m)^earlyWindowControl\\s*=.*$', line)
+        } else if (backgroundClient) {
+            text += (text.isEmpty() || text.endsWith('\n') ? '' : '\n') + line + '\n'
+        }
+        if (fmlToml.exists() || backgroundClient) {
+            fmlToml.parentFile.mkdirs()
+            fmlToml.setText(text, 'UTF-8')
+        }
+    }
 }

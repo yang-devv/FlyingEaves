@@ -610,18 +610,78 @@ public final class Bgen {
         return new Object[]{rooms, walls};
     }
 
+    /** bgen.EMPTY_ROOM: 空房 - a use with nothing in it (no furniture, no lamps; walls, partitions, stairs as ever). */
+    public static final String EMPTY_ROOM = "empty";
+
+    /**
+     * bgen.scratch / _Scratch (内饰：无): a frame like f whose writes go to a map of their own that is thrown away; reads see
+     * those writes over the building's, so the furniture draws the same random numbers as when it is kept and the rest of
+     * the building comes out the same with or without it.
+     */
+    static Fr scratch(Fr f) {
+        Frame fr = (Frame) f;
+        return new Scratch(fr.cv, new java.util.HashMap<>(), fr.ox, fr.oz, fr.front);
+    }
+
+    static final class Scratch implements Fr {
+        final Canvas under;
+        final Map<Long, String> mine;
+        final int ox, oz, a, b, c, d;
+        final String front;
+
+        Scratch(Canvas under, Map<Long, String> mine, int ox, int oz, String front) {
+            this.under = under;
+            this.mine = mine;
+            this.ox = ox;
+            this.oz = oz;
+            this.front = front;
+            int[] r = Blocks.ROT.get(front);
+            a = r[0];
+            b = r[1];
+            c = r[2];
+            d = r[3];
+        }
+
+        @Override
+        public int wx(int u, int v) {
+            return ox + a * u + b * v;
+        }
+
+        @Override
+        public int wz(int u, int v) {
+            return oz + c * u + d * v;
+        }
+
+        @Override
+        public void put(int u, int y, int v, String s) {
+            mine.put(Canvas.key(wx(u, v), y, wz(u, v)), Blocks.rotateState(s, front));
+        }
+
+        @Override
+        public String get(int u, int y, int v) {
+            long k = Canvas.key(wx(u, v), y, wz(u, v));
+            return mine.containsKey(k) ? mine.get(k) : under.get(wx(u, v), y, wz(u, v));
+        }
+
+        @Override
+        public Fr sub(int du, int dv, String frontLocal) {
+            return new Scratch(under, mine, wx(du, dv), wz(du, dv), Blocks.worldDir(front, frontLocal));
+        }
+    }
+
     /** A room storey_interior handed out: (a, b, c, d, room type). */
     record Used(int a, int b, int c, int d, String rt) {
     }
 
     /**
      * bgen.storey_interior. partitions: "bays", a truthy value (true: bsp) or falsy (null / false: one room).
-     * stairsCells, furnFree: sets of cells; sideDoors: list of cells.
+     * stairsCells, furnFree: sets of cells; sideDoors: list of cells. bare (内饰：无): the partitions and doorways as ever,
+     * the furniture and lamps not kept; a room of {@link #EMPTY_ROOM} gets neither.
      */
     @SuppressWarnings("unchecked")
     static List<Used> storeyInterior(Fr f, PyRandom rng, int hx, int hz, int y, int sh, List<String> program, String wallBlk,
                                      Set<IntPair> stairsCells, int frontDoorU, int maxSide, Object partitions, List<IntPair> sideDoors,
-                                     String tier, Set<IntPair> furnFree) {
+                                     String tier, Set<IntPair> furnFree, boolean bare) {
         int[] rect = {-hx + 1, -hz + 1, hx - 1, hz - 1};
         Object[] rw;
         if ("bays".equals(partitions)) rw = bays(rect);
@@ -654,30 +714,34 @@ public final class Bgen {
         for (IntPair c : sideDoors) for (int k = 1; k < 4; k++) f.put(c.a(), y + k, c.b(), AIR);
         rooms.sort(Comparator.<int[]>comparingInt(r -> -r[3]).thenComparingInt(r -> Math.abs(r[0] + r[2])));
         List<Used> used = new ArrayList<>();
+        Fr ff = bare ? scratch(f) : f;
         for (int i = 0; i < rooms.size(); i++) {
             int[] r = rooms.get(i);
             int a = r[0], b = r[1], c = r[2], d = r[3];
             String rt = program.get(Math.floorMod(i, program.size()));
             used.add(new Used(a, b, c, d, rt));
+            if (rt.equals(EMPTY_ROOM)) continue;
             List<int[]> dlist = new ArrayList<>();
             for (IntPair dd : doors) if (a - 1 <= dd.a() && dd.a() <= c + 1 && b - 1 <= dd.b() && dd.b() <= d + 1) dlist.add(new int[]{dd.a(), dd.b()});
             if (b <= hz - 1 && hz - 1 <= d + 1 && a <= frontDoorU && frontDoorU <= c) dlist.add(new int[]{frontDoorU, hz - 1});
             for (IntPair s : stairsCells) dlist.add(new int[]{s.a(), s.b()});
             for (IntPair s : furnFree) if (!stairsCells.contains(s)) dlist.add(new int[]{s.a(), s.b()});
             for (IntPair s : sideDoors) if (a - 1 <= s.a() && s.a() <= c + 1 && b - 1 <= s.b() && s.b() <= d + 1) dlist.add(new int[]{s.a(), s.b()});
-            Furniture.furnish(f, rng, rt, a, b, c, d, y, dlist, "north", sh);
+            Furniture.furnish(ff, rng, rt, a, b, c, d, y, dlist, "north", sh);
         }
         Set<IntPair> nearDoors = new HashSet<>();
         List<IntPair> dd = new ArrayList<>(doors);
         dd.addAll(sideDoors);
         for (IntPair p : dd) for (int i = -1; i <= 1; i++) for (int j = -1; j <= 1; j++) nearDoors.add(IntPair.of(p.a() + i, p.b() + j));
         for (Used u : used) {
+            if (u.rt.equals(EMPTY_ROOM)) continue;
             boolean big = (u.c - u.a + 1) * (u.d - u.b + 1) >= 120;
             Set<IntPair> keep = new HashSet<>(stairsCells);
             keep.addAll(furnFree);
             keep.addAll(sideDoors);
             keep.addAll(nearDoors);
-            lightRoom(f, u.a, u.b, u.c, u.d, y, sh, keep, pickLight(rng, u.rt, tier, big ? List.of("ceiling", "inlay", "floor") : null), u.a + u.c == 0, null);
+            Map<String, Object> fixture = pickLight(rng, u.rt, tier, big ? List.of("ceiling", "inlay", "floor") : null);
+            if (!bare) lightRoom(f, u.a, u.b, u.c, u.d, y, sh, keep, fixture, u.a + u.c == 0, null);   // (picked either way: the same draws)
         }
         return used;
     }

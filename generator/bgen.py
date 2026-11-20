@@ -544,11 +544,35 @@ def bsp(rect, max_side, rng, depth=0):
     return a + b, wa + wb + [("v", cut, u0, u1, door)]
 
 
+EMPTY_ROOM = "empty"        # 空房: a use with nothing in it (no furniture, no lamps; walls, partitions, stairs as ever)
+
+
+class _Scratch(Canvas):
+    """内饰：无 - the furniture and lamps drawn on a canvas of their own that is thrown away: what they read sees their
+    own writes over the building's, so they draw the same random numbers as when they are kept and the rest of the
+    building comes out the same with or without them."""
+
+    def __init__(self, under):
+        super().__init__()
+        self.under = under
+
+    def get(self, x, y, z):
+        key = (x, y, z)
+        return self.blocks[key] if key in self.blocks else self.under.get(x, y, z)
+
+
+def scratch(f):
+    """A frame like f (a Frame) whose writes go nowhere (see _Scratch)."""
+    return Frame(_Scratch(f.cv), f.ox, f.oz, f.front)
+
+
 def storey_interior(f, rng, hx, hz, y, sh, program, wall_blk, stairs_cells, front_door_u, max_side=9, partitions=True, side_doors=(),
-                    tier="mortal", furn_free=()):
+                    tier="mortal", furn_free=(), bare=False):
     """Partition one storey and furnish its rooms. program: list of room types to hand out. side_doors: interior cells
     just inside doorways in the outer walls (to rooms built next to this one) - kept free of partitions and furniture.
-    furn_free: cells kept free of furniture and lamps only (the way on at the foot and off at the head of stairs)."""
+    furn_free: cells kept free of furniture and lamps only (the way on at the foot and off at the head of stairs).
+    bare (内饰：无): the partitions and doorways as ever, the furniture and lamps not kept. A room of EMPTY_ROOM gets
+    neither."""
     rect = (-hx + 1, -hz + 1, hx - 1, hz - 1)
     rooms, walls_ = bays(rect) if partitions == "bays" else bsp(rect, max_side, rng) if partitions else ([rect], [])
     doors = []
@@ -574,20 +598,27 @@ def storey_interior(f, rng, hx, hz, y, sh, program, wall_blk, stairs_cells, fron
             f.put(cu, y + k, cv, AIR)
     rooms.sort(key=lambda r: (-(r[3]), abs(r[0] + r[2])))   # rooms nearest the front first, the middle one first
     used = []
+    ff = scratch(f) if bare else f
     for i, (a, b, c, d) in enumerate(rooms):
         rt = program[i % len(program)]
         used.append((a, b, c, d, rt))
+        if rt == EMPTY_ROOM:
+            continue
         dlist = [dd for dd in doors if a - 1 <= dd[0] <= c + 1 and b - 1 <= dd[1] <= d + 1]
         if b <= hz - 1 <= d + 1 and a <= front_door_u <= c:
             dlist.append((front_door_u, hz - 1))
         dlist += [s for s in stairs_cells] + [s for s in furn_free if s not in stairs_cells]
         dlist += [s for s in side_doors if a - 1 <= s[0] <= c + 1 and b - 1 <= s[1] <= d + 1]
-        FU.furnish(f, rng, rt, a, b, c, d, y, doors=dlist, back_side="north", sh=sh)
+        FU.furnish(ff, rng, rt, a, b, c, d, y, doors=dlist, back_side="north", sh=sh)
     near_doors = {(du + i, dv + j) for (du, dv) in list(doors) + list(side_doors) for i in (-1, 0, 1) for j in (-1, 0, 1)}
     for (a, b, c, d, rt) in used:
+        if rt == EMPTY_ROOM:
+            continue
         big = (c - a + 1) * (d - b + 1) >= 120        # standing lamps only light the edges of a big room
-        light_room(f, a, b, c, d, y, sh, set(stairs_cells) | set(furn_free) | set(side_doors) | near_doors,   # a room on the house's axis gets its lamps in pairs
-                   fixture=pick_light(rng, rt, tier, mounts=("ceiling", "inlay", "floor") if big else None), mirror=a + c == 0)
+        fixture = pick_light(rng, rt, tier, mounts=("ceiling", "inlay", "floor") if big else None)
+        if not bare:                                  # (the lamp is still picked: the same draws either way)
+            light_room(f, a, b, c, d, y, sh, set(stairs_cells) | set(furn_free) | set(side_doors) | near_doors,   # a room on the house's axis gets its lamps in pairs
+                       fixture=fixture, mirror=a + c == 0)
     return used
 
 
@@ -961,7 +992,7 @@ def house(f, y, rng, spec, tier, hx=None, hz=None, n=None, ground=None):
                                    max_side=spec.get("_max_side") or int(8 * min(k, 2)),
                                    partitions=False if wspec.get("_open") or (s == 0 and wspec.get("_through")) else   # (the plan's own value)
                                    (hxs >= 5 or hzs >= 5) and (len(set(program)) > 1 or split) and (plan or True),
-                                   side_doors=inner, tier=tier, furn_free=furn_free)
+                                   side_doors=inner, tier=tier, furn_free=furn_free, bare=bool(spec.get("_bare")))
         # windows by the room behind them: bedrooms keep only a high strip (no one looks in), stores none. Decided for
         # each mirrored pair (u and -u) together, and the front stays full windows, so the outside stays symmetric
         def behind(wu, wv):
@@ -2740,9 +2771,13 @@ def round_room(f, y, rng, spec, tier, R, n, sh=None):
               (spec["ground"] if s == 0 else spec["upper"])[0])
         q = max(1, int((Rs - 1) / 1.42))
         here = [side_inner[c] for c, lv in side_doors.items() if lv > s and c in side_inner]
-        FU.furnish(f, rng, rt, -q, -q, q, q, ys, doors=[(0, Rs - 1), (0, q), lad_c, (0, -q)] + lad_more + here, sh=shs)
-        light_room(f, -Rs + 1, -Rs + 1, Rs - 1, Rs - 1, ys, shs, {lad_c, (0, Rs - 1)} | set(lad_more) | set(here),
-                   fixture=pick_light(rng, rt, tier), mask=inside_s)
+        if rt != EMPTY_ROOM:                                          # (空房: nothing; 内饰：无: drawn, not kept)
+            FU.furnish(scratch(f) if spec.get("_bare") else f, rng, rt, -q, -q, q, q, ys,
+                       doors=[(0, Rs - 1), (0, q), lad_c, (0, -q)] + lad_more + here, sh=shs)
+            fixture = pick_light(rng, rt, tier)
+            if not spec.get("_bare"):
+                light_room(f, -Rs + 1, -Rs + 1, Rs - 1, Rs - 1, ys, shs, {lad_c, (0, Rs - 1)} | set(lad_more) | set(here),
+                           fixture=fixture, mask=inside_s)
         if s < n - 1:                                                 # skirt roof round the storey
             top = ys + sh + max(0, 7 - sh)                            # (a low storey: lifted, its lowest tiles clear of the door)
             rs_ = Rs + 0.5

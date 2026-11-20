@@ -45,7 +45,8 @@ public final class RunFiles {
             "guardroom", "门房（守卫）", "barracks", "营房", "courtroom", "公堂", "jail", "牢房", "classroom", "学堂",
             "discipline_hall", "戒律堂", "array_control", "阵枢", "spirit_stone_vault", "灵石库",
             "artifact_shop", "法器铺", "pill_shop", "丹药铺", "talisman_shop", "符箓铺", "material_shop", "材料铺",
-            "cultivator_inn_room", "修士客房", "auction_box", "拍卖雅间", "ship_cabin", "船舱");
+            "cultivator_inn_room", "修士客房", "auction_box", "拍卖雅间", "ship_cabin", "船舱",
+            "empty", "空房");
     static final List<List<String>> FRONTS = rows("south", "南", "east", "东", "north", "北", "west", "西");
     static final List<String> TIER_CN = List.of("凡人", "练气", "筑基", "金丹", "元婴", "化神");
     static final Set<String> MORTAL_ARCH = Set.of("thatched_hut", "mud_house", "stone_cottage", "log_cabin", "stilt_house",

@@ -805,6 +805,7 @@ public final class Compose {
             spec.put("_round_roof", rr != null && List.of("cone", "helmet", "dome", "luding", "flat").contains(rr) ? rr : null);
             Object bs = r.get("bay_style");
             spec.put("_bay_style", bs != null && !"auto".equals(bs) ? bs : null);
+            if (Boolean.FALSE.equals(req.get("interior"))) spec.put("_bare", true);   // 内饰：无 - no furniture, no lamps inside
             if (r.get("_on") != null && built.containsKey(gi(r, "_on"))) r.put("y", built.get(gi(r, "_on")).get("wall_top"));
             List<Map<String, Object>> ups = new ArrayList<>();
             for (Map<String, Object> o : rooms) if (o.get("_on") != null && gi(o, "_on") == gi(r, "_i")) ups.add(o);

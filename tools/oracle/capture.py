@@ -1,6 +1,6 @@
 """Capture the JUnit fixtures for the Java generator from the frozen Python one (the oracle as checked-in hashes).
 
-  python -I tools/oracle/capture.py [default|kinds|slow|all]
+  python -I tools/oracle/capture.py [default|interior|kinds|slow|all]
 
 Writes src/test/resources/oracle/<set>.json.gz: a list of {"req": the request, "sha256": of the decompressed .dvcr
 payload, "result": the daemon's result dict without "seconds"}, in the order they were run. The requests of a set run
@@ -10,6 +10,8 @@ runs them in the same order in a fresh JVM.
 Sets:
   default  single rooms of every profile, multi-room buildings, the library (every saved design), 随机一院 plans
            (house, palace, free), the 宫城, a 随机城镇 and a 随机宗门 (筑基)
+  interior 内饰：无 and 空房 (1.2): oracle.interior_requests - rooms of several profiles and two saved designs built
+           bare ("interior": false) and with "empty" floors
   kinds    the build menu (O / 建造菜单): every kind of bgen.K at its first and last tier, seed 1
   slow     the 紫禁城 1:1 (siteplan.city_real, as bgen_daemon.city_real_site: every room on one level)
   plans    the planners (designs back, no blocks): oracle.plan_requests "all" for seed 1 - 随机一院, the 宫城, the
@@ -176,6 +178,8 @@ def main(argv):
         capture_startup()
     if which in ("default", "all"):
         capture("default", default_requests())
+    if which in ("interior", "all"):
+        capture("interior", oracle.interior_requests())
     if which in ("kinds", "all"):
         capture("kinds", oracle.kind_requests(seed=1, tiers="ends"))
     if which in ("slow", "all"):

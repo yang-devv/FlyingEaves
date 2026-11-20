@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased (1.2.0)
+## 1.2.0 — 2026-11-19
 
 - 单体建造: rooms without interior.
   - **用途「空房」** (`empty`, the 74th use, last in the list: one notch down from 堂屋 with the wheel): that floor gets
